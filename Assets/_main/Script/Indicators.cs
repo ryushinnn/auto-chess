@@ -4,9 +4,6 @@ using UnityEngine;
 public class Indicators : MonoBehaviour {
     [SerializeField] Transform _hexParent;
     [SerializeField] Indicator _hexCell;
-    [SerializeField] float _hexWidth;
-    [SerializeField] float _hexHeight;
-
     [SerializeField] Transform _squareParent;
     [SerializeField] Indicator _squareCell;
     [SerializeField] float _squareWidth;
@@ -18,28 +15,35 @@ public class Indicators : MonoBehaviour {
     Camera _camera;
     LayerMask _layerMask;
     
-    const int SIZE = 8;
-
     void Awake() {
         _camera = Camera.main;
         _layerMask = LayerMask.GetMask("RaycastOnly");
     }
-
+    
     void Start() {
-        _hexCells = new Indicator[SIZE/2,SIZE];
-        var rootOffset = new Vector3(_hexWidth/2, 0, _hexHeight/2 - _hexHeight/8);
-        for (int i = 0; i < SIZE/2; i++) {
-            for (int j=0; j<SIZE; j++) {
-                var columnOffset = new Vector3(i % 2 == 0 ? _hexWidth / 4 : _hexWidth / -4, 0, 0);
+        SpawnSquareIndicators();
+    }
+    
+    void Update() {
+        HandleHighlightCell();   
+    }
+
+    public void SpawnHexIndicators(GameObject[,] nodes) {
+        var row = nodes.GetLength(0) / 2;
+        var col = nodes.GetLength(1);
+        _hexCells = new Indicator[row, col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
                 var cell = Instantiate(_hexCell, _hexParent);
-                cell.transform.localPosition = new Vector3((j-SIZE/2) * _hexWidth, 0 , (i-SIZE/2) * _hexHeight * 3/4)
-                                              + rootOffset
-                                              + columnOffset;
-                cell.transform.localScale = new Vector3(_hexWidth, 1, _hexHeight);
+                cell.transform.localPosition = nodes[i, j].transform.localPosition;
+                cell.transform.localScale = nodes[i, j].transform.localScale;
                 _hexCells[i, j] = cell;
             }
         }
 
+    }
+
+    void SpawnSquareIndicators() {
         _squareCells = new Indicator[9];
         for (int i = 0; i < 9; i++) {
             var cell = Instantiate(_squareCell, _squareParent);
@@ -48,15 +52,15 @@ public class Indicators : MonoBehaviour {
             _squareCells[i] = cell;
         }
     }
-
-    void Update() {
+    
+    void HandleHighlightCell() {
         if (Input.GetMouseButton(0)) {
             var ray = _camera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out var hit, 1000, _layerMask)) {
                 _currentHighlightCell?.SetHighlight(false);
                 var minDist = Mathf.Infinity;
-                for (int i = 0; i < SIZE/2; i++) {
-                    for (int j = 0; j < SIZE; j++) {
+                for (int i = 0; i < _hexCells.GetLength(0); i++) {
+                    for (int j = 0; j < _hexCells.GetLength(1); j++) {
                         var dist = Vector3.Distance(_hexCells[i, j].transform.position, hit.point);
                         if (dist < minDist) {
                             minDist = dist;
