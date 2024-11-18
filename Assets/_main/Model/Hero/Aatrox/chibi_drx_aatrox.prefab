@@ -38,6 +38,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7448635697971285175, guid: 66e109960c0201845af0b5d0bd33280f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -6881627211965715439, guid: 66e109960c0201845af0b5d0bd33280f,
         type: 3}
       propertyPath: m_IsActive
@@ -598,6 +603,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AABB.m_Extent.z
       value: 62.01915
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802658166052233217, guid: 66e109960c0201845af0b5d0bd33280f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2812508657323080702, guid: 66e109960c0201845af0b5d0bd33280f,
         type: 3}
