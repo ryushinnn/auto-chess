@@ -114,7 +114,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5488216004242047480}
-  - component: {fileID: -1509804549761832230}
+  - component: {fileID: 3737245379978466277}
   m_Layer: 0
   m_Name: HexCell
   m_TagString: Untagged
@@ -139,7 +139,7 @@ Transform:
   - {fileID: 5785920494614560162}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-1509804549761832230
+--- !u!114 &3737245379978466277
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6071563754579655882}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b9191a1bcae4914284f76215a99760a, type: 3}
+  m_Script: {fileID: 11500000, guid: d81ee4c3e7617b448a993d3551fa98e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 4611849657893045965}

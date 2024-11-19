@@ -3,23 +3,18 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Mecanim_Aatrox : Mecanim {
-    protected override void SetUp() {
-        animator.SetBool(paramHasIdleIn, true);
-        animator.SetBool(paramHasRunIn, true);
-    }
-
     protected override void ModifyBodyParts() {
         switch (currentState) {
             case State.Idle:
-                bodyParts.SetBodyParts(0.5f, ("spikes", true), ("wings_0", false), ("wings_1", false));
+                bodyParts.SetBodyParts(0, ("spikes", false), ("wings_0", true), ("wings_1", true));
                 break;
             
             case State.Run:
-                bodyParts.SetBodyParts(0.3f, ("spikes", false), ("wings_0", true), ("wings_1", true));
+                bodyParts.SetBodyParts(0, ("spikes", false), ("wings_0", true), ("wings_1", true));
                 break;
             
             case State.Death:
-                bodyParts.SetBodyParts(0f, ("spikes", true), ("wings_0", false), ("wings_1", false));
+                bodyParts.SetBodyParts(0, ("spikes", true), ("wings_0", false), ("wings_1", false));
                 break;
         }
     }

@@ -1154,13 +1154,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parts:
-  - enableAtStart: 1
+  - enableAtStart: 0
     name: spikes
     obj: {fileID: 6463675429474785321}
-  - enableAtStart: 0
+  - enableAtStart: 1
     name: wings_0
     obj: {fileID: 202728268735245133}
-  - enableAtStart: 0
+  - enableAtStart: 1
     name: wings_1
     obj: {fileID: 2920100244373079770}
 --- !u!114 &6030379420075625112

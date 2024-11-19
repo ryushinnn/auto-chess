@@ -869,17 +869,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66097caf1269d574c991c239ac4d7c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _map: {fileID: 1379350718}
   _hexParent: {fileID: 1822094305}
-  _hexCell: {fileID: -1509804549761832230, guid: f46a5ff6afe68d741bd181e3377bc7be,
+  _hexCell: {fileID: 3737245379978466277, guid: f46a5ff6afe68d741bd181e3377bc7be,
     type: 3}
-  _hexWidth: 1.88
-  _hexHeight: 1.89
-  _gen8x8: 1
   _squareParent: {fileID: 97593393}
-  _squareCell: {fileID: -1509804549761832230, guid: 8ae0000caf99ab14da17a4df0d3c1fb8,
+  _squareCell: {fileID: 8085342610786647693, guid: 8ae0000caf99ab14da17a4df0d3c1fb8,
     type: 3}
   _squareWidth: 1.68
   _squareHeight: 1.72
+  _updateRate: 30
+  _row: 0
+  _column: 0
+  _selectedCell: {fileID: 0}
 --- !u!1001 &1801000821
 PrefabInstance:
   m_ObjectHideFlags: 0
