@@ -154,6 +154,9 @@ MonoBehaviour:
   _meshRenderer: {fileID: 4611849657893045965}
   _normalMat: {fileID: 2100000, guid: 31a87148c9e2a4d48b3c3e563a60dd06, type: 2}
   _highlightMat: {fileID: 2100000, guid: 023b07ac2503b6843a43a1ca3ad2c0c9, type: 2}
+  meshRenderer: {fileID: 4611849657893045965}
+  normalMat: {fileID: 2100000, guid: 31a87148c9e2a4d48b3c3e563a60dd06, type: 2}
+  highlightMat: {fileID: 2100000, guid: 023b07ac2503b6843a43a1ca3ad2c0c9, type: 2}
 --- !u!1001 &6323336956421495369
 PrefabInstance:
   m_ObjectHideFlags: 0

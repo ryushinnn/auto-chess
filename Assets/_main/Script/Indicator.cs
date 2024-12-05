@@ -1,12 +1,13 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Indicator : MonoBehaviour {
-    [SerializeField] MeshRenderer _meshRenderer;
-    [SerializeField] Material _normalMat;
-    [SerializeField] Material _highlightMat;
+    [SerializeField] MeshRenderer meshRenderer;
+    [SerializeField] Material normalMat;
+    [SerializeField] Material highlightMat;
     
     public void SetHighlight(bool highlight) {
-        _meshRenderer.sharedMaterial = highlight ? _highlightMat : _normalMat;
+        meshRenderer.sharedMaterial = highlight ? highlightMat : normalMat;
     }
 }

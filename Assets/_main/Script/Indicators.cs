@@ -5,30 +5,34 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Indicators : MonoBehaviour {
-    [SerializeField] Map _map;
-    [SerializeField] Transform _hexParent;
-    [SerializeField] HexIndicator _hexCell;
-    [SerializeField] Transform _squareParent;
-    [SerializeField] SquareIndicator _squareCell;
-    [SerializeField] float _squareWidth;
-    [SerializeField] float _squareHeight;
-    [SerializeField] float _updateRate;
+    [SerializeField] Map map;
+    [SerializeField] Transform hexParent;
+    [SerializeField] HexIndicator hexCell;
+    [SerializeField] Transform squareParent;
+    [SerializeField] SquareIndicator squareCell;
+    [SerializeField] float squareWidth;
+    [SerializeField] float squareHeight;
+    [SerializeField] float updateRate;
 
     [SerializeField, ReadOnly] int _row;
     [SerializeField, ReadOnly] int _column;
     HexIndicator[,] _hexCells;
     [SerializeField, ReadOnly] Indicator _selectedCell;
-    HexIndicator[] _adjacentCells;
+    HexIndicator[] _selectedCells;
     SquareIndicator[] _squareCells;
     Camera _camera;
     LayerMask _layerMask;
     float _updateInterval;
     float _updateTimer;
     
+    public SelectNodeMethod selectNodeMethod;
+    public int range;
+    public Direction direction;
+    
     void Awake() {
         _camera = Camera.main;
         _layerMask = LayerMask.GetMask("RaycastOnly");
-        _updateInterval = 1 / _updateRate;
+        _updateInterval = 1 / updateRate;
         _updateTimer = 0;
     }
     
@@ -46,7 +50,7 @@ public class Indicators : MonoBehaviour {
         _hexCells = new HexIndicator[_row, _column];
         for (int i = 0; i < _row; i++) {
             for (int j = 0; j < _column; j++) {
-                var cell = Instantiate(_hexCell, _hexParent);
+                var cell = Instantiate(hexCell, hexParent);
                 cell.transform.localPosition = nodes[i, j].transform.localPosition;
                 cell.transform.localScale = nodes[i, j].transform.localScale;
                 cell.name = $"Hex[{i},{j}]";
@@ -60,9 +64,9 @@ public class Indicators : MonoBehaviour {
     void SpawnSquareIndicators() {
         _squareCells = new SquareIndicator[9];
         for (int i = 0; i < 9; i++) {
-            var cell = Instantiate(_squareCell, _squareParent);
-            cell.transform.transform.localPosition = new Vector3((i-4)*_squareWidth, 0, 0);
-            cell.transform.transform.localScale = new Vector3(_squareWidth, 1, _squareHeight);
+            var cell = Instantiate(squareCell, squareParent);
+            cell.transform.transform.localPosition = new Vector3((i-4)*squareWidth, 0, 0);
+            cell.transform.transform.localScale = new Vector3(squareWidth, 1, squareHeight);
             cell.name = $"Square[{i}]";
             _squareCells[i] = cell;
         }
@@ -77,12 +81,11 @@ public class Indicators : MonoBehaviour {
         _updateTimer = _updateInterval;
         _selectedCell?.SetHighlight(false);
         _selectedCell = null;
-        if (_adjacentCells != null) {
-            foreach (var cell in _adjacentCells) {
+        if (_selectedCells != null) {
+            foreach (var cell in _selectedCells) {
                 cell?.SetHighlight(false);
             }
         }
-        _adjacentCells = new HexIndicator[6];
         
         if (Input.GetMouseButton(0)) {
             var ray = _camera.ScreenPointToRay(Input.mousePosition);
@@ -109,9 +112,20 @@ public class Indicators : MonoBehaviour {
                 _selectedCell?.SetHighlight(true);
 
                 if (_selectedCell != null && _selectedCell is HexIndicator hex) {
-                    _adjacentCells = _map.GetAdjacentNodes(hex.X, hex.Y).Select(GetHexIndicator).ToArray();
-                    foreach (var cell in _adjacentCells) {
-                        cell?.SetHighlight(true);
+                    if (selectNodeMethod == SelectNodeMethod.Adjacent) {
+                        _selectedCells = map.GetAdjacentNodes(hex.X, hex.Y, range).Select(GetHexIndicator).ToArray();
+                    }
+                    else if (selectNodeMethod == SelectNodeMethod.Line) {
+                        _selectedCells = map.GetLineOfNodes(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
+                    }
+                    else if (selectNodeMethod == SelectNodeMethod.Sector) {
+                        _selectedCells = map.GetSectorOfNodes(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
+                    }
+
+                    if (_selectedCells != null) {
+                        foreach (var cell in _selectedCells) {
+                            cell?.SetHighlight(true);
+                        }
                     }
                 }
             }

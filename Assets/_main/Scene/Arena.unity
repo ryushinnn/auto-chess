@@ -641,8 +641,8 @@ Transform:
   m_GameObject: {fileID: 880606345}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -4.17}
-  m_LocalScale: {x: 1.79, y: 1, z: 1.02}
+  m_LocalPosition: {x: 0, y: -0, z: -0.9832}
+  m_LocalScale: {x: 1.79, y: 1, z: 1.657398}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1794363227}
@@ -822,6 +822,11 @@ MonoBehaviour:
   _nodeHeight: 1.89
   _indicators: {fileID: 1794363228}
   _aStarPath: {fileID: 36020082}
+  nodeParent: {fileID: 1014229706}
+  nodeWidth: 1.88
+  nodeHeight: 1.89
+  indicators: {fileID: 1794363228}
+  aStarPath: {fileID: 36020082}
 --- !u!1 &1794363226
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,19 +874,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66097caf1269d574c991c239ac4d7c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _map: {fileID: 1379350718}
-  _hexParent: {fileID: 1822094305}
-  _hexCell: {fileID: 3737245379978466277, guid: f46a5ff6afe68d741bd181e3377bc7be,
+  map: {fileID: 1379350718}
+  hexParent: {fileID: 1822094305}
+  hexCell: {fileID: 3737245379978466277, guid: f46a5ff6afe68d741bd181e3377bc7be, type: 3}
+  squareParent: {fileID: 97593393}
+  squareCell: {fileID: 8085342610786647693, guid: 8ae0000caf99ab14da17a4df0d3c1fb8,
     type: 3}
-  _squareParent: {fileID: 97593393}
-  _squareCell: {fileID: 8085342610786647693, guid: 8ae0000caf99ab14da17a4df0d3c1fb8,
-    type: 3}
-  _squareWidth: 1.68
-  _squareHeight: 1.72
-  _updateRate: 30
+  squareWidth: 1.68
+  squareHeight: 1.72
+  updateRate: 30
   _row: 0
   _column: 0
   _selectedCell: {fileID: 0}
+  selectNodeMethod: 0
+  range: 0
+  direction: 0
 --- !u!1001 &1801000821
 PrefabInstance:
   m_ObjectHideFlags: 0

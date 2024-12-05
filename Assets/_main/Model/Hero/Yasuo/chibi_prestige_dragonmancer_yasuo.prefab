@@ -1171,6 +1171,10 @@ MonoBehaviour:
   - enableAtStart: 0
     name: dragon
     obj: {fileID: 1921214729245204479}
+  parts:
+  - enableAtStart: 0
+    name: dragon
+    obj: {fileID: 1921214729245204479}
 --- !u!114 &6263284951136927269
 MonoBehaviour:
   m_ObjectHideFlags: 0
