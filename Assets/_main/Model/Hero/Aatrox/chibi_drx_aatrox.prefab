@@ -457,7 +457,7 @@ PrefabInstance:
     - target: {fileID: -553860988396757955, guid: 66e109960c0201845af0b5d0bd33280f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -553860988396757955, guid: 66e109960c0201845af0b5d0bd33280f,
         type: 3}
@@ -1153,16 +1153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0427ccc19e76b041a80c689a3a42f80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parts:
-  - enableAtStart: 0
-    name: spikes
-    obj: {fileID: 6463675429474785321}
-  - enableAtStart: 1
-    name: wings_0
-    obj: {fileID: 202728268735245133}
-  - enableAtStart: 1
-    name: wings_1
-    obj: {fileID: 2920100244373079770}
   parts:
   - enableAtStart: 0
     name: spikes

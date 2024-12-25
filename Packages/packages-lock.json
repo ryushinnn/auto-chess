@@ -23,6 +23,22 @@
         "com.unity.ugui": "1.0.0"
       }
     },
+    "com.ryushin.rext": {
+      "version": "https://github.com/ryushinnn/rext.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      },
+      "hash": "12c9e875ed459fe47c834b17f8f125da6ce896c1"
+    },
+    "com.ryushin.ryushin-script-tpl": {
+      "version": "https://github.com/ryushinnn/ryushin-script-tpl.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "518956d07f5cf34c0a9567f93ab190cdb7220adb"
+    },
     "com.unity.burst": {
       "version": "1.8.12",
       "depth": 1,

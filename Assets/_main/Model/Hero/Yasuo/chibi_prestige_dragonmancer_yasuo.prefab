@@ -402,7 +402,7 @@ PrefabInstance:
     - target: {fileID: -553860988396757955, guid: 0b632b5e08677be4b9a21e1d33d6ebba,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -553860988396757955, guid: 0b632b5e08677be4b9a21e1d33d6ebba,
         type: 3}
@@ -1167,10 +1167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0427ccc19e76b041a80c689a3a42f80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parts:
-  - enableAtStart: 0
-    name: dragon
-    obj: {fileID: 1921214729245204479}
   parts:
   - enableAtStart: 0
     name: dragon

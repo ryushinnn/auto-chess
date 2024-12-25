@@ -27,7 +27,7 @@ public class Map : MonoBehaviour {
     [SerializeField] Indicators indicators;
     [SerializeField] AstarPath aStarPath;
     
-    Node[,] _nodes;
+    Node[,] nodes;
     
     const int SIZE = 8;
 
@@ -54,7 +54,7 @@ public class Map : MonoBehaviour {
     }
 
     void SpawnNodes() {
-        _nodes = new Node[SIZE,SIZE];
+        nodes = new Node[SIZE,SIZE];
         var rootOffset = new Vector3(nodeWidth/2, 0, nodeHeight/2 - nodeHeight/8);
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -66,17 +66,17 @@ public class Map : MonoBehaviour {
                                                + columnOffset;
                 node.transform.localScale = new Vector3(nodeWidth, 1, nodeHeight);
                 node.SaveIndex(i, j);
-                _nodes[i, j] = node;
+                nodes[i, j] = node;
             }
         }
 
-        indicators.SpawnHexIndicators(_nodes);
+        indicators.SpawnHexIndicators(nodes);
         aStarPath.Scan();
     }
 
     Node GetNode(int x, int y) {
         if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
-            return _nodes[x, y];
+            return nodes[x, y];
         }
 
         return null;
