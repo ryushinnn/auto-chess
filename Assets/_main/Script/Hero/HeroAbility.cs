@@ -7,7 +7,7 @@ public abstract class HeroAbility : MonoBehaviour {
 
     protected Hero hero;
     
-    public void Initialize(Hero hero) {
+    public virtual void Initialize(Hero hero) {
         this.hero = hero;
     }
     

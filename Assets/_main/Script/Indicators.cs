@@ -30,7 +30,7 @@ public class Indicators : MonoBehaviour {
     public SelectNodeMethod selectNodeMethod;
     public int range;
     public Direction direction;
-    public Seeker hero;
+    public Hero hero;
     
     void Awake() {
         cam = Camera.main;
@@ -135,7 +135,7 @@ public class Indicators : MonoBehaviour {
                 }
             }
         }
-        else if (Input.GetMouseButtonDown(1)) {
+        else if (Input.GetMouseButton(1)) {
             var ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out var hit, 1000, layerMask)) {
                 Vector3 destination = default;
@@ -150,12 +150,7 @@ public class Indicators : MonoBehaviour {
                     }
                 }
 
-                hero.StartPath(hero.transform.position, destination, path => {
-                    var sequence = DOTween.Sequence();
-                    foreach (var waypoint in path.vectorPath) {
-                        sequence.Append(hero.transform.DOMove(waypoint, 0.5f).SetEase(Ease.Linear));
-                    }
-                });
+                hero.GetAbility<HeroMovement>().StartMove(destination);
             }
         }
     }

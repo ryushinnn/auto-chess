@@ -63,7 +63,7 @@ public class Mecanim : MonoBehaviour {
         
     }
 
-    protected virtual void ChangeState(State state) {
+    public virtual void ChangeState(State state) {
         if (state == currentState) return;
 
         lastState = currentState;
@@ -75,7 +75,7 @@ public class Mecanim : MonoBehaviour {
         ModifyBodyParts();
     }
 
-    protected virtual void DoAction(Action action, params (int, object)[] metaDatas) {
+    public virtual void DoAction(Action action, params (int, object)[] metaDatas) {
         foreach (var data in metaDatas) {
             switch (data.Item2) {
                 case int i:
