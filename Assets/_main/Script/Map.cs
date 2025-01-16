@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RExt.Core;
 using Sirenix.OdinInspector;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
@@ -20,12 +21,16 @@ public enum SelectNodeMethod {
     Sector,
 }
 
-public class Map : MonoBehaviour {
+public class Map : Singleton<Map> {
     [SerializeField] Transform nodeParent;
     [SerializeField] float nodeWidth;
     [SerializeField] float nodeHeight;
-    [SerializeField] Indicators indicators;
     [SerializeField] AstarPath aStarPath;
+    
+    [TitleGroup("DEVELOPMENT")]
+    public Hero dev_hero;
+    public int dev_nodeX;
+    public int dev_nodeY;
     
     Node[,] nodes;
     
@@ -33,6 +38,30 @@ public class Map : MonoBehaviour {
 
     void Start() {
         SpawnNodes();
+    }
+
+    public Node GetNode(Vector3 position) {
+        var minDist = Mathf.Infinity;
+        var node = default(Node);
+        for (int i=0; i<SIZE; i++) {
+            for (int j=0; j<SIZE; j++) {;
+                var dist = Vector3.Distance(nodes[i, j].Position, position);
+                if (dist < minDist) {
+                    minDist = dist;
+                    node = nodes[i, j];
+                }
+            }
+        }
+        
+        return node;
+    }
+    
+    public Node GetNode(int x, int y) {
+        if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
+            return nodes[x, y];
+        }
+
+        return null;
     }
 
     public Node[] GetAdjacentNodes(int x, int y, int range) {
@@ -59,27 +88,22 @@ public class Map : MonoBehaviour {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 var columnOffset = new Vector3(i % 2 == 0 ? nodeWidth / 4 : nodeWidth / -4, 0, 0);
-                var node = new GameObject($"Node[{i},{j}]").AddComponent<Node>();
-                node.transform.SetParent(nodeParent);
-                node.transform.localPosition = new Vector3((j-SIZE/2) * nodeWidth, 0 , (i-SIZE/2) * nodeHeight * 3/4)
-                                               + rootOffset
-                                               + columnOffset;
-                node.transform.localScale = new Vector3(nodeWidth, 1, nodeHeight);
-                node.SaveIndex(i, j);
+                var node = new Node();
+                node.Initialize(i, j, new Vector3((j-SIZE/2) * nodeWidth, 0 , (i-SIZE/2) * nodeHeight * 3/4)
+                                      + rootOffset
+                                      + columnOffset);
                 nodes[i, j] = node;
+                var nodeVisual = new GameObject($"[{i},{j}]");
+                nodeVisual.transform.SetParent(nodeParent);
+                nodeVisual.transform.position = node.Position;
             }
         }
 
-        indicators.SpawnHexIndicators(nodes);
+        MapVisual.Instance.SpawnHexIndicators(nodes, nodeWidth, nodeHeight);
         aStarPath.Scan();
-    }
-
-    Node GetNode(int x, int y) {
-        if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
-            return nodes[x, y];
-        }
-
-        return null;
+        
+        dev_hero.SetNode(GetNode(dev_nodeX, dev_nodeY));
+        dev_hero.ResetPosition();
     }
 
     Node GetAdjacentNode(int x, int y, Direction direction) {
@@ -204,6 +228,17 @@ public class Map : MonoBehaviour {
             if (botRightNode != null) {
                 result.Add(botRightNode);
                 GetSectorOfNodes(botRightNode.X, botRightNode.Y, direction, range - 1, result);
+            }
+        }
+    }
+
+    [Button]
+    public void Dev_DetectObject() {
+        for (int i=0; i<SIZE; i++) {
+            for (int j=0; j<SIZE; j++) {
+                if (nodes[i, j].obj != null) {
+                    Debug.Log($"[{i},{j}] has object");
+                }
             }
         }
     }

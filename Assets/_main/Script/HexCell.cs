@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class HexIndicator : Indicator {
+public class HexCell : Indicator {
     public int X { get; private set; }
 
     public int Y { get; private set; }

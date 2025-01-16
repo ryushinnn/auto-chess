@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Pathfinding;
+using RExt.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class Indicators : MonoBehaviour {
-    [SerializeField] Map map;
+public class MapVisual : Singleton<MapVisual> {
     [SerializeField] Transform hexParent;
-    [SerializeField] HexIndicator hexCell;
+    [SerializeField] HexCell hexCell;
     [SerializeField] Transform squareParent;
-    [SerializeField] SquareIndicator squareCell;
+    [SerializeField] SquareCell squareCell;
     [SerializeField] float squareWidth;
     [SerializeField] float squareHeight;
     [SerializeField] float updateRate;
 
     [SerializeField, ReadOnly] int row;
     [SerializeField, ReadOnly] int column;
-    HexIndicator[,] hexCells;
+    HexCell[,] hexCells;
     [SerializeField, ReadOnly] Indicator selectedCell;
-    HexIndicator[] selectedCells;
-    SquareIndicator[] squareCells;
+    HexCell[] selectedCells;
+    SquareCell[] squareCells;
     Camera cam;
     LayerMask layerMask;
     float updateInterval;
@@ -32,7 +32,7 @@ public class Indicators : MonoBehaviour {
     public Direction direction;
     public Hero hero;
     
-    void Awake() {
+    protected override void OnAwake() {
         cam = Camera.main;
         layerMask = LayerMask.GetMask("RaycastOnly");
         updateInterval = 1 / updateRate;
@@ -47,15 +47,15 @@ public class Indicators : MonoBehaviour {
         HandleHighlightCell();   
     }
 
-    public void SpawnHexIndicators(Node[,] nodes) {
+    public void SpawnHexIndicators(Node[,] nodes, float width, float height) {
         row = nodes.GetLength(0);
         column = nodes.GetLength(1);
-        hexCells = new HexIndicator[row, column];
+        hexCells = new HexCell[row, column];
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
                 var cell = Instantiate(hexCell, hexParent);
-                cell.transform.localPosition = nodes[i, j].transform.localPosition;
-                cell.transform.localScale = nodes[i, j].transform.localScale;
+                cell.transform.localPosition = new Vector3(nodes[i, j].Position.x, 0, nodes[i, j].Position.z);
+                cell.transform.localScale = new Vector3(width, 1, height);
                 cell.name = $"Hex[{i},{j}]";
                 cell.SaveIndex(i,j);
                 hexCells[i, j] = cell;
@@ -65,7 +65,7 @@ public class Indicators : MonoBehaviour {
     }
 
     void SpawnSquareIndicators() {
-        squareCells = new SquareIndicator[9];
+        squareCells = new SquareCell[9];
         for (int i = 0; i < 9; i++) {
             var cell = Instantiate(squareCell, squareParent);
             cell.transform.transform.localPosition = new Vector3((i-4)*squareWidth, 0, 0);
@@ -114,17 +114,17 @@ public class Indicators : MonoBehaviour {
                 
                 selectedCell?.SetHighlight(true);
 
-                if (selectedCell != null && selectedCell is HexIndicator hex) {
+                if (selectedCell != null && selectedCell is HexCell hex) {
                     hero.transform.position = selectedCell.transform.position;
                     
                     if (selectNodeMethod == SelectNodeMethod.Adjacent) {
-                        selectedCells = map.GetAdjacentNodes(hex.X, hex.Y, range).Select(GetHexIndicator).ToArray();
+                        selectedCells = Map.Instance.GetAdjacentNodes(hex.X, hex.Y, range).Select(GetHexIndicator).ToArray();
                     }
                     else if (selectNodeMethod == SelectNodeMethod.Line) {
-                        selectedCells = map.GetLineOfNodes(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
+                        selectedCells = Map.Instance.GetLineOfNodes(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
                     }
                     else if (selectNodeMethod == SelectNodeMethod.Sector) {
-                        selectedCells = map.GetSectorOfNodes(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
+                        selectedCells = Map.Instance.GetSectorOfNodes(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
                     }
 
                     if (selectedCells != null) {
@@ -155,7 +155,7 @@ public class Indicators : MonoBehaviour {
         }
     }
 
-    HexIndicator GetHexIndicator(Node node) {
+    HexCell GetHexIndicator(Node node) {
         if (node == null || node.X < 0 || node.X >= row || node.Y < 0 || node.Y >= column) {
             return null;
         }

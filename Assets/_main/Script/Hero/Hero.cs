@@ -1,26 +1,27 @@
 using System;
 using System.Collections.Generic;
 using Pathfinding;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class Hero : MonoBehaviour {
+public class Hero : MonoBehaviour, INodeObject {
     [SerializeField] HeroTrait trait;
     [SerializeField] Transform model;
     [SerializeField] Transform abilitiesContainer;
+    [SerializeField] Seeker seeker;
 
     public HeroTrait Trait => trait;
     public Seeker Seeker => seeker;
     public Transform Model => model;
     public Mecanim Mecanim => mecanim;
 
-    Seeker seeker;
     Mecanim mecanim;
     List<HeroAbility> abilities = new();
     Dictionary<Type, HeroAbility> cachedAbilities = new();
-
+    [SerializeField, ReadOnly] Node node;
+    
     void Awake() {
         FindAbilities();
-        seeker = GetComponent<Seeker>();
         mecanim = model.GetComponentInChildren<Mecanim>();
     }
 
@@ -35,6 +36,18 @@ public class Hero : MonoBehaviour {
             cachedAbilities.Add(typeof(T), abilities.Find(ab => ab is T));
         }
         return cachedAbilities[typeof(T)] as T;
+    }
+
+    public void SetNode(Node node) {
+        if (this.node != null) {
+            this.node.obj = null;
+        }
+        this.node = node;
+        this.node.obj = this;
+    }
+
+    public void ResetPosition() {
+        transform.position = node.Position;
     }
 
     void FindAbilities() {
