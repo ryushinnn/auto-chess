@@ -4,7 +4,7 @@ using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class Hero : MonoBehaviour, INodeObject {
+public class Hero : MonoBehaviour, IMapNodeObject {
     [SerializeField] HeroTrait trait;
     [SerializeField] Transform model;
     [SerializeField] Transform abilitiesContainer;
@@ -14,11 +14,16 @@ public class Hero : MonoBehaviour, INodeObject {
     public Seeker Seeker => seeker;
     public Transform Model => model;
     public Mecanim Mecanim => mecanim;
+    public MapNode MapNode => mapNode;
+    public Hero Target => target;
 
     Mecanim mecanim;
     List<HeroAbility> abilities = new();
     Dictionary<Type, HeroAbility> cachedAbilities = new();
-    [SerializeField, ReadOnly] Node node;
+    MapNode mapNode;
+    [SerializeField, ReadOnly] Hero target;
+
+    public Vector2 dev_mapNode;
     
     void Awake() {
         FindAbilities();
@@ -29,6 +34,8 @@ public class Hero : MonoBehaviour, INodeObject {
         PreProcess();
         Process();
         PostProcess();
+        
+        dev_mapNode = new Vector2(mapNode.X, mapNode.Y);
     }
 
     public T GetAbility<T>() where T : HeroAbility {
@@ -38,16 +45,24 @@ public class Hero : MonoBehaviour, INodeObject {
         return cachedAbilities[typeof(T)] as T;
     }
 
-    public void SetNode(Node node) {
-        if (this.node != null) {
-            this.node.obj = null;
+    public void SetNode(MapNode mapNode) {
+        if (this.mapNode != null) {
+            this.mapNode.obj = null;
         }
-        this.node = node;
-        this.node.obj = this;
+        this.mapNode = mapNode;
+        this.mapNode.obj = this;
     }
 
     public void ResetPosition() {
-        transform.position = node.Position;
+        transform.position = mapNode.Position;
+    }
+
+    public bool IsAlive() {
+        return true;
+    }
+    
+    public void FindTarget() {
+        target = Map.Instance.GetNearestNonEmptyNode<Hero>(mapNode)?.obj as Hero;
     }
 
     void FindAbilities() {
@@ -82,5 +97,11 @@ public class Hero : MonoBehaviour, INodeObject {
                 ab.PostProcess();
             }
         }
+    }
+
+    [Button]
+    void Dev_ChangeNode(int x, int y) {
+        SetNode(Map.Instance.GetNode(x,y));
+        ResetPosition();
     }
 }

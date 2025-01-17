@@ -47,7 +47,7 @@ public class MapVisual : Singleton<MapVisual> {
         HandleHighlightCell();   
     }
 
-    public void SpawnHexIndicators(Node[,] nodes, float width, float height) {
+    public void SpawnHexIndicators(MapNode[,] nodes, float width, float height) {
         row = nodes.GetLength(0);
         column = nodes.GetLength(1);
         hexCells = new HexCell[row, column];
@@ -155,11 +155,11 @@ public class MapVisual : Singleton<MapVisual> {
         }
     }
 
-    HexCell GetHexIndicator(Node node) {
-        if (node == null || node.X < 0 || node.X >= row || node.Y < 0 || node.Y >= column) {
+    HexCell GetHexIndicator(MapNode mapNode) {
+        if (mapNode == null || mapNode.X < 0 || mapNode.X >= row || mapNode.Y < 0 || mapNode.Y >= column) {
             return null;
         }
         
-        return hexCells[node.X, node.Y];
+        return hexCells[mapNode.X, mapNode.Y];
     }
 }

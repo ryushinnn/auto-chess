@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
-  m_Name: Yasuo
+  m_Name: Aatrox
   m_EditorClassIdentifier: 
-  maxHp: 1000
+  maxHp: 1270
   physicalDamage: 120
   magicalPower: 0
-  armor: 30
-  resistance: 25
-  attackSpeed: 1
-  movementSpeed: 2.2
+  armor: 32
+  resistance: 24
+  attackSpeed: 0.7
+  movementSpeed: 4
   criticalChance: 0.1
   criticalDamage: 1.5
   energyRegenEfficient: 1
@@ -26,5 +26,5 @@ MonoBehaviour:
   magicalPenetration: 0
   lifeSteal: 0
   tenacity: 0
-  energyRegenPerAttack: 5
-  energyRegenPerHit: 7
+  energyRegenPerAttack: 4
+  energyRegenPerHit: 8

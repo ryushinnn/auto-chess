@@ -31,8 +31,9 @@ public class Map : Singleton<Map> {
     public Hero dev_hero;
     public int dev_nodeX;
     public int dev_nodeY;
+    public Hero dev_enemy;
     
-    Node[,] nodes;
+    MapNode[,] nodes;
     
     const int SIZE = 8;
 
@@ -40,9 +41,60 @@ public class Map : Singleton<Map> {
         SpawnNodes();
     }
 
-    public Node GetNode(Vector3 position) {
+    public MapNode GetNearestAdjacentNode(MapNode origin, MapNode destination, int radius) {
+        var potentialNodes = GetAdjacentNodes(destination.X, destination.Y, radius);
         var minDist = Mathf.Infinity;
-        var node = default(Node);
+        var node = default(MapNode);
+        foreach (var n in potentialNodes) {
+            var dist = Vector3.Distance(origin.Position, n.Position);
+            if (dist < minDist) {
+                minDist = dist;
+                node = n;
+            }
+        }
+        
+        return node;
+    }
+    
+    public MapNode GetNearestNonEmptyNode(MapNode origin, bool containSelf = false) {
+        var minDist = Mathf.Infinity;
+        var node = default(MapNode);
+        for (int i=0; i<SIZE; i++) {
+            for (int j=0; j<SIZE; j++) {
+                if ((nodes[i,j] != origin || containSelf) && nodes[i, j].obj != null) {
+                    var dist = Vector3.Distance(nodes[i, j].Position, origin.Position);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        node = nodes[i, j];
+                    }
+                }
+            }
+        }
+        
+        return node;
+    }
+    
+    public MapNode GetNearestNonEmptyNode<T>(MapNode origin, bool containSelf = false) where T : IMapNodeObject {
+        var minDist = Mathf.Infinity;
+        var node = default(MapNode);
+        for (int i=0; i<SIZE; i++) {
+            for (int j=0; j<SIZE; j++) {
+                if ((nodes[i,j] != origin || containSelf) && nodes[i, j].obj != null && nodes[i, j].obj is T) {
+                    var dist = Vector3.Distance(nodes[i, j].Position, origin.Position);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        node = nodes[i, j];
+                    }
+                }
+            }
+        }
+        
+        return node;
+    }
+
+    public MapNode GetNode(Vector3 position) {
+        var minDist = Mathf.Infinity;
+        var node = default(MapNode);
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {;
                 var dist = Vector3.Distance(nodes[i, j].Position, position);
@@ -56,7 +108,7 @@ public class Map : Singleton<Map> {
         return node;
     }
     
-    public Node GetNode(int x, int y) {
+    public MapNode GetNode(int x, int y) {
         if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
             return nodes[x, y];
         }
@@ -64,31 +116,31 @@ public class Map : Singleton<Map> {
         return null;
     }
 
-    public Node[] GetAdjacentNodes(int x, int y, int range) {
-        var result = new HashSet<Node>();
+    public MapNode[] GetAdjacentNodes(int x, int y, int range) {
+        var result = new HashSet<MapNode>();
         GetAdjacentNodes(x, y, range, result);
         return result.ToArray();
     }
 
-    public Node[] GetLineOfNodes(int x, int y, Direction direction, int range) {
-        var result = new HashSet<Node>();
+    public MapNode[] GetLineOfNodes(int x, int y, Direction direction, int range) {
+        var result = new HashSet<MapNode>();
         GetLineOfNodes(x, y, direction, range, result);
         return result.ToArray();
     }
     
-    public Node[] GetSectorOfNodes(int x, int y, Direction direction, int range) {
-        var result = new HashSet<Node>();
+    public MapNode[] GetSectorOfNodes(int x, int y, Direction direction, int range) {
+        var result = new HashSet<MapNode>();
         GetSectorOfNodes(x, y, direction, range, result);
         return result.ToArray();
     }
 
     void SpawnNodes() {
-        nodes = new Node[SIZE,SIZE];
+        nodes = new MapNode[SIZE,SIZE];
         var rootOffset = new Vector3(nodeWidth/2, 0, nodeHeight/2 - nodeHeight/8);
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 var columnOffset = new Vector3(i % 2 == 0 ? nodeWidth / 4 : nodeWidth / -4, 0, 0);
-                var node = new Node();
+                var node = new MapNode();
                 node.Initialize(i, j, new Vector3((j-SIZE/2) * nodeWidth, 0 , (i-SIZE/2) * nodeHeight * 3/4)
                                       + rootOffset
                                       + columnOffset);
@@ -104,9 +156,11 @@ public class Map : Singleton<Map> {
         
         dev_hero.SetNode(GetNode(dev_nodeX, dev_nodeY));
         dev_hero.ResetPosition();
+        dev_enemy.SetNode(GetNode(0,0));
+        dev_enemy.ResetPosition();
     }
 
-    Node GetAdjacentNode(int x, int y, Direction direction) {
+    MapNode GetAdjacentNode(int x, int y, Direction direction) {
         switch (direction) {
             case Direction.TopLeft:
                 return x % 2 == 0 ? GetNode(x + 1, y) : GetNode(x + 1, y - 1);
@@ -130,7 +184,7 @@ public class Map : Singleton<Map> {
         return null;
     }
 
-    void GetAdjacentNodes(int x, int y, int range, HashSet<Node> result) {
+    void GetAdjacentNodes(int x, int y, int range, HashSet<MapNode> result) {
         if (range == 0) return;
         
         var topLeftNode = GetAdjacentNode(x, y, Direction.TopLeft);
@@ -170,7 +224,7 @@ public class Map : Singleton<Map> {
         }
     }
 
-    void GetLineOfNodes(int x, int y, Direction direction, int range, HashSet<Node> result) {
+    void GetLineOfNodes(int x, int y, Direction direction, int range, HashSet<MapNode> result) {
         if (range == 0) return;
 
         var node = GetAdjacentNode(x, y, direction);
@@ -180,7 +234,7 @@ public class Map : Singleton<Map> {
         }
     }
 
-    void GetSectorOfNodes(int x, int y, Direction direction, int range, HashSet<Node> result) {
+    void GetSectorOfNodes(int x, int y, Direction direction, int range, HashSet<MapNode> result) {
         if (range == 0) return;
 
         if (direction is Direction.Left or Direction.TopLeft or Direction.TopRight) {
