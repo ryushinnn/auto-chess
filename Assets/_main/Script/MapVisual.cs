@@ -64,6 +64,10 @@ public class MapVisual : Singleton<MapVisual> {
 
     }
 
+    public void Highlight(MapNode node, bool active) {
+        hexCells[node.X, node.Y].SetHighlight(active);
+    }
+
     void SpawnSquareIndicators() {
         squareCells = new SquareCell[9];
         for (int i = 0; i < 9; i++) {

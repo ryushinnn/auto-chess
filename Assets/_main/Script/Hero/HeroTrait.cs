@@ -24,6 +24,7 @@ public class HeroTrait : ScriptableObject {
     [TitleGroup("Unmodifiable")]
     public float energyRegenPerAttack;
     public float energyRegenPerHit;
+    public int attackRange;
     
     [TitleGroup("Hidden")]
     public const float MAX_ENERGY = 100;

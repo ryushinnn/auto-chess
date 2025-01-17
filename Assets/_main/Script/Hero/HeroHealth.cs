@@ -11,6 +11,10 @@ public class HeroHealth : HeroAbility {
 
     void Initialize() {
         healthBar.UpdateAmount(1, true);
-        energyBar.UpdateAmount(1, true);
+        energyBar.UpdateAmount(0, true);
+    }
+
+    public void UpdateEnergyBar(float amount) {
+        energyBar.UpdateAmount(amount);
     }
 }

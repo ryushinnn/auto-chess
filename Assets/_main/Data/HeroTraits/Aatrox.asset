@@ -18,7 +18,7 @@ MonoBehaviour:
   armor: 32
   resistance: 24
   attackSpeed: 0.7
-  movementSpeed: 4
+  movementSpeed: 1
   criticalChance: 0.1
   criticalDamage: 1.5
   energyRegenEfficient: 1
@@ -26,5 +26,6 @@ MonoBehaviour:
   magicalPenetration: 0
   lifeSteal: 0
   tenacity: 0
-  energyRegenPerAttack: 4
-  energyRegenPerHit: 8
+  energyRegenPerAttack: 8
+  energyRegenPerHit: 12
+  attackRange: 1

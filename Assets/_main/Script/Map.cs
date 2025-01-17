@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using RExt.Core;
 using Sirenix.OdinInspector;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 public enum Direction {
@@ -29,8 +28,6 @@ public class Map : Singleton<Map> {
     
     [TitleGroup("DEVELOPMENT")]
     public Hero dev_hero;
-    public int dev_nodeX;
-    public int dev_nodeY;
     public Hero dev_enemy;
     
     MapNode[,] nodes;
@@ -41,8 +38,16 @@ public class Map : Singleton<Map> {
         SpawnNodes();
     }
 
-    public MapNode GetNearestAdjacentNode(MapNode origin, MapNode destination, int radius) {
-        var potentialNodes = GetAdjacentNodes(destination.X, destination.Y, radius);
+    void Update() {
+        for (int i=0; i<SIZE; i++) {
+            for (int j=0; j<SIZE; j++) {
+                MapVisual.Instance.Highlight(nodes[i,j],nodes[i,j].obj != null);
+            }
+        }
+    }
+
+    public MapNode GetNearestAdjacentNode(MapNode origin, MapNode target, int radius) {
+        var potentialNodes = GetAdjacentNodes(target.X, target.Y, radius);
         var minDist = Mathf.Infinity;
         var node = default(MapNode);
         foreach (var n in potentialNodes) {
@@ -154,7 +159,7 @@ public class Map : Singleton<Map> {
         MapVisual.Instance.SpawnHexIndicators(nodes, nodeWidth, nodeHeight);
         aStarPath.Scan();
         
-        dev_hero.SetNode(GetNode(dev_nodeX, dev_nodeY));
+        dev_hero.SetNode(GetNode(7, 7));
         dev_hero.ResetPosition();
         dev_enemy.SetNode(GetNode(0,0));
         dev_enemy.ResetPosition();
