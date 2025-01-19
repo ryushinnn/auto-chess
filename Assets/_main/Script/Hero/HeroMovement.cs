@@ -6,14 +6,22 @@ using UnityEngine;
 public class HeroMovement : HeroAbility {
     float moveSpeed;
     Sequence moveSequence;
+    bool isMoving;
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
         moveSpeed = this.hero.Trait.movementSpeed;
     }
 
+    public override void Process() {
+        if (isMoving) {
+            hero.SetNode(Map.Instance.GetNode(hero.transform.position));
+        }
+    }
+
     public void StartMove(Vector3 dest) {
         hero.Seeker.StartPath(hero.transform.position, dest, path => {
+            isMoving = true;
             hero.Mecanim.ChangeState(Mecanim.State.Run);
             moveSequence?.Kill();
             moveSequence = DOTween.Sequence();
@@ -24,10 +32,7 @@ public class HeroMovement : HeroAbility {
                 moveSequence.AppendCallback(() => {
                         hero.GetAbility<HeroRotation>().Rotate(wp - hero.transform.position, rotateInstantly);
                     })
-                    .Append(hero.transform.DOMove(wp, 1 / moveSpeed).SetEase(Ease.Linear))
-                    .AppendCallback(() => {
-                        hero.SetNode(Map.Instance.GetNode(hero.transform.position));
-                    });
+                    .Append(hero.transform.DOMove(wp, 1 / moveSpeed).SetEase(Ease.Linear));
             }
 
             moveSequence.AppendCallback(()=>StopMove());
@@ -35,6 +40,7 @@ public class HeroMovement : HeroAbility {
     }
 
     public void StopMove(bool resetPosition = false) {
+        isMoving = false;
         hero.Mecanim.ChangeState(Mecanim.State.Idle);
         moveSequence?.Kill();
         if (resetPosition) {

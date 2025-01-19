@@ -55,7 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5923675976069476576}
   - component: {fileID: 1820667639101673539}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Billboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 2170252594167637654}
   - component: {fileID: 6854018346424601833}
   - component: {fileID: 6529644040993711803}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Energy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 7213423456055106341}
   - component: {fileID: 2913336716966697458}
   - component: {fileID: 4616933226886558938}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 3762968882429806231}
   - component: {fileID: 804720960774728593}
   - component: {fileID: 3459056203777857187}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -419,7 +419,7 @@ GameObject:
   - component: {fileID: 5979484886004994438}
   - component: {fileID: 3229849689054160027}
   - component: {fileID: 623331297059478832}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -494,7 +494,7 @@ GameObject:
   - component: {fileID: 6976613162207989212}
   - component: {fileID: 8173032420438245715}
   - component: {fileID: 7062440372462822312}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -569,7 +569,7 @@ GameObject:
   - component: {fileID: 2772924827455929281}
   - component: {fileID: 5668405288385343765}
   - component: {fileID: 3774782474425146583}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sub
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -642,7 +642,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8215626553261558385}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -712,7 +712,7 @@ GameObject:
   - component: {fileID: 8880643874958777263}
   - component: {fileID: 2047719414504272096}
   - component: {fileID: 4976646644167869743}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sub
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1052,7 +1052,7 @@ GameObject:
   - component: {fileID: 1556335370846995868}
   - component: {fileID: 3629292696444711685}
   - component: {fileID: 6481395050130107954}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

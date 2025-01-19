@@ -1,7 +1,10 @@
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
 public class HexCell : Indicator {
+    [SerializeField] TMP_Text label;
+    
     public int X { get; private set; }
 
     public int Y { get; private set; }
@@ -9,5 +12,6 @@ public class HexCell : Indicator {
     public void SaveIndex(int x, int y) {
         X = x;
         Y = y;
+        label.text = $"({x},{y})";
     }
 }

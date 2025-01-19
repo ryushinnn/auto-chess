@@ -25,6 +25,8 @@ public class HeroAttack : HeroAbility {
         if (currentAttackCooldown > 0) return false;
         
         Debug.Log("attack");
+        hero.Mecanim.DoAction(Mecanim.Action.Skill, (Animator.StringToHash("skill"), 0));
+        hero.GetAbility<HeroRotation>().Rotate(hero.Target.transform.position - hero.transform.position);
         hero.GetAbility<HeroSkill>().RegenEnergy(energyRegenPerAttack);
         currentAttackCooldown = attackCooldown;
         return true;

@@ -1,4 +1,6 @@
-﻿public class MoveToTarget : BTNode {
+﻿using UnityEngine;
+
+public class MoveToTarget : BTNode {
     Hero hero;
     MapNode target;
     MapNode destination;
@@ -20,6 +22,7 @@
             target = hero.Target.MapNode;
             destination = Map.Instance.GetNearestAdjacentNode(hero.MapNode, target, hero.GetAbility<HeroAttack>().AttackRange);
             hero.GetAbility<HeroMovement>().StartMove(destination.Position);
+            Debug.Log(hero.name + " move to " + destination.X + ", " + destination.Y);
         }
         
         State = hero.MapNode == destination ? NodeState.Success : NodeState.Running;
