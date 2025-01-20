@@ -4,6 +4,8 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class HeroMovement : HeroAbility {
+    public bool IsMoving => isMoving;
+    
     float moveSpeed;
     Sequence moveSequence;
     bool isMoving;

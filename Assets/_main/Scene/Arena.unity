@@ -1185,6 +1185,7 @@ MonoBehaviour:
   aStarPath: {fileID: 36020082}
   dev_hero: {fileID: 627061918}
   dev_enemy: {fileID: 1462340354}
+  dev_enemy2: {fileID: 0}
 --- !u!114 &1462340354 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 276282976127478005, guid: 9b00a5bcaa357bd4e812117e914f0359,
@@ -1462,6 +1463,6 @@ SceneRoots:
   - {fileID: 473208186}
   - {fileID: 1379350717}
   - {fileID: 1794363227}
+  - {fileID: 36020083}
   - {fileID: 5462340256483514799}
   - {fileID: 935335857}
-  - {fileID: 36020083}

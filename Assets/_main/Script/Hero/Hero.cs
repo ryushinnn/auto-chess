@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -47,10 +48,10 @@ public class Hero : MonoBehaviour, IMapNodeObject {
 
     public void SetNode(MapNode mapNode) {
         if (this.mapNode != null) {
-            this.mapNode.obj = null;
+            this.mapNode.objects.Remove(this);
         }
         this.mapNode = mapNode;
-        this.mapNode.obj = this;
+        this.mapNode.objects.Add(this);
     }
 
     public void ResetPosition() {
@@ -62,7 +63,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     }
     
     public void FindTarget() {
-        target = Map.Instance.GetNearestNonEmptyNode<Hero>(mapNode)?.obj as Hero;
+        target = Map.Instance.GetNearestNonEmptyNode<Hero>(mapNode)?.objects.First(x => x is Hero) as Hero;
     }
 
     void FindAbilities() {

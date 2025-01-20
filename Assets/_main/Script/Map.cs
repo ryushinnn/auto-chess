@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using RExt.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -29,6 +30,7 @@ public class Map : Singleton<Map> {
     [TitleGroup("DEVELOPMENT")]
     public Hero dev_hero;
     public Hero dev_enemy;
+    public Hero dev_enemy2;
     
     MapNode[,] nodes;
     
@@ -41,7 +43,7 @@ public class Map : Singleton<Map> {
     void Update() {
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
-                MapVisual.Instance.Highlight(nodes[i,j],nodes[i,j].obj != null);
+                MapVisual.Instance.Highlight(nodes[i,j],nodes[i,j].objects.Count > 0);
             }
         }
     }
@@ -66,7 +68,7 @@ public class Map : Singleton<Map> {
         var node = default(MapNode);
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
-                if ((nodes[i,j] != origin || containSelf) && nodes[i, j].obj != null) {
+                if ((nodes[i,j] != origin || containSelf) && nodes[i, j].objects.Count > 0) {
                     var dist = Vector3.Distance(nodes[i, j].Position, origin.Position);
                     if (dist < minDist) {
                         minDist = dist;
@@ -84,7 +86,7 @@ public class Map : Singleton<Map> {
         var node = default(MapNode);
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
-                if ((nodes[i,j] != origin || containSelf) && nodes[i, j].obj != null && nodes[i, j].obj is T) {
+                if ((nodes[i,j] != origin || containSelf) && nodes[i, j].objects.Count > 0 && nodes[i, j].objects.Any(x=>x is T)) {
                     var dist = Vector3.Distance(nodes[i, j].Position, origin.Position);
                     if (dist < minDist) {
                         minDist = dist;
@@ -163,6 +165,8 @@ public class Map : Singleton<Map> {
         dev_hero.ResetPosition();
         dev_enemy.SetNode(GetNode(0,0));
         dev_enemy.ResetPosition();
+        // dev_enemy2.SetNode(GetNode(3,3));
+        // dev_enemy2.ResetPosition();
     }
 
     MapNode GetAdjacentNode(int x, int y, Direction direction) {
@@ -295,7 +299,7 @@ public class Map : Singleton<Map> {
     public void Dev_DetectObject() {
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
-                if (nodes[i, j].obj != null) {
+                if (nodes[i, j].objects.Count > 0) {
                     Debug.Log($"[{i},{j}] has object");
                 }
             }

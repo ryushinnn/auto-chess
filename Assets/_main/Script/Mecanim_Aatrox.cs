@@ -29,17 +29,12 @@ public class Mecanim_Aatrox : Mecanim {
         DoAction(Action.Dive, (paramDiveIn, false));
     }
 
-    [Button]
-    void Test__Attack() {
-        DoAction(Action.Skill, (paramSkill, 0));
+    public override float UseSkill() {
+        StartCoroutine(DoUseSkill());
+        return 1.2f + 1.8f;
     }
 
-    [Button]
-    void Test__Ultimate() {
-        StartCoroutine(DoUltimate());
-    }
-
-    IEnumerator DoUltimate() {
+    IEnumerator DoUseSkill() {
         DoAction(Action.Skill, (paramSkill, 1));
         yield return new WaitForSeconds(1.2f);
         DoAction(Action.Skill, (paramSkill, 2));

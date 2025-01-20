@@ -16,6 +16,8 @@ public class HeroAttack : HeroAbility {
     }
 
     public override void Process() {
+        if (hero.GetAbility<HeroSkill>().IsUsingSkill) return;
+        
         if (currentAttackCooldown > 0) {
             currentAttackCooldown -= Time.deltaTime;
         }

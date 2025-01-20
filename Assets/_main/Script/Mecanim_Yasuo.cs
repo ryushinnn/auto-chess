@@ -4,17 +4,12 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Mecanim_Yasuo : Mecanim {
-    [Button]
-    void Test__Attack() {
-        DoAction(Action.Skill, (paramSkill, 0));
+    public override float UseSkill() {
+        StartCoroutine(DoUseSkill());
+        return 4.6f + 0.9f;
     }
 
-    [Button]
-    void Test__Ultimate() {
-        StartCoroutine(DoUltimate());
-    }
-
-    IEnumerator DoUltimate() {
+    IEnumerator DoUseSkill() {
         bodyParts.SetBodyParts(0,("dragon",true));
         DoAction(Action.Skill, (paramSkill, 1));
         yield return new WaitForSeconds(4.6f);

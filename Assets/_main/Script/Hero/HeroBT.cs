@@ -15,9 +15,10 @@ public class HeroBT : MonoBehaviour {
     void Initialize() {
         var hero = GetComponent<Hero>();
         
-        // root (>) -----> isDead
+        // root (>) -----> isAlive
         //         |-----> moveAndAction (>) -----> findTarget
         //                                  |-----> moveToTarget
+        //                                  |-----> (!) isMoving
         //                                  |-----> action (?) -----> attack
         //                                                    |-----> useSkill
         
@@ -29,9 +30,11 @@ public class HeroBT : MonoBehaviour {
         mainLoop.AddChild(moveAndAction);
         var findTarget = new FindTarget(hero);
         var moveToTarget = new MoveToTarget(hero);
+        var notMoving = new Inverter(new IsMoving(hero));
         var action = new SelectorNode();
         moveAndAction.AddChild(findTarget);
         moveAndAction.AddChild(moveToTarget);
+        moveAndAction.AddChild(notMoving);
         moveAndAction.AddChild(action);
         var useSkill = new UseSkill(hero);
         var attack = new Attack(hero);

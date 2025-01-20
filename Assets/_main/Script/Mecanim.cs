@@ -59,8 +59,12 @@ public class Mecanim : MonoBehaviour {
         ChangeState(State.Death);
     }
 
-    protected virtual void SetUp() {
-        
+    public virtual void Attack() {
+        DoAction(Action.Skill, (paramSkill, 0));
+    }
+
+    public virtual float UseSkill() {
+        return 0;
     }
 
     public virtual void ChangeState(State state) {
@@ -92,6 +96,10 @@ public class Mecanim : MonoBehaviour {
         
         animator.SetInteger(paramAction, (int)action);
         animator.SetTrigger(paramActionOn);
+    }
+    
+    protected virtual void SetUp() {
+        
     }
 
     protected virtual void ModifyBodyParts() {
