@@ -166,4 +166,22 @@ public class MapVisual : Singleton<MapVisual> {
         
         return hexCells[mapNode.X, mapNode.Y];
     }
+
+    [Button]
+    void TurnOnLabels() {
+        for (int i=0; i<row; i++) {
+            for (int j=0; j<column; j++) {
+                hexCells[i, j].Dev_SwitchLabel(true);
+            }
+        }
+    }
+    
+    [Button]
+    void TurnOffLabels() {
+        for (int i=0; i<row; i++) {
+            for (int j=0; j<column; j++) {
+                hexCells[i, j].Dev_SwitchLabel(false);
+            }
+        }
+    }
 }

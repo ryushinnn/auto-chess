@@ -6,7 +6,7 @@
     }
     
     public override NodeState Evaluate() {
-        State = hero.IsAlive() ? NodeState.Success : NodeState.Failure;
+        State = hero.GetAbility<HeroHealth>().IsAlive ? NodeState.Success : NodeState.Failure;
         return State;
     }
 }

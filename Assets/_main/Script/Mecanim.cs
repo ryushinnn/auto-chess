@@ -28,8 +28,9 @@ public class Mecanim : MonoBehaviour {
     protected readonly int paramHasSkill0Out = Animator.StringToHash("has_skill_0_out");
     protected readonly int paramSkill0Multiplier = Animator.StringToHash("skill_0_multiplier");
 
-    [SerializeField, Unity.Collections.ReadOnly] protected State currentState;
-    [SerializeField, Unity.Collections.ReadOnly] protected State lastState;
+    [SerializeField, ReadOnly] protected State currentState;
+    [SerializeField, ReadOnly] protected State lastState;
+    [SerializeField, ReadOnly] protected Action lastAction;
     
     protected Animator animator;
     protected BodyParts bodyParts;
@@ -59,11 +60,15 @@ public class Mecanim : MonoBehaviour {
         ChangeState(State.Death);
     }
 
+    public virtual void DoNone() {
+        DoAction(Action.None);
+    }
+
     public virtual void Attack() {
         DoAction(Action.Skill, (paramSkill, 0));
     }
 
-    public virtual float UseSkill() {
+    public virtual float UseSkill(System.Action[] events) {
         return 0;
     }
 
@@ -94,7 +99,8 @@ public class Mecanim : MonoBehaviour {
             }
         }
         
-        animator.SetInteger(paramAction, (int)action);
+        lastAction = action;
+        animator.SetInteger(paramAction, (int)lastAction);
         animator.SetTrigger(paramActionOn);
     }
     

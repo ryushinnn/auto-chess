@@ -30,9 +30,8 @@ public class HeroMovement : HeroAbility {
 
             for (int i = 1; i < path.vectorPath.Count; i++) {
                 var wp = path.vectorPath[i];
-                var rotateInstantly = i == 1;
                 moveSequence.AppendCallback(() => {
-                        hero.GetAbility<HeroRotation>().Rotate(wp - hero.transform.position, rotateInstantly);
+                        hero.GetAbility<HeroRotation>().Rotate(wp - hero.transform.position);
                     })
                     .Append(hero.transform.DOMove(wp, 1 / moveSpeed).SetEase(Ease.Linear));
             }

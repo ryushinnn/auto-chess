@@ -4,12 +4,24 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Mecanim_Yasuo : Mecanim {
-    public override float UseSkill() {
-        StartCoroutine(DoUseSkill());
+    Coroutine useSkillCoroutine;
+    
+    public override void DoNone() {
+        if (useSkillCoroutine != null) {
+            StopCoroutine(useSkillCoroutine);
+        }
+        base.DoNone();
+    }
+    
+    public override float UseSkill(System.Action[] events) {
+        if (useSkillCoroutine != null) {
+            StopCoroutine(useSkillCoroutine);
+        }
+        useSkillCoroutine = StartCoroutine(DoUseSkill(events));
         return 4.6f + 0.9f;
     }
 
-    IEnumerator DoUseSkill() {
+    IEnumerator DoUseSkill(System.Action[] events) {
         bodyParts.SetBodyParts(0,("dragon",true));
         DoAction(Action.Skill, (paramSkill, 1));
         yield return new WaitForSeconds(4.6f);

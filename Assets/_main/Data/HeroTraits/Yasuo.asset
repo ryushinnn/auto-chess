@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Yasuo
   m_EditorClassIdentifier: 
   maxHp: 1000
-  physicalDamage: 120
+  physicalDamage: 128
   magicalPower: 0
   armor: 30
   resistance: 25
-  attackSpeed: 1
-  movementSpeed: 2.2
+  attackSpeed: 0.75
+  movementSpeed: 1.8
   criticalChance: 0.1
   criticalDamage: 1.5
   energyRegenEfficient: 1

@@ -35,8 +35,8 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         PreProcess();
         Process();
         PostProcess();
-        
-        dev_mapNode = new Vector2(mapNode.X, mapNode.Y);
+
+        dev_mapNode = mapNode != null ? new Vector2(mapNode.X, mapNode.Y) : new Vector2(-1, -1);
     }
 
     public T GetAbility<T>() where T : HeroAbility {
@@ -47,19 +47,13 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     }
 
     public void SetNode(MapNode mapNode) {
-        if (this.mapNode != null) {
-            this.mapNode.objects.Remove(this);
-        }
+        this.mapNode?.objects.Remove(this);
         this.mapNode = mapNode;
-        this.mapNode.objects.Add(this);
+        this.mapNode?.objects.Add(this);
     }
 
     public void ResetPosition() {
         transform.position = mapNode.Position;
-    }
-
-    public bool IsAlive() {
-        return true;
     }
     
     public void FindTarget() {

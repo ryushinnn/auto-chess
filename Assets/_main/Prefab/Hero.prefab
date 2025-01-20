@@ -868,6 +868,7 @@ MonoBehaviour:
   isActive: 1
   healthBar: {fileID: 4616933226886558938}
   energyBar: {fileID: 6529644040993711803}
+  canvas: {fileID: 1556335370846995868}
 --- !u!1 &6117265596786432917
 GameObject:
   m_ObjectHideFlags: 0

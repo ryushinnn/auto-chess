@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Aatrox
   m_EditorClassIdentifier: 
-  maxHp: 1270
+  maxHp: 12700
   physicalDamage: 120
   magicalPower: 0
   armor: 32
   resistance: 24
-  attackSpeed: 0.7
-  movementSpeed: 1
+  attackSpeed: 0.6
+  movementSpeed: 2
   criticalChance: 0.1
   criticalDamage: 1.5
   energyRegenEfficient: 1
@@ -27,5 +27,5 @@ MonoBehaviour:
   lifeSteal: 0
   tenacity: 0
   energyRegenPerAttack: 8
-  energyRegenPerHit: 12
+  energyRegenPerHit: 100
   attackRange: 1

@@ -3,6 +3,8 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Mecanim_Aatrox : Mecanim {
+    Coroutine useSkillCoroutine;
+    
     protected override void ModifyBodyParts() {
         switch (currentState) {
             case State.Idle:
@@ -29,16 +31,32 @@ public class Mecanim_Aatrox : Mecanim {
         DoAction(Action.Dive, (paramDiveIn, false));
     }
 
-    public override float UseSkill() {
-        StartCoroutine(DoUseSkill());
-        return 1.2f + 1.8f;
+    public override void DoNone() {
+        if (useSkillCoroutine != null) {
+            StopCoroutine(useSkillCoroutine);
+        }
+        base.DoNone();
     }
 
-    IEnumerator DoUseSkill() {
+    public override float UseSkill(System.Action[] events) {
+        if (useSkillCoroutine != null) {
+            StopCoroutine(useSkillCoroutine);
+        }
+        useSkillCoroutine = StartCoroutine(DoUseSkill(events));
+        return 5f;
+    }
+
+    IEnumerator DoUseSkill(System.Action[] events) {
         DoAction(Action.Skill, (paramSkill, 1));
-        yield return new WaitForSeconds(1.2f);
+        yield return new WaitForSeconds(0.6f);
+        events[0].Invoke();
+        yield return new WaitForSeconds(0.6f);
         DoAction(Action.Skill, (paramSkill, 2));
-        yield return new WaitForSeconds(1.8f);
+        yield return new WaitForSeconds(1f);
+        events[1].Invoke();
+        yield return new WaitForSeconds(1.2f);
         DoAction(Action.Skill, (paramSkill, 3));
+        yield return new WaitForSeconds(1.2f);
+        events[2].Invoke();
     }
 }

@@ -2,8 +2,8 @@
 
 public class MoveToTarget : BTNode {
     Hero hero;
-    MapNode target;
-    MapNode destination;
+    MapNode targetNode;
+    MapNode destinationNode;
     
     public MoveToTarget(Hero hero) {
         this.hero = hero;
@@ -12,20 +12,20 @@ public class MoveToTarget : BTNode {
     public override NodeState Evaluate() {
         if (hero.Target == null) {
             hero.GetAbility<HeroMovement>().StopMove(true);
-            target = null;
+            targetNode = null;
             State = NodeState.Failure;
             return State;
         }
 
         
-        if (hero.Target.MapNode != target) {
-            target = hero.Target.MapNode;
-            destination = Map.Instance.GetNearestAdjacentNode(hero.MapNode, target, hero.GetAbility<HeroAttack>().AttackRange);
-            hero.GetAbility<HeroMovement>().StartMove(destination.Position);
-            Debug.Log(hero.name + " move to " + destination.X + ", " + destination.Y);
+        if (hero.Target.MapNode != targetNode) {
+            targetNode = hero.Target.MapNode;
+            destinationNode = Map.Instance.GetNearestAdjacentNode(hero.MapNode, targetNode, hero.GetAbility<HeroAttack>().AttackRange);
+            hero.GetAbility<HeroMovement>().StartMove(destinationNode.Position);
+            // Debug.Log(hero.name + " move to " + destinationNode.X + ", " + destinationNode.Y);
         }
         
-        State = hero.MapNode == destination ? NodeState.Success : NodeState.Running;
+        State = hero.MapNode == destinationNode ? NodeState.Success : NodeState.Running;
         return State;
     }
 }
