@@ -15,11 +15,11 @@ MonoBehaviour:
   realm: 3
   role: 0
   maxHp: 1270
-  physicalDamage: 120
+  physicalDamage: 130
   magicalPower: 0
   armor: 32
   resistance: 24
-  attackSpeed: 0.6
+  attackSpeed: 0.3
   movementSpeed: 2
   criticalChance: 0.1
   criticalDamage: 1.5
@@ -28,6 +28,6 @@ MonoBehaviour:
   magicalPenetration: 0
   lifeSteal: 0
   tenacity: 0
-  energyRegenPerAttack: 7
-  energyRegenPerHit: 8
+  energyRegenPerAttack: 8
+  energyRegenPerHit: 12
   attackRange: 1

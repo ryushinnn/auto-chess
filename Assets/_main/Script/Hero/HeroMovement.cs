@@ -8,7 +8,6 @@ public class HeroMovement : HeroAbility {
     public bool IsMoving => isMoving;
     public bool DestinationReached => destinationReached;
     
-    float moveSpeed;
     Sequence moveSequence;
     bool isMoving;
     bool destinationReached;
@@ -17,11 +16,6 @@ public class HeroMovement : HeroAbility {
 
     void Start() {
         hero.Mecanim.Idle();
-    }
-
-    public override void Initialize(Hero hero) {
-        base.Initialize(hero);
-        moveSpeed = this.hero.Trait.movementSpeed;
     }
 
     public override void Process() {
@@ -35,7 +29,7 @@ public class HeroMovement : HeroAbility {
         if (targetNode == hero.Target.MapNode) return;
         
         targetNode = hero.Target.MapNode;
-        var newDestinationNode = Map.Instance.GetNearestAdjacentNode(hero.MapNode, targetNode, hero.GetAbility<HeroAttack>().AttackRange);
+        var newDestinationNode = Map.Instance.GetNearestAdjacentNode(hero.MapNode, targetNode, hero.GetAbility<HeroAttributes>().AttackRange);
         if (newDestinationNode == destinationNode) return;
         
         destinationNode = newDestinationNode;
@@ -52,10 +46,11 @@ public class HeroMovement : HeroAbility {
                 moveSequence.AppendCallback(() => {
                         hero.GetAbility<HeroRotation>().Rotate(wp - hero.transform.position);
                     })
-                    .Append(hero.transform.DOMove(wp, 1 / moveSpeed).SetEase(Ease.Linear));
+                    .Append(hero.transform.DOMove(wp, 1 / hero.GetAbility<HeroAttributes>().MovementSpeed).SetEase(Ease.Linear));
             }
 
             moveSequence.AppendCallback(()=> {
+                hero.GetAbility<HeroRotation>().Rotate(targetNode.Position - hero.transform.position);
                 StopMove();
                 Debug.Log($"{hero.name} reached ({destinationNode.X}, {destinationNode.Y})");
             });

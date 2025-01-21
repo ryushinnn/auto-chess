@@ -3,8 +3,8 @@ using Unity.Mathematics;
 using UnityEngine;
 
 public class HeroRotation : HeroAbility {
-    float rotateTime = 0.25f;
     Tween rotateTween;
+    const float ROTATE_TIME = 0.25f;
 
     public void Rotate(Vector3 direction, bool instantly = false) {
         rotateTween?.Kill();
@@ -14,6 +14,6 @@ public class HeroRotation : HeroAbility {
             return;
         }
 
-        rotateTween = hero.Model.DORotateQuaternion(rot, rotateTime);
+        rotateTween = hero.Model.DORotateQuaternion(rot, ROTATE_TIME);
     }
 }

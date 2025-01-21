@@ -4,7 +4,6 @@ using UnityEngine;
 public class HeroSkill : HeroAbility {
     public bool IsUsingSkill => isUsingSkill;
     
-    float energy;
     bool isUsingSkill;
     Skill skill;
     Tween resetUsingSkillTween;
@@ -17,13 +16,8 @@ public class HeroSkill : HeroAbility {
         };
     }
 
-    public void RegenEnergy(float amount) {
-        energy = Mathf.Min(energy + amount, HeroTrait.MAX_ENERGY);
-        hero.GetAbility<HeroAttributes>().UpdateEnergyBar(energy / HeroTrait.MAX_ENERGY);
-    }
-
     public bool UseSkill() {
-        if (energy < HeroTrait.MAX_ENERGY 
+        if (hero.GetAbility<HeroAttributes>().Energy < HeroTrait.MAX_ENERGY 
             || isUsingSkill
             || hero.GetAbility<HeroStatusEffects>().IsAirborne
             || hero.GetAbility<HeroStatusEffects>().IsStun
@@ -35,8 +29,7 @@ public class HeroSkill : HeroAbility {
             hero.GetAbility<HeroStatusEffects>().Unstoppable(true);
         }
         hero.GetAbility<HeroRotation>().Rotate(hero.Target.transform.position - hero.transform.position);
-        energy = 0;
-        hero.GetAbility<HeroAttributes>().UpdateEnergyBar(0);
+        hero.GetAbility<HeroAttributes>().UseAllEnergy();
         resetUsingSkillTween?.Kill();
         resetUsingSkillTween = DOVirtual.DelayedCall(duration, () => {
             isUsingSkill = false;

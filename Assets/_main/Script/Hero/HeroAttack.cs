@@ -1,33 +1,7 @@
 ﻿using UnityEngine;
 
 public class HeroAttack : HeroAbility {
-    public int AttackRange => attackRange;
-    
-    int attackRange;
-    float attackCooldown;
     float currentAttackCooldown;
-    float energyRegenPerAttack;
-    float physicalDamage;
-    float magicalPower;
-    float physicalPenetration;
-    float magicalPenetration;
-    float lifeSteal;
-    float criticalChance;
-    float criticalDamage;
-
-    public override void Initialize(Hero hero) {
-        base.Initialize(hero);
-        attackRange = this.hero.Trait.attackRange;
-        attackCooldown = 1 / this.hero.Trait.attackSpeed;
-        energyRegenPerAttack = this.hero.Trait.energyRegenPerAttack;
-        physicalDamage = this.hero.Trait.physicalDamage;
-        magicalPower = this.hero.Trait.magicalPower;
-        physicalPenetration = this.hero.Trait.physicalPenetration;
-        magicalPenetration = this.hero.Trait.magicalPenetration;
-        lifeSteal = this.hero.Trait.lifeSteal;
-        criticalChance = this.hero.Trait.criticalChance;
-        criticalDamage = this.hero.Trait.criticalDamage;
-    }
 
     public override void Process() {
         if (currentAttackCooldown > 0) {
@@ -45,44 +19,44 @@ public class HeroAttack : HeroAbility {
         CalculateDamage(out var dmg, out var type, out var pen);
         hero.Mecanim.Attack(() => {
             var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen);
-            hero.GetAbility<HeroAttributes>().Heal(outputDamage * lifeSteal);
-            hero.GetAbility<HeroSkill>().RegenEnergy(energyRegenPerAttack);
+            hero.GetAbility<HeroAttributes>().Heal(outputDamage * hero.GetAbility<HeroAttributes>().LifeSteal);
+            hero.GetAbility<HeroAttributes>().RegenEnergy(hero.Trait.energyRegenPerAttack);
         });
-        currentAttackCooldown = attackCooldown;
+        currentAttackCooldown = hero.GetAbility<HeroAttributes>().AttackCooldown;
         return true;
     }
 
     public void Interrupt() {
         hero.Mecanim.InterruptAttack();
-        currentAttackCooldown = attackCooldown;
+        currentAttackCooldown = hero.GetAbility<HeroAttributes>().AttackCooldown;
     }
 
     void CalculateDamage(out float damage, out DamageType type, out float penetration) {
-        if (physicalDamage > magicalPower) {
-            damage = physicalDamage;
+        if (hero.GetAbility<HeroAttributes>().PhysicalDamage > hero.GetAbility<HeroAttributes>().MagicalPower) {
+            damage = hero.GetAbility<HeroAttributes>().PhysicalDamage;
             type = DamageType.Physical;
-            penetration = physicalPenetration;
+            penetration = hero.GetAbility<HeroAttributes>().PhysicalPenetration;
         }
-        else if (physicalDamage < magicalPower) {
-            damage = magicalPower;
+        else if (hero.GetAbility<HeroAttributes>().PhysicalDamage < hero.GetAbility<HeroAttributes>().MagicalPower) {
+            damage = hero.GetAbility<HeroAttributes>().MagicalPower;
             type = DamageType.Magical;
-            penetration = magicalPenetration;
+            penetration = hero.GetAbility<HeroAttributes>().MagicalPenetration;
         }
         else {
-            if (physicalPenetration > magicalPenetration) {
-                damage = physicalDamage;
+            if (hero.GetAbility<HeroAttributes>().PhysicalPenetration > hero.GetAbility<HeroAttributes>().MagicalPenetration) {
+                damage = hero.GetAbility<HeroAttributes>().PhysicalDamage;
                 type = DamageType.Physical;
-                penetration = physicalPenetration;
+                penetration = hero.GetAbility<HeroAttributes>().PhysicalPenetration;
             }
             else {
-                damage = magicalPower;
+                damage = hero.GetAbility<HeroAttributes>().MagicalPower;
                 type = DamageType.Magical;
-                penetration = magicalPenetration;
+                penetration = hero.GetAbility<HeroAttributes>().MagicalPenetration;
             }
         }
 
-        if (Random.value < criticalChance) {
-            damage *= criticalDamage;
+        if (Random.value < hero.GetAbility<HeroAttributes>().CriticalChance) {
+            damage *= hero.GetAbility<HeroAttributes>().CriticalDamage;
         }
     }
 }

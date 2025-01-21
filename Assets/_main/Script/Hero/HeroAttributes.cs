@@ -7,28 +7,54 @@ public class HeroAttributes : HeroAbility {
     [SerializeField] Canvas canvas;
 
     public bool IsAlive => isAlive;
+    public float Energy => energy;
+    public int AttackRange => attackRange;
+    public float AttackCooldown => attackCooldown;
+    public float PhysicalDamage => physicalDamage;
+    public float MagicalPower => magicalPower;
+    public float PhysicalPenetration => physicalPenetration;
+    public float MagicalPenetration => magicalPenetration;
+    
+    public float LifeSteal => lifeSteal;
+    public float CriticalChance => criticalChance;
+    public float CriticalDamage => criticalDamage;
+    public float MovementSpeed => movementSpeed;
 
+    bool isAlive;
     float hp;
-    float maxHp;
+    float energy;
     float armor;
     float resistance;
-    float energyRegenPerHit;
-    bool isAlive;
+    int attackRange;
+    float attackCooldown;
+    float physicalDamage;
+    float magicalPower;
+    float physicalPenetration;
+    float magicalPenetration;
+    float lifeSteal;
+    float criticalChance;
+    float criticalDamage;
+    float movementSpeed;
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
-        healthBar.UpdateAmount(1, true);
-        energyBar.UpdateAmount(0, true);
+        isAlive = true;
         hp = hero.Trait.maxHp;
-        maxHp = hero.Trait.maxHp;
+        energy = 0;
+        healthBar.UpdateAmount(hp / this.hero.Trait.maxHp, true);
+        energyBar.UpdateAmount(0, true);
         armor = hero.Trait.armor;
         resistance = hero.Trait.resistance;
-        energyRegenPerHit = hero.Trait.energyRegenPerHit;
-        isAlive = true;
-    }
-
-    public void UpdateEnergyBar(float amount) {
-        energyBar.UpdateAmount(amount);
+        attackRange = this.hero.Trait.attackRange;
+        attackCooldown = 1 / this.hero.Trait.attackSpeed;
+        physicalDamage = this.hero.Trait.physicalDamage;
+        magicalPower = this.hero.Trait.magicalPower;
+        physicalPenetration = this.hero.Trait.physicalPenetration;
+        magicalPenetration = this.hero.Trait.magicalPenetration;
+        lifeSteal = this.hero.Trait.lifeSteal;
+        criticalChance = this.hero.Trait.criticalChance;
+        criticalDamage = this.hero.Trait.criticalDamage;
+        movementSpeed = this.hero.Trait.movementSpeed;
     }
 
     public float TakeDamage(float damage, DamageType type, float penetration) {
@@ -40,9 +66,9 @@ public class HeroAttributes : HeroAbility {
         
         damage -= dmgReduction;
         hp -= damage;
-        healthBar.UpdateAmount(hp / maxHp);
+        healthBar.UpdateAmount(hp / hero.Trait.maxHp);
         if (hp > 0) {
-            hero.GetAbility<HeroSkill>().RegenEnergy(energyRegenPerHit);
+            RegenEnergy(hero.Trait.energyRegenPerHit);
         }
         else {
             Die();
@@ -58,8 +84,18 @@ public class HeroAttributes : HeroAbility {
             amount *= HeroTrait.HEAL_UPON_ANTI_HEALTH;
         }
 
-        hp = Mathf.Min(hp + amount, maxHp);
-        healthBar.UpdateAmount(hp / maxHp);
+        hp = Mathf.Min(hp + amount, hero.Trait.maxHp);
+        healthBar.UpdateAmount(hp / hero.Trait.maxHp);
+    }
+
+    public void RegenEnergy(float amount) {
+        energy = Mathf.Min(energy + amount, HeroTrait.MAX_ENERGY);
+        energyBar.UpdateAmount(energy / HeroTrait.MAX_ENERGY);
+    }
+
+    public void UseAllEnergy() {
+        energy = 0;
+        energyBar.UpdateAmount(0);
     }
 
     void Die() {
