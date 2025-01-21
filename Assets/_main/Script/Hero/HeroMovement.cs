@@ -29,7 +29,7 @@ public class HeroMovement : HeroAbility {
         if (targetNode == hero.Target.MapNode) return;
         
         targetNode = hero.Target.MapNode;
-        var newDestinationNode = Map.Instance.GetNearestAdjacentNode(hero.MapNode, targetNode, hero.GetAbility<HeroAttributes>().AttackRange);
+        var newDestinationNode = Map.Instance.GetNearestAdjacentNode(hero.MapNode, targetNode, hero.Trait.attackRange);
         if (newDestinationNode == destinationNode) return;
         
         destinationNode = newDestinationNode;

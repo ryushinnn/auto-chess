@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class HeroAttributes : HeroAbility {
@@ -8,7 +10,6 @@ public class HeroAttributes : HeroAbility {
 
     public bool IsAlive => isAlive;
     public float Energy => energy;
-    public int AttackRange => attackRange;
     public float AttackCooldown => attackCooldown;
     public float PhysicalDamage => physicalDamage;
     public float MagicalPower => magicalPower;
@@ -20,21 +21,22 @@ public class HeroAttributes : HeroAbility {
     public float CriticalDamage => criticalDamage;
     public float MovementSpeed => movementSpeed;
 
-    bool isAlive;
-    float hp;
-    float energy;
-    float armor;
-    float resistance;
-    int attackRange;
-    float attackCooldown;
-    float physicalDamage;
-    float magicalPower;
-    float physicalPenetration;
-    float magicalPenetration;
-    float lifeSteal;
-    float criticalChance;
-    float criticalDamage;
-    float movementSpeed;
+    [SerializeField, ReadOnly] bool isAlive;
+    [SerializeField, ReadOnly] float hp;
+    [SerializeField, ReadOnly] float energy;
+    [SerializeField, ReadOnly] float armor;
+    [SerializeField, ReadOnly] float resistance;
+    [SerializeField, ReadOnly] float attackCooldown;
+    [SerializeField, ReadOnly] float physicalDamage;
+    [SerializeField, ReadOnly] float magicalPower;
+    [SerializeField, ReadOnly] float physicalPenetration;
+    [SerializeField, ReadOnly] float magicalPenetration;
+    [SerializeField, ReadOnly] float lifeSteal;
+    [SerializeField, ReadOnly] float criticalChance;
+    [SerializeField, ReadOnly] float criticalDamage;
+    [SerializeField, ReadOnly] float movementSpeed;
+
+    [SerializeField, ReadOnly] List<AttributeModifier> modifiers = new();
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
@@ -45,7 +47,6 @@ public class HeroAttributes : HeroAbility {
         energyBar.UpdateAmount(0, true);
         armor = hero.Trait.armor;
         resistance = hero.Trait.resistance;
-        attackRange = this.hero.Trait.attackRange;
         attackCooldown = 1 / this.hero.Trait.attackSpeed;
         physicalDamage = this.hero.Trait.physicalDamage;
         magicalPower = this.hero.Trait.magicalPower;
@@ -55,6 +56,17 @@ public class HeroAttributes : HeroAbility {
         criticalChance = this.hero.Trait.criticalChance;
         criticalDamage = this.hero.Trait.criticalDamage;
         movementSpeed = this.hero.Trait.movementSpeed;
+    }
+
+    public override void Process() {
+        for (int i = modifiers.Count - 1; i >= 0; i--) {
+            modifiers[i].duration -= Time.deltaTime;
+            if (modifiers[i].duration <= 0) {
+                var key = modifiers[i].key;
+                modifiers.RemoveAt(i);
+                RecalculateAttributes(key);
+            }
+        }
     }
 
     public float TakeDamage(float damage, DamageType type, float penetration) {
@@ -98,11 +110,75 @@ public class HeroAttributes : HeroAbility {
         energyBar.UpdateAmount(0);
     }
 
+    public void AddAttributeModifier(AttributeModifier modifier) {
+        modifiers.Add(modifier);
+        RecalculateAttributes(modifier.key);
+    }
+
+    void RecalculateAttributes(string key) {
+        modifiers.Sort((a, b) => {
+            var typeComparison = a.type == ModifierType.FixedValue ?
+                (b.type == ModifierType.FixedValue ? 0 : -1) :
+                (b.type == ModifierType.FixedValue ? 1 : 0);
+            
+            if (typeComparison != 0) return typeComparison;
+            return b.value.CompareTo(a.value);
+        });
+        
+        switch (key) {
+            case "armor":
+                armor = hero.Trait.armor;
+                modifiers.ForEach(x => {
+                    if (x.key == key) {
+                        armor = Mathf.Max(armor + (x.type == ModifierType.FixedValue ? x.value : armor * x.value), HeroTrait.MIN_ARMOR_AND_RESISTANCE);
+                    }
+                });
+                break;
+        }
+    }
+
     void Die() {
         isAlive = false;
+        hero.GetAbility<HeroMovement>().StopMove();
         hero.Mecanim.Death();
         hero.Mecanim.InterruptAttack();
         hero.Mecanim.InterruptSkill();
         canvas.enabled = false;
     }
+
+    [Button]
+    void Dev_BuffArmorFixedValue(float val) {
+        AddAttributeModifier(new AttributeModifier("armor",val,ModifierType.FixedValue,500));
+    }
+    
+    [Button]
+    void Dev_BuffArmorPercentage(float val) {
+        AddAttributeModifier(new AttributeModifier("armor",val,ModifierType.Percentage,500));
+    }
+
+    [Button]
+    void Dev_Reset() {
+        modifiers.Clear();
+        RecalculateAttributes("armor");
+    }
+}
+
+[Serializable]
+public class AttributeModifier {
+    public string key;
+    public float value;
+    public ModifierType type;
+    public float duration;
+
+    public AttributeModifier(string key, float value, ModifierType type, float duration) {
+        this.key = key;
+        this.value = value;
+        this.type = type;
+        this.duration = duration;
+    }
+}
+
+public enum ModifierType {
+    FixedValue,
+    Percentage
 }

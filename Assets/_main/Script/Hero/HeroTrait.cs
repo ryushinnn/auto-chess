@@ -36,4 +36,5 @@ public class HeroTrait : ScriptableObject {
     public const float MAX_LIFE_STEAL = 1;
     public const float MAX_TENACITY = 0.5f;
     public const float HEAL_UPON_ANTI_HEALTH = 0.5f;
+    public const float MIN_ARMOR_AND_RESISTANCE = 1;
 }
