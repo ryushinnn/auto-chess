@@ -10,53 +10,61 @@ public class HeroAttributes : HeroAbility {
     [SerializeField] Canvas canvas;
 
     public bool IsAlive => isAlive;
+    public float Hp => hp;
     public float Energy => energy;
-    public float AttackCooldown => attackCooldown;
+    public float Armor => armor;
+    public float Resistance => resistance;
+    public float AttackSpeed => attackSpeed;
     public float PhysicalDamage => physicalDamage;
     public float MagicalPower => magicalPower;
-    public float PhysicalPenetration => physicalPenetration;
-    public float MagicalPenetration => magicalPenetration;
-    
-    public float LifeSteal => lifeSteal;
+    public float MovementSpeed => movementSpeed;
     public float CriticalChance => criticalChance;
     public float CriticalDamage => criticalDamage;
-    public float MovementSpeed => movementSpeed;
+    public float EnergyRegenEfficient => energyRegenEfficient;
+    public float PhysicalPenetration => physicalPenetration;
+    public float MagicalPenetration => magicalPenetration;
+    public float LifeSteal => lifeSteal;
+    public float Tenacity => tenacity;
 
     [SerializeField, ReadOnly] bool isAlive;
     [SerializeField, ReadOnly] float hp;
     [SerializeField, ReadOnly] float energy;
     [SerializeField, ReadOnly] float armor;
     [SerializeField, ReadOnly] float resistance;
-    [SerializeField, ReadOnly] float attackCooldown;
+    [SerializeField, ReadOnly] float attackSpeed;
     [SerializeField, ReadOnly] float physicalDamage;
     [SerializeField, ReadOnly] float magicalPower;
+    [SerializeField, ReadOnly] float movementSpeed;
+    [SerializeField, ReadOnly] float criticalChance;
+    [SerializeField, ReadOnly] float criticalDamage;
+    [SerializeField, ReadOnly] float energyRegenEfficient;
     [SerializeField, ReadOnly] float physicalPenetration;
     [SerializeField, ReadOnly] float magicalPenetration;
     [SerializeField, ReadOnly] float lifeSteal;
-    [SerializeField, ReadOnly] float criticalChance;
-    [SerializeField, ReadOnly] float criticalDamage;
-    [SerializeField, ReadOnly] float movementSpeed;
+    [SerializeField, ReadOnly] float tenacity;
 
     [SerializeField, ReadOnly] List<AttributeModifierGroup> modifierGroups = new();
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
         isAlive = true;
-        hp = hero.Trait.maxHp;
+        hp = this.hero.Trait.maxHp;
         energy = 0;
         healthBar.UpdateAmount(hp / this.hero.Trait.maxHp, true);
         energyBar.UpdateAmount(0, true);
-        armor = hero.Trait.armor;
-        resistance = hero.Trait.resistance;
-        attackCooldown = 1 / this.hero.Trait.attackSpeed;
+        armor = this.hero.Trait.armor;
+        resistance = this.hero.Trait.resistance;
+        attackSpeed = this.hero.Trait.attackSpeed;
         physicalDamage = this.hero.Trait.physicalDamage;
         magicalPower = this.hero.Trait.magicalPower;
+        movementSpeed = this.hero.Trait.movementSpeed;
+        criticalChance = this.hero.Trait.criticalChance;
+        criticalDamage = this.hero.Trait.criticalDamage;
+        energyRegenEfficient = this.hero.Trait.energyRegenEfficient;
         physicalPenetration = this.hero.Trait.physicalPenetration;
         magicalPenetration = this.hero.Trait.magicalPenetration;
         lifeSteal = this.hero.Trait.lifeSteal;
-        criticalChance = this.hero.Trait.criticalChance;
-        criticalDamage = this.hero.Trait.criticalDamage;
-        movementSpeed = this.hero.Trait.movementSpeed;
+        tenacity = this.hero.Trait.tenacity;
     }
 
     public override void Process() {
@@ -67,6 +75,7 @@ public class HeroAttributes : HeroAbility {
                 if (modifiers[j].permanent) continue;
                 modifiers[j].duration -= Time.deltaTime;
                 if (modifiers[j].duration <= 0) {
+                    modifiers[j].onRemove?.Invoke();
                     modifiers.RemoveAt(j);
                 }
             }
@@ -110,6 +119,7 @@ public class HeroAttributes : HeroAbility {
     }
 
     public void RegenEnergy(float amount) {
+        amount *= energyRegenEfficient;
         energy = Mathf.Min(energy + amount, HeroTrait.MAX_ENERGY);
         energyBar.UpdateAmount(energy / HeroTrait.MAX_ENERGY);
     }
@@ -132,7 +142,10 @@ public class HeroAttributes : HeroAbility {
     public void RemoveAttributeModifier(string id) {
         for (int i = modifierGroups.Count - 1; i >= 0; i--) {
             var key = modifierGroups[i].key;
-            if (modifierGroups[i].modifiers.RemoveAll(x => x.id == id) > 0) {
+            var modifier = modifierGroups[i].modifiers.Find(x => x.id == id);
+            if (modifier != null) {
+                modifier.onRemove?.Invoke();
+                modifierGroups[i].modifiers.Remove(modifier);
                 if (modifierGroups[i].modifiers.Count == 0) {
                     modifierGroups.RemoveAt(i);
                 }
@@ -154,13 +167,23 @@ public class HeroAttributes : HeroAbility {
         });
         
         switch (key) {
-            case "armor":
+            case AttributeModifierKey.Armor:
                 armor = hero.Trait.armor;
                 modifiers?.ForEach(x => {
                     if (x.key == key) {
                         armor = Mathf.Max(armor + (x.type == ModifierType.FixedValue ? x.value : armor * x.value), HeroTrait.MIN_ARMOR_AND_RESISTANCE);
                     }
                 });
+                break;
+            
+            case AttributeModifierKey.AttackSpeed:
+                attackSpeed = hero.Trait.attackSpeed;
+                modifiers?.ForEach(x => {
+                    if (x.key == key) {
+                        attackSpeed = Mathf.Max(attackSpeed + (x.type == ModifierType.FixedValue ? x.value : attackSpeed * x.value), HeroTrait.MIN_ATTACK_SPEED);
+                    }
+                });
+                hero.GetAbility<HeroAttack>().RefreshAttackCooldown();
                 break;
         }
     }
@@ -175,24 +198,18 @@ public class HeroAttributes : HeroAbility {
     }
 
     [Button]
-    void Dev_BuffArmorFixedValue(float val) {
-        AddAttributeModifier(AttributeModifier.Create("armor",val,ModifierType.FixedValue,5));
+    void Dev_FixedValue(float val) {
+        AddAttributeModifier(AttributeModifier.Create(AttributeModifierKey.AttackSpeed,val,ModifierType.FixedValue,5));
     }
     
     [Button]
-    void Dev_BuffArmorPercentage(float val) {
-        AddAttributeModifier(AttributeModifier.Create("armor",val,ModifierType.Percentage,5));
+    void Dev_Percentage(float val) {
+        AddAttributeModifier(AttributeModifier.Create(AttributeModifierKey.AttackSpeed,val,ModifierType.Percentage,5));
     }
 
     [Button]
-    void Dev_BuffArmorPermanent() {
-        AddAttributeModifier(AttributeModifier.Create("armor",0.5f,ModifierType.Percentage));
-    }
-
-    [Button]
-    void Dev_Reset() {
-        modifierGroups.Clear();
-        RecalculateAttributes("armor");
+    void Dev_Permanent() {
+        AddAttributeModifier(AttributeModifier.Create(AttributeModifierKey.AttackSpeed,0.5f,ModifierType.Percentage));
     }
 }
 
@@ -215,26 +232,29 @@ public class AttributeModifier {
     public ModifierType type;
     public float duration;
     public bool permanent;
+    public Action onRemove;
 
-    public static AttributeModifier Create(string key, float value, ModifierType type, float duration) {
+    public static AttributeModifier Create(string key, float value, ModifierType type, float duration, Action onRemove = null) {
         return new AttributeModifier {
-            id = "",
+            id = Guid.NewGuid().ToString(),
             key = key,
             value = value,
             type = type,
             duration = duration,
-            permanent = false
+            permanent = false,
+            onRemove = onRemove
         };
     }
 
-    public static AttributeModifier Create(string key, float value, ModifierType type) {
+    public static AttributeModifier Create(string key, float value, ModifierType type, Action onRemove = null) {
         return new AttributeModifier {
             id = Guid.NewGuid().ToString(),
             key = key,
             value = value,
             type = type,
             duration = Mathf.Infinity,
-            permanent = true
+            permanent = true,
+            onRemove = onRemove
         };
     }
 }
@@ -242,4 +262,9 @@ public class AttributeModifier {
 public enum ModifierType {
     FixedValue,
     Percentage
+}
+
+public static class AttributeModifierKey {
+    public const string Armor = "armor";
+    public const string AttackSpeed = "atk_spd";
 }

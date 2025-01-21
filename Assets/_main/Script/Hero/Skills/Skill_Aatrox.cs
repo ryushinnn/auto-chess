@@ -1,6 +1,11 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// chem 3 lan, lan luot gay 70%/150%/200% st vat ly,
+/// hat tung muc tieu 0.2s/0.2s/0.25s
+/// va hoi mau bang 25%/25%/100% st gay ra
+/// </summary>
 public class Skill_Aatrox : Skill {
     Hero hero;
 

@@ -22,13 +22,17 @@ public class HeroAttack : HeroAbility {
             hero.GetAbility<HeroAttributes>().Heal(outputDamage * hero.GetAbility<HeroAttributes>().LifeSteal);
             hero.GetAbility<HeroAttributes>().RegenEnergy(hero.Trait.energyRegenPerAttack);
         });
-        currentAttackCooldown = hero.GetAbility<HeroAttributes>().AttackCooldown;
+        currentAttackCooldown = 1 / hero.GetAbility<HeroAttributes>().AttackSpeed;
         return true;
     }
 
     public void Interrupt() {
         hero.Mecanim.InterruptAttack();
-        currentAttackCooldown = hero.GetAbility<HeroAttributes>().AttackCooldown;
+        currentAttackCooldown = 1 / hero.GetAbility<HeroAttributes>().AttackSpeed;
+    }
+
+    public void RefreshAttackCooldown() {
+        currentAttackCooldown = Mathf.Min(currentAttackCooldown, 1 / hero.GetAbility<HeroAttributes>().AttackSpeed);
     }
 
     void CalculateDamage(out float damage, out DamageType type, out float penetration) {
