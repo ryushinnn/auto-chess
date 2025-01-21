@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -36,7 +37,7 @@ public class HeroAttributes : HeroAbility {
     [SerializeField, ReadOnly] float criticalDamage;
     [SerializeField, ReadOnly] float movementSpeed;
 
-    [SerializeField, ReadOnly] List<AttributeModifier> modifiers = new();
+    [SerializeField, ReadOnly] List<AttributeModifierGroup> modifierGroups = new();
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
@@ -59,13 +60,21 @@ public class HeroAttributes : HeroAbility {
     }
 
     public override void Process() {
-        for (int i = modifiers.Count - 1; i >= 0; i--) {
-            modifiers[i].duration -= Time.deltaTime;
-            if (modifiers[i].duration <= 0) {
-                var key = modifiers[i].key;
-                modifiers.RemoveAt(i);
-                RecalculateAttributes(key);
+        for (int i = modifierGroups.Count - 1; i >= 0; i--) {
+            var key = modifierGroups[i].key;
+            var modifiers = modifierGroups[i].modifiers;
+            for (int j = modifiers.Count - 1; j >= 0; j--) {
+                if (modifiers[j].permanent) continue;
+                modifiers[j].duration -= Time.deltaTime;
+                if (modifiers[j].duration <= 0) {
+                    modifiers.RemoveAt(j);
+                }
             }
+
+            if (modifiers.Count == 0) {
+                modifierGroups.RemoveAt(i);
+            }
+            RecalculateAttributes(key);
         }
     }
 
@@ -111,12 +120,31 @@ public class HeroAttributes : HeroAbility {
     }
 
     public void AddAttributeModifier(AttributeModifier modifier) {
-        modifiers.Add(modifier);
+        var group = modifierGroups.Find(x => x.key == modifier.key);
+        if (group == null) {
+            group = new AttributeModifierGroup(modifier.key);
+            modifierGroups.Add(group);
+        }
+        group.modifiers.Add(modifier);
         RecalculateAttributes(modifier.key);
+    }
+    
+    public void RemoveAttributeModifier(string id) {
+        for (int i = modifierGroups.Count - 1; i >= 0; i--) {
+            var key = modifierGroups[i].key;
+            if (modifierGroups[i].modifiers.RemoveAll(x => x.id == id) > 0) {
+                if (modifierGroups[i].modifiers.Count == 0) {
+                    modifierGroups.RemoveAt(i);
+                }
+                RecalculateAttributes(key);
+                return;
+            }
+        }
     }
 
     void RecalculateAttributes(string key) {
-        modifiers.Sort((a, b) => {
+        var modifiers = modifierGroups.Find(x => x.key == key)?.modifiers;
+        modifiers?.Sort((a, b) => {
             var typeComparison = a.type == ModifierType.FixedValue ?
                 (b.type == ModifierType.FixedValue ? 0 : -1) :
                 (b.type == ModifierType.FixedValue ? 1 : 0);
@@ -128,7 +156,7 @@ public class HeroAttributes : HeroAbility {
         switch (key) {
             case "armor":
                 armor = hero.Trait.armor;
-                modifiers.ForEach(x => {
+                modifiers?.ForEach(x => {
                     if (x.key == key) {
                         armor = Mathf.Max(armor + (x.type == ModifierType.FixedValue ? x.value : armor * x.value), HeroTrait.MIN_ARMOR_AND_RESISTANCE);
                     }
@@ -148,33 +176,66 @@ public class HeroAttributes : HeroAbility {
 
     [Button]
     void Dev_BuffArmorFixedValue(float val) {
-        AddAttributeModifier(new AttributeModifier("armor",val,ModifierType.FixedValue,500));
+        AddAttributeModifier(AttributeModifier.Create("armor",val,ModifierType.FixedValue,5));
     }
     
     [Button]
     void Dev_BuffArmorPercentage(float val) {
-        AddAttributeModifier(new AttributeModifier("armor",val,ModifierType.Percentage,500));
+        AddAttributeModifier(AttributeModifier.Create("armor",val,ModifierType.Percentage,5));
+    }
+
+    [Button]
+    void Dev_BuffArmorPermanent() {
+        AddAttributeModifier(AttributeModifier.Create("armor",0.5f,ModifierType.Percentage));
     }
 
     [Button]
     void Dev_Reset() {
-        modifiers.Clear();
+        modifierGroups.Clear();
         RecalculateAttributes("armor");
     }
 }
 
 [Serializable]
+public class AttributeModifierGroup {
+    public string key;
+    public List<AttributeModifier> modifiers;
+
+    public AttributeModifierGroup(string key) {
+        this.key = key;
+        modifiers = new List<AttributeModifier>();
+    }
+}
+
+[Serializable]
 public class AttributeModifier {
+    public string id;
     public string key;
     public float value;
     public ModifierType type;
     public float duration;
+    public bool permanent;
 
-    public AttributeModifier(string key, float value, ModifierType type, float duration) {
-        this.key = key;
-        this.value = value;
-        this.type = type;
-        this.duration = duration;
+    public static AttributeModifier Create(string key, float value, ModifierType type, float duration) {
+        return new AttributeModifier {
+            id = "",
+            key = key,
+            value = value,
+            type = type,
+            duration = duration,
+            permanent = false
+        };
+    }
+
+    public static AttributeModifier Create(string key, float value, ModifierType type) {
+        return new AttributeModifier {
+            id = Guid.NewGuid().ToString(),
+            key = key,
+            value = value,
+            type = type,
+            duration = Mathf.Infinity,
+            permanent = true
+        };
     }
 }
 
