@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class HeroHealth : HeroAbility {
+public class HeroAttributes : HeroAbility {
     [SerializeField] ProgressBar healthBar;
     [SerializeField] ProgressBar energyBar;
     [SerializeField] Canvas canvas;
@@ -31,10 +31,10 @@ public class HeroHealth : HeroAbility {
         energyBar.UpdateAmount(amount);
     }
 
-    public void TakeDamage(float damage, DamageType type, float penetration) {
+    public float TakeDamage(float damage, DamageType type, float penetration) {
         var dmgReduction = type switch {
-            DamageType.Physical => Mathf.Clamp(armor - penetration, 0, HeroTrait.MAX_DMG_REDUCTION * damage),
-            DamageType.Magical => Mathf.Clamp(resistance - penetration, 0, HeroTrait.MAX_DMG_REDUCTION * damage),
+            DamageType.Physical => Mathf.Min(armor * (1-penetration), HeroTrait.MAX_DMG_REDUCTION * damage),
+            DamageType.Magical => Mathf.Min(resistance * (1-penetration), HeroTrait.MAX_DMG_REDUCTION * damage),
             DamageType.Pure => 0
         };
         
@@ -47,13 +47,26 @@ public class HeroHealth : HeroAbility {
         else {
             Die();
         }
+
+        return damage;
+    }
+
+    public void Heal(float amount) {
+        if (!isAlive) return;
+        
+        if (hero.GetAbility<HeroStatusEffects>().IsAntiHeal) {
+            amount *= HeroTrait.HEAL_UPON_ANTI_HEALTH;
+        }
+
+        hp = Mathf.Min(hp + amount, maxHp);
+        healthBar.UpdateAmount(hp / maxHp);
     }
 
     void Die() {
         isAlive = false;
         hero.Mecanim.Death();
-        hero.Mecanim.DoNone();
-        hero.SetNode(null);
+        hero.Mecanim.InterruptAttack();
+        hero.Mecanim.InterruptSkill();
         canvas.enabled = false;
     }
 }

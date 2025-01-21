@@ -8,17 +8,21 @@ public class Skill_Aatrox : Skill {
         this.hero = hero;
 
         events = new Action[]{LightSlash, MediumSlash, HeavySlash};
+        unstoppable = true;
     }
 
     void LightSlash() {
-        hero.Target.GetAbility<HeroHealth>().TakeDamage(99, DamageType.Physical, 0);
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(40, DamageType.Physical, 0);
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(0.2f);
     }
     
     void MediumSlash() {
-        hero.Target.GetAbility<HeroHealth>().TakeDamage(199, DamageType.Physical, 0);
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(60, DamageType.Physical, 0);
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(0.2f);
     }
     
     void HeavySlash() {
-        hero.Target.GetAbility<HeroHealth>().TakeDamage(299, DamageType.Physical, 0);
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(200, DamageType.Physical, 0);
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(0.25f);
     }
 }

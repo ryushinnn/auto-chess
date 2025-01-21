@@ -39,6 +39,10 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         dev_mapNode = mapNode != null ? new Vector2(mapNode.X, mapNode.Y) : new Vector2(-1, -1);
     }
 
+    void LateUpdate() {
+        RemoveNodeOnDead();
+    }
+
     public T GetAbility<T>() where T : HeroAbility {
         if (!cachedAbilities.ContainsKey(typeof(T))) {
             cachedAbilities.Add(typeof(T), abilities.Find(ab => ab is T));
@@ -49,7 +53,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     public void SetNode(MapNode mapNode) {
         this.mapNode?.objects.Remove(this);
         this.mapNode = mapNode;
-        this.mapNode?.objects.Add(this);
+        this.mapNode.objects.Add(this);
     }
 
     public void ResetPosition() {
@@ -57,6 +61,12 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     }
     
     public void FindTarget() {
+        if (GetAbility<HeroStatusEffects>().IsAirborne
+            || GetAbility<HeroStatusEffects>().IsStun) {
+            
+            target = null;
+            return;
+        }
         target = Map.Instance.GetNearestNonEmptyNode<Hero>(mapNode)?.objects.First(x => x is Hero) as Hero;
     }
 
@@ -91,6 +101,13 @@ public class Hero : MonoBehaviour, IMapNodeObject {
             if (ab.IsActive) {
                 ab.PostProcess();
             }
+        }
+    }
+
+    void RemoveNodeOnDead() {
+        if (!GetAbility<HeroAttributes>().IsAlive && mapNode != null) {
+            mapNode.objects.Remove(this);
+            mapNode = null;
         }
     }
 

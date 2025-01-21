@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Pathfinding;
 using Sirenix.OdinInspector;
@@ -5,10 +6,18 @@ using UnityEngine;
 
 public class HeroMovement : HeroAbility {
     public bool IsMoving => isMoving;
+    public bool DestinationReached => destinationReached;
     
     float moveSpeed;
     Sequence moveSequence;
     bool isMoving;
+    bool destinationReached;
+    MapNode targetNode;
+    MapNode destinationNode;
+
+    void Start() {
+        hero.Mecanim.Idle();
+    }
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
@@ -19,12 +28,22 @@ public class HeroMovement : HeroAbility {
         if (isMoving) {
             hero.SetNode(Map.Instance.GetNode(hero.transform.position));
         }
+        destinationReached = hero.MapNode == destinationNode;
     }
 
-    public void StartMove(Vector3 dest) {
-        hero.Seeker.StartPath(hero.transform.position, dest, path => {
+    public void StartMove() {
+        if (targetNode == hero.Target.MapNode) return;
+        
+        targetNode = hero.Target.MapNode;
+        var newDestinationNode = Map.Instance.GetNearestAdjacentNode(hero.MapNode, targetNode, hero.GetAbility<HeroAttack>().AttackRange);
+        if (newDestinationNode == destinationNode) return;
+        
+        destinationNode = newDestinationNode;
+        Debug.Log($"{hero.name} change destination to ({destinationNode.X}, {destinationNode.Y})");
+        
+        hero.Seeker.StartPath(hero.transform.position, destinationNode.Position, path => {
             isMoving = true;
-            hero.Mecanim.ChangeState(Mecanim.State.Run);
+            hero.Mecanim.Run();
             moveSequence?.Kill();
             moveSequence = DOTween.Sequence();
 
@@ -36,13 +55,16 @@ public class HeroMovement : HeroAbility {
                     .Append(hero.transform.DOMove(wp, 1 / moveSpeed).SetEase(Ease.Linear));
             }
 
-            moveSequence.AppendCallback(()=>StopMove());
+            moveSequence.AppendCallback(()=> {
+                StopMove();
+                Debug.Log($"{hero.name} reached ({destinationNode.X}, {destinationNode.Y})");
+            });
         });
     }
 
     public void StopMove(bool resetPosition = false) {
         isMoving = false;
-        hero.Mecanim.ChangeState(Mecanim.State.Idle);
+        hero.Mecanim.Idle();
         moveSequence?.Kill();
         if (resetPosition) {
             hero.ResetPosition();

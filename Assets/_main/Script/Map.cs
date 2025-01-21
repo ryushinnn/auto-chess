@@ -31,6 +31,7 @@ public class Map : Singleton<Map> {
     public Hero dev_hero;
     public Hero dev_enemy;
     public Hero dev_enemy2;
+    public Hero dev_enemy3;
     
     MapNode[,] nodes;
     
@@ -160,13 +161,23 @@ public class Map : Singleton<Map> {
 
         MapVisual.Instance.SpawnHexIndicators(nodes, nodeWidth, nodeHeight);
         aStarPath.Scan();
-        
-        dev_hero.SetNode(GetNode(7, 7));
-        dev_hero.ResetPosition();
-        dev_enemy.SetNode(GetNode(0,0));
-        dev_enemy.ResetPosition();
-        // dev_enemy2.SetNode(GetNode(3,3));
-        // dev_enemy2.ResetPosition();
+
+        if (dev_hero.gameObject.activeSelf) {
+            dev_hero.SetNode(GetNode(7, 7));
+            dev_hero.ResetPosition();
+        }
+        if (dev_enemy.gameObject.activeSelf) {
+            dev_enemy.SetNode(GetNode(0,0));
+            dev_enemy.ResetPosition();
+        }
+        if (dev_enemy2.gameObject.activeSelf) {
+            dev_enemy2.SetNode(GetNode(0,7));
+            dev_enemy2.ResetPosition();
+        }
+        if (dev_enemy3.gameObject.activeSelf) {
+            dev_enemy3.SetNode(GetNode(7,0));
+            dev_enemy3.ResetPosition();
+        }
     }
 
     MapNode GetAdjacentNode(int x, int y, Direction direction) {

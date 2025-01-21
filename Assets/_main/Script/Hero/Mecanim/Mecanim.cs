@@ -41,10 +41,6 @@ public class Mecanim : MonoBehaviour {
         SetUp();
     }
 
-    protected virtual void Start() {
-        Idle();
-    }
-
     [Button]
     public virtual void Idle() {
         ChangeState(State.Idle);
@@ -64,15 +60,19 @@ public class Mecanim : MonoBehaviour {
         DoAction(Action.None);
     }
 
-    public virtual void Attack() {
+    public virtual void Attack(System.Action atkEvent) {
         DoAction(Action.Skill, (paramSkill, 0));
     }
+    
+    public virtual void InterruptAttack() { }
 
     public virtual float UseSkill(System.Action[] events) {
         return 0;
     }
 
-    public virtual void ChangeState(State state) {
+    public virtual void InterruptSkill() { }
+
+    protected virtual void ChangeState(State state) {
         if (state == currentState) return;
 
         lastState = currentState;
@@ -84,7 +84,7 @@ public class Mecanim : MonoBehaviour {
         ModifyBodyParts();
     }
 
-    public virtual void DoAction(Action action, params (int, object)[] metaDatas) {
+    protected virtual void DoAction(Action action, params (int, object)[] metaDatas) {
         foreach (var data in metaDatas) {
             switch (data.Item2) {
                 case int i:

@@ -154,7 +154,7 @@ public class MapVisual : Singleton<MapVisual> {
                     }
                 }
 
-                hero.GetAbility<HeroMovement>().StartMove(destination);
+                // hero.GetAbility<HeroMovement>().StartMove(destination);
             }
         }
     }

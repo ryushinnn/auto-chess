@@ -11,6 +11,9 @@ public class HeroAttack : HeroAbility {
     float magicalPower;
     float physicalPenetration;
     float magicalPenetration;
+    float lifeSteal;
+    float criticalChance;
+    float criticalDamage;
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
@@ -21,30 +24,40 @@ public class HeroAttack : HeroAbility {
         magicalPower = this.hero.Trait.magicalPower;
         physicalPenetration = this.hero.Trait.physicalPenetration;
         magicalPenetration = this.hero.Trait.magicalPenetration;
+        lifeSteal = this.hero.Trait.lifeSteal;
+        criticalChance = this.hero.Trait.criticalChance;
+        criticalDamage = this.hero.Trait.criticalDamage;
     }
 
     public override void Process() {
-        if (hero.GetAbility<HeroSkill>().IsUsingSkill) return;
-        
         if (currentAttackCooldown > 0) {
             currentAttackCooldown -= Time.deltaTime;
         }
     }
 
     public bool Attack() {
-        if (currentAttackCooldown > 0) return false;
+        if (currentAttackCooldown > 0 
+            || hero.GetAbility<HeroSkill>().IsUsingSkill
+            || hero.GetAbility<HeroStatusEffects>().IsAirborne
+            || hero.GetAbility<HeroStatusEffects>().IsStun) return false;
         
-        Debug.Log("attack");
-        hero.Mecanim.DoAction(Mecanim.Action.Skill, (Animator.StringToHash("skill"), 0));
         hero.GetAbility<HeroRotation>().Rotate(hero.Target.transform.position - hero.transform.position);
-        hero.GetAbility<HeroSkill>().RegenEnergy(energyRegenPerAttack);
-        GetDamage(out var dmg, out var type, out var pen);
-        hero.Target.GetAbility<HeroHealth>().TakeDamage(dmg, type, pen);
+        CalculateDamage(out var dmg, out var type, out var pen);
+        hero.Mecanim.Attack(() => {
+            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen);
+            hero.GetAbility<HeroAttributes>().Heal(outputDamage * lifeSteal);
+            hero.GetAbility<HeroSkill>().RegenEnergy(energyRegenPerAttack);
+        });
         currentAttackCooldown = attackCooldown;
         return true;
     }
 
-    void GetDamage(out float damage, out DamageType type, out float penetration) {
+    public void Interrupt() {
+        hero.Mecanim.InterruptAttack();
+        currentAttackCooldown = attackCooldown;
+    }
+
+    void CalculateDamage(out float damage, out DamageType type, out float penetration) {
         if (physicalDamage > magicalPower) {
             damage = physicalDamage;
             type = DamageType.Physical;
@@ -66,6 +79,10 @@ public class HeroAttack : HeroAbility {
                 type = DamageType.Magical;
                 penetration = magicalPenetration;
             }
+        }
+
+        if (Random.value < criticalChance) {
+            damage *= criticalDamage;
         }
     }
 }
