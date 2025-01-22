@@ -36,13 +36,13 @@ public class HeroAttack : HeroAbility {
     }
 
     void CalculateDamage(out float damage, out DamageType type, out float penetration) {
-        if (hero.GetAbility<HeroAttributes>().PhysicalDamage > hero.GetAbility<HeroAttributes>().MagicalPower) {
+        if (hero.GetAbility<HeroAttributes>().PhysicalDamage > hero.GetAbility<HeroAttributes>().MagicalDamage) {
             damage = hero.GetAbility<HeroAttributes>().PhysicalDamage;
             type = DamageType.Physical;
             penetration = hero.GetAbility<HeroAttributes>().PhysicalPenetration;
         }
-        else if (hero.GetAbility<HeroAttributes>().PhysicalDamage < hero.GetAbility<HeroAttributes>().MagicalPower) {
-            damage = hero.GetAbility<HeroAttributes>().MagicalPower;
+        else if (hero.GetAbility<HeroAttributes>().PhysicalDamage < hero.GetAbility<HeroAttributes>().MagicalDamage) {
+            damage = hero.GetAbility<HeroAttributes>().MagicalDamage;
             type = DamageType.Magical;
             penetration = hero.GetAbility<HeroAttributes>().MagicalPenetration;
         }
@@ -53,7 +53,7 @@ public class HeroAttack : HeroAbility {
                 penetration = hero.GetAbility<HeroAttributes>().PhysicalPenetration;
             }
             else {
-                damage = hero.GetAbility<HeroAttributes>().MagicalPower;
+                damage = hero.GetAbility<HeroAttributes>().MagicalDamage;
                 type = DamageType.Magical;
                 penetration = hero.GetAbility<HeroAttributes>().MagicalPenetration;
             }

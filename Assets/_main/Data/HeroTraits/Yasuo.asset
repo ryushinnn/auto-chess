@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   realm: 0
   role: 0
-  maxHp: 1000
-  physicalDamage: 128
+  price: 0
+  maxHp: 100000
+  physicalDamage: 1.28
   magicalPower: 0
   armor: 30
   resistance: 25

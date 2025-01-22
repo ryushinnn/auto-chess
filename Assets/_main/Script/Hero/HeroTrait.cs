@@ -3,12 +3,15 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "Hero/Trait")]
 public class HeroTrait : ScriptableObject {
-    [TitleGroup("Basic")]
+    [TitleGroup("Identity")]
     public Realm realm;
     public Role role;
+    public int price;
+    
+    [TitleGroup("Basic")]
     public float maxHp;
     public float physicalDamage;
-    public float magicalPower;
+    public float magicalDamage;
     public float armor;
     public float resistance;
     public float attackSpeed;
@@ -37,5 +40,7 @@ public class HeroTrait : ScriptableObject {
     public const float MAX_TENACITY = 0.5f;
     public const float HEAL_UPON_ANTI_HEALTH = 0.5f;
     public const float MIN_ARMOR_AND_RESISTANCE = 1;
-    public const float MIN_ATTACK_SPEED = 0.01f;
+    public const float MIN_DAMAGE = 1;
+    public const float MIN_ATTACK_SPEED = 0.1f;
+    public const float MIN_MOVEMENT_SPEED = 0.1f;
 }
