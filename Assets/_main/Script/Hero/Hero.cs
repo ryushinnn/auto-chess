@@ -6,18 +6,21 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Hero : MonoBehaviour, IMapNodeObject {
-    [SerializeField] HeroTrait trait;
     [SerializeField] Transform model;
     [SerializeField] Transform abilitiesContainer;
-    [SerializeField] Seeker seeker;
 
     public HeroTrait Trait => trait;
+    public TeamSide Side => side;
     public Seeker Seeker => seeker;
     public Transform Model => model;
     public Mecanim Mecanim => mecanim;
     public MapNode MapNode => mapNode;
     public Hero Target => target;
 
+    Seeker seeker;
+    HeroBT bt;
+    [SerializeField, ReadOnly] HeroTrait trait;
+    [SerializeField, ReadOnly] TeamSide side;
     Mecanim mecanim;
     List<HeroAbility> abilities = new();
     Dictionary<Type, HeroAbility> cachedAbilities = new();
@@ -28,7 +31,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     
     void Awake() {
         FindAbilities();
-        mecanim = model.GetComponentInChildren<Mecanim>();
+        FindComponents();
     }
 
     void Update() {
@@ -41,6 +44,19 @@ public class Hero : MonoBehaviour, IMapNodeObject {
 
     void LateUpdate() {
         RemoveNodeOnDead();
+    }
+
+    public void Initialize(HeroTrait trait, TeamSide side) {
+        this.trait = trait;
+        this.side = side;
+        foreach (Transform child in model) {
+            if (child.TryGetComponent(out Mecanim _)) {
+                Destroy(child.gameObject);
+            }
+        }
+        mecanim = Instantiate(trait.mecanim, model);
+        abilities.ForEach(x=>x.Initialize(this));
+        bt.Initialize();
     }
 
     public T GetAbility<T>() where T : HeroAbility {
@@ -67,17 +83,22 @@ public class Hero : MonoBehaviour, IMapNodeObject {
             target = null;
             return;
         }
-        target = Map.Instance.GetNearestNonEmptyNode<Hero>(mapNode)?.objects.First(x => x is Hero) as Hero;
+        target = Map.Instance.GetNearestNonEmptyNode<Hero>(mapNode, objects=> {
+            return objects.Any(x => x is Hero h && h.side != side);
+        })?.objects.First(x => x is Hero h && h.side != side) as Hero;
     }
 
     void FindAbilities() {
-        abilities ??= new List<HeroAbility>();
         foreach (Transform child in abilitiesContainer) {
             if (child.TryGetComponent(out HeroAbility ab)) {
-                ab.Initialize(this);
                 abilities.Add(ab);
             }
         }
+    }
+    
+    void FindComponents() {
+        seeker = GetComponent<Seeker>();
+        bt = GetComponent<HeroBT>();
     }
 
     void PreProcess() {

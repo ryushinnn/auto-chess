@@ -27,12 +27,6 @@ public class Map : Singleton<Map> {
     [SerializeField] float nodeHeight;
     [SerializeField] AstarPath aStarPath;
     
-    [TitleGroup("DEVELOPMENT")]
-    public Hero dev_hero;
-    public Hero dev_enemy;
-    public Hero dev_enemy2;
-    public Hero dev_enemy3;
-    
     MapNode[,] nodes;
     
     const int SIZE = 8;
@@ -64,12 +58,12 @@ public class Map : Singleton<Map> {
         return node;
     }
     
-    public MapNode GetNearestNonEmptyNode(MapNode origin, bool containSelf = false) {
+    public MapNode GetNearestNonEmptyNode(MapNode origin) {
         var minDist = Mathf.Infinity;
         var node = default(MapNode);
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
-                if ((nodes[i,j] != origin || containSelf) && nodes[i, j].objects.Count > 0) {
+                if (nodes[i,j] != origin && nodes[i, j].objects.Count > 0) {
                     var dist = Vector3.Distance(nodes[i, j].Position, origin.Position);
                     if (dist < minDist) {
                         minDist = dist;
@@ -82,12 +76,15 @@ public class Map : Singleton<Map> {
         return node;
     }
     
-    public MapNode GetNearestNonEmptyNode<T>(MapNode origin, bool containSelf = false) where T : IMapNodeObject {
+    public MapNode GetNearestNonEmptyNode<T>(MapNode origin, Func<IMapNodeObject[], bool> condition = null) where T : IMapNodeObject {
         var minDist = Mathf.Infinity;
         var node = default(MapNode);
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
-                if ((nodes[i,j] != origin || containSelf) && nodes[i, j].objects.Count > 0 && nodes[i, j].objects.Any(x=>x is T)) {
+                if (nodes[i,j] != origin && nodes[i, j].objects.Count > 0 
+                                         && nodes[i, j].objects.Any(x=>x is T) 
+                                         && (condition == null || condition(nodes[i,j].objects.Where(x=>x is T).ToArray()))) {
+                    
                     var dist = Vector3.Distance(nodes[i, j].Position, origin.Position);
                     if (dist < minDist) {
                         minDist = dist;
@@ -161,23 +158,6 @@ public class Map : Singleton<Map> {
 
         MapVisual.Instance.SpawnHexIndicators(nodes, nodeWidth, nodeHeight);
         aStarPath.Scan();
-
-        if (dev_hero.gameObject.activeSelf) {
-            dev_hero.SetNode(GetNode(7, 7));
-            dev_hero.ResetPosition();
-        }
-        if (dev_enemy.gameObject.activeSelf) {
-            dev_enemy.SetNode(GetNode(0,0));
-            dev_enemy.ResetPosition();
-        }
-        if (dev_enemy2.gameObject.activeSelf) {
-            dev_enemy2.SetNode(GetNode(0,7));
-            dev_enemy2.ResetPosition();
-        }
-        if (dev_enemy3.gameObject.activeSelf) {
-            dev_enemy3.SetNode(GetNode(7,0));
-            dev_enemy3.ResetPosition();
-        }
     }
 
     MapNode GetAdjacentNode(int x, int y, Direction direction) {

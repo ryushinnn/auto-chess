@@ -171,11 +171,18 @@ public class HeroAttributes : HeroAbility {
         
         switch (key) {
             case AttributeModifierKey.MaxHp:
+                var lastMaxHp = maxHp;
                 maxHp = hero.Trait.maxHp;
                 modifiers?.ForEach(x => {
                     maxHp += (x.type == ModifierType.FixedValue ? x.value : maxHp * x.value);
                 });
-                hp = Mathf.Min(hp, maxHp);
+                if (maxHp > lastMaxHp) {
+                    hp += maxHp - lastMaxHp;
+                }
+                else {
+                    hp = Mathf.Min(hp, maxHp);
+                }
+                healthBar.UpdateAmount(hp / maxHp);
                 break;
             
             case AttributeModifierKey.PhysicalDamage:
@@ -273,6 +280,7 @@ public class HeroAttributes : HeroAbility {
         hero.Mecanim.InterruptAttack();
         hero.Mecanim.InterruptSkill();
         canvas.enabled = false;
+        hero.name = "(DEAD) " + hero.name;
     }
 
     [Button]

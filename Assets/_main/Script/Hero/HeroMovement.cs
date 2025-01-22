@@ -14,7 +14,8 @@ public class HeroMovement : HeroAbility {
     MapNode targetNode;
     MapNode destinationNode;
 
-    void Start() {
+    public override void Initialize(Hero hero) {
+        base.Initialize(hero);
         hero.Mecanim.Idle();
     }
 

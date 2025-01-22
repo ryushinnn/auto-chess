@@ -10,7 +10,7 @@ public class HeroSkill : HeroAbility {
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
-        skill = hero.name switch {
+        skill = hero.Trait.id switch {
             "Aatrox" => new Skill_Aatrox(hero),
             "Yasuo" => new Skill_Yasuo(hero),
         };

@@ -4,9 +4,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Hero/Trait")]
 public class HeroTrait : ScriptableObject {
     [TitleGroup("Identity")]
+    public string id;
     public Realm realm;
     public Role role;
     public int price;
+    public Mecanim mecanim;
     
     [TitleGroup("Basic")]
     public float maxHp;

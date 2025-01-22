@@ -4,15 +4,11 @@ using UnityEngine;
 public class HeroBT : MonoBehaviour {
     BTNode root;
 
-    void Start() {
-        Initialize();
-    }
-
     void Update() {
-        root.Evaluate();
+        root?.Evaluate();
     }
 
-    void Initialize() {
+    public void Initialize() {
         var hero = GetComponent<Hero>();
         
         // root (>) -----> isAlive
