@@ -12,6 +12,7 @@ public class StaticDataManager : Singleton<StaticDataManager> {
     }
     
     public Item GetCompleteItem(Item ingredient0, Item ingredient1) {
-        return Array.Find(completeItems, x => x.ingredients.Contains(ingredient0) && x.ingredients.Contains(ingredient1));
+        return Array.Find(completeItems, x => (x.ingredients[0] == ingredient0 && x.ingredients[1] == ingredient1)
+                                                        || (x.ingredients[0] == ingredient1 && x.ingredients[1] == ingredient0));
     }
 }
