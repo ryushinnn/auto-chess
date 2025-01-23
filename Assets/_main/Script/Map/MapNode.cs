@@ -35,6 +35,10 @@ public class MapNode {
     public bool HasOnly(IMapNodeObject obj) {
         return objects.Count == 1 && objects[0] == obj;
     }
+    
+    public bool HasAtFirst(IMapNodeObject obj) {
+        return objects.Count > 0 && objects[0] == obj;
+    }
 
     public bool HasNone() {
         return objects.Count == 0;

@@ -10,9 +10,7 @@ public class GameManager : MonoBehaviour {
 
     List<Hero> heroes = new();
 
-    void Start() {
-        // Initialize();
-    }
+    int dev_count = 0;
     
     [Button]
     void Initialize() {
@@ -24,9 +22,9 @@ public class GameManager : MonoBehaviour {
                 return;
             }
             var hero = Instantiate(heroPrefab);
-            hero.name = e.id;
+            hero.name = $"{dev_count++}" + e.id;
             hero.SetNode(Map.Instance.GetNode(e.mapNode.x, e.mapNode.y));
-            hero.ResetPosition();
+            hero.ResetPosition(true);
             hero.Initialize(trait, TeamSide.Ally);
             foreach (var i in e.items) {
                 hero.GetAbility<HeroInventory>().Add(i);
@@ -42,9 +40,9 @@ public class GameManager : MonoBehaviour {
                 return;
             }
             var hero = Instantiate(heroPrefab);
-            hero.name = e.id + " [Enemy]";
+            hero.name = $"{dev_count++}" + e.id + " [Enemy]";
             hero.SetNode(Map.Instance.GetNode(e.mapNode.x, e.mapNode.y));
-            hero.ResetPosition();
+            hero.ResetPosition(true);
             hero.Initialize(trait, TeamSide.Enemy);
             foreach (var i in e.items) {
                 hero.GetAbility<HeroInventory>().Add(i);

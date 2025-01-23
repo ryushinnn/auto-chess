@@ -45,8 +45,8 @@ public class Map : Singleton<Map> {
                 if (x is Hero h) {
                     objs.Add(h.name);
                 }
-                else {
-                    objs.Add("mark");
+                else if (x is DestinationMark m) {
+                    objs.Add($"mark_{m.Owner.name}");
                 }
             });
         }
@@ -56,7 +56,7 @@ public class Map : Singleton<Map> {
         SpawnNodes();
     }
 
-    void Update() {
+    void LateUpdate() {
         dev_mapNodes.Clear();
         
         for (int i=0; i<SIZE; i++) {
@@ -70,12 +70,12 @@ public class Map : Singleton<Map> {
         }
     }
     
-    public bool CheckAdjacency(MapNode origin, MapNode target, int radius = 1) {
+    public bool CheckAdjacency(MapNode target, MapNode origin, int radius = 1) {
         var potentialNodes = GetCircle(target.X, target.Y, radius);
         return potentialNodes.Any(x => x == origin);
     }
 
-    public MapNode GetNearestAdjacentNode(MapNode origin, MapNode target, int radius, Func<MapNode,bool> condition = null) {
+    public MapNode GetNearestAdjacentNode(MapNode target, MapNode origin, int radius, Func<MapNode,bool> condition = null) {
         var potentialNodes = GetCircle(target.X, target.Y, radius);
         var minDist = Mathf.Infinity;
         var node = default(MapNode);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -26,6 +27,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     Dictionary<Type, HeroAbility> cachedAbilities = new();
     MapNode mapNode;
     [SerializeField, ReadOnly] Hero target;
+    Tween snapTween;
 
     public Vector2 dev_mapNode;
     public Vector2 dev_targetNode;
@@ -75,18 +77,17 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         this.mapNode.Add(this);
     }
 
-    public void ResetPosition() {
-        transform.position = mapNode.Position;
+    public void ResetPosition(bool skipAnimation = false) {
+        snapTween?.Kill();
+        if (skipAnimation) {
+            transform.position = mapNode.Position;
+        }
+        else {
+            snapTween = transform.DOMove(mapNode.Position, 0.1f);
+        }
     }
     
     public void FindTarget() {
-        if (GetAbility<HeroStatusEffects>().IsAirborne
-            || GetAbility<HeroStatusEffects>().IsStun) {
-            
-            target = null;
-            return;
-        }
-
         Func<IMapNodeObject, bool> condition = x => x is Hero h && h.side != side;
         target = Map.Instance.GetNearestNode(mapNode, node => node.Any(condition))?.Get<Hero>(condition);
     }
@@ -138,6 +139,6 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     [Button]
     void Dev_ChangeNode(int x, int y) {
         SetNode(Map.Instance.GetNode(x,y));
-        ResetPosition();
+        ResetPosition(true);
     }
 }

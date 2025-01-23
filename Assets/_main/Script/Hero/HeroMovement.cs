@@ -4,6 +4,7 @@ using Pathfinding;
 using RExt.Utils;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class HeroMovement : HeroAbility {
     public bool IsMoving => isMoving;
@@ -12,7 +13,7 @@ public class HeroMovement : HeroAbility {
     Sequence moveSequence;
     bool isMoving;
     bool destinationReached;
-    MapNode destinationNode;
+    MapNode destination;
     DestinationMark mark;
 
     public override void Initialize(Hero hero) {
@@ -23,37 +24,41 @@ public class HeroMovement : HeroAbility {
     public override void Process() {
         if (isMoving) {
             hero.SetNode(Map.Instance.GetNode(hero.transform.position));
+            destinationReached = hero.MapNode == destination;
         }
-        destinationReached = hero.MapNode == destinationNode;
         
-        hero.dev_destinationNode = destinationNode != null ? new Vector2(destinationNode.X, destinationNode.Y) : new Vector2(-1, -1);
+        hero.dev_destinationNode = destination != null ? new Vector2(destination.X, destination.Y) : new Vector2(-1, -1);
     }
 
     public void StartMove() {
-        if (destinationNode != null 
-            && destinationNode.Any(x=>x is Hero h && h == hero.Target) 
-            && Map.Instance.CheckAdjacency(hero.Target.MapNode, destinationNode, hero.Trait.attackRange)) return;
-        
-        if (Map.Instance.CheckAdjacency(hero.Target.MapNode, hero.MapNode, hero.Trait.attackRange) && hero.MapNode.HasOnly(hero)) {
-            destinationNode = hero.MapNode;
-            OnReachEndOfPath();
+        if (Map.Instance.CheckAdjacency(hero.Target.MapNode, hero.MapNode, hero.Trait.attackRange)
+            && hero.MapNode.HasAtFirst(hero)) {
+            
+            Debug.Log($"{hero.name} inspect");
+            hero.MapNode.Process(x=>Debug.Log($"{hero.name}.MapNode: {((MonoBehaviour)x).name}"));
+            
+            destination?.Remove(mark);
+            destination = hero.MapNode;
+            Debug.Log($"{hero.name} already has target in range, stop at ({destination.X}, {destination.Y})");
+            StopMove(true);
             return;
         }
-        
-        if (isMoving) {
-            destinationNode?.Remove(mark);
-        }
-        
-        destinationNode = Map.Instance.GetNearestAdjacentNode(hero.MapNode, hero.Target.MapNode, hero.Trait.attackRange, 
-                              x => x.HasNone()) 
-                          ?? hero.MapNode;
-        
-        destinationNode.Add(mark = new DestinationMark());
-        Debug.Log($"{hero.name} change destination to ({destinationNode.X}, {destinationNode.Y})");
-        
-        hero.Seeker.StartPath(hero.transform.position, destinationNode.Position, path => {
-            isMoving = true;
-            hero.Mecanim.Run();
+
+        Func<MapNode, bool> acceptableDest = x => x.HasNone() || x == destination;
+        var newDest = Map.Instance.GetNearestAdjacentNode(hero.Target.MapNode, hero.MapNode, hero.Trait.attackRange, acceptableDest) 
+                      ??
+                      Map.Instance.GetNearestNode(hero.Target.MapNode, acceptableDest);
+
+        if (newDest == destination) return;
+
+        destination?.Remove(mark);
+        destination = newDest;
+        destination.Add(mark = new DestinationMark(hero));
+
+        Debug.Log($"{hero.name} change destination to ({destination.X}, {destination.Y})");
+        isMoving = true;
+        hero.Mecanim.Run();
+        hero.Seeker.StartPath(hero.transform.position, destination.Position, path => {
             moveSequence?.Kill();
             moveSequence = DOTween.Sequence();
 
@@ -65,7 +70,12 @@ public class HeroMovement : HeroAbility {
                     .Append(hero.transform.DOMove(wp, 1 / hero.GetAbility<HeroAttributes>().MovementSpeed).SetEase(Ease.Linear));
             }
 
-            moveSequence.AppendCallback(OnReachEndOfPath);
+            moveSequence.AppendCallback(() => {
+                Debug.Log($"{hero.name} reached ({destination.X}, {destination.Y})");
+                hero.GetAbility<HeroRotation>().Rotate(hero.Target.MapNode.Position - hero.transform.position);
+                StopMove();
+                destination.Remove(mark);
+            });
         });
     }
 
@@ -80,24 +90,20 @@ public class HeroMovement : HeroAbility {
         }
     }
 
-    void OnReachEndOfPath() {
-        Debug.Log($"{hero.name} reached ({destinationNode.X}, {destinationNode.Y})");
-        hero.GetAbility<HeroRotation>().Rotate(hero.Target.MapNode.Position - hero.transform.position);
-        StopMove();
-        destinationNode.Remove(mark);
-    }
-
     [Button]
     void Dev_StopMove() {
         StopMove(true);
     }
 
     void OnDrawGizmos() {
-        if (destinationNode != null) {
+        if (destination != null) {
+            var offset = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
             Gizmos.color = Color.red;
-            Utils.DrawArrow(hero.MapNode.Position, destinationNode.Position);
+            Utils.DrawArrow(hero.MapNode.Position, destination.Position + offset);
             Gizmos.color = Color.green;
-            Utils.DrawArrow(destinationNode.Position, hero.Target.MapNode.Position);
+            Utils.DrawArrow(destination.Position + offset, hero.Target.MapNode.Position);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(hero.MapNode.Position + new Vector3(0,5,0), 0.25f);
         }
     }
 }
