@@ -17,6 +17,8 @@ public class HeroSkill : HeroAbility {
     }
 
     public bool UseSkill() {
+        return false;
+        
         if (hero.GetAbility<HeroAttributes>().Energy < HeroTrait.MAX_ENERGY 
             || isUsingSkill
             || hero.GetAbility<HeroStatusEffects>().IsAirborne

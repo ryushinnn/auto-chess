@@ -275,7 +275,7 @@ public class HeroAttributes : HeroAbility {
 
     void Die() {
         isAlive = false;
-        hero.GetAbility<HeroMovement>().StopMove();
+        hero.GetAbility<HeroMovement>().StopMove(true);
         hero.Mecanim.Death();
         hero.Mecanim.InterruptAttack();
         hero.Mecanim.InterruptSkill();

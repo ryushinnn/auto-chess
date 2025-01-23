@@ -28,6 +28,8 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     [SerializeField, ReadOnly] Hero target;
 
     public Vector2 dev_mapNode;
+    public Vector2 dev_targetNode;
+    public Vector2 dev_destinationNode;
     
     void Awake() {
         FindAbilities();
@@ -40,6 +42,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         PostProcess();
 
         dev_mapNode = mapNode != null ? new Vector2(mapNode.X, mapNode.Y) : new Vector2(-1, -1);
+        dev_targetNode = target != null ? new Vector2(target.mapNode.X, target.mapNode.Y) : new Vector2(-1, -1);
     }
 
     void LateUpdate() {
@@ -67,9 +70,9 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     }
 
     public void SetNode(MapNode mapNode) {
-        this.mapNode?.objects.Remove(this);
+        this.mapNode?.Remove(this);
         this.mapNode = mapNode;
-        this.mapNode.objects.Add(this);
+        this.mapNode.Add(this);
     }
 
     public void ResetPosition() {
@@ -83,9 +86,9 @@ public class Hero : MonoBehaviour, IMapNodeObject {
             target = null;
             return;
         }
-        target = Map.Instance.GetNearestNonEmptyNode<Hero>(mapNode, objects=> {
-            return objects.Any(x => x is Hero h && h.side != side);
-        })?.objects.First(x => x is Hero h && h.side != side) as Hero;
+
+        Func<IMapNodeObject, bool> condition = x => x is Hero h && h.side != side;
+        target = Map.Instance.GetNearestNode(mapNode, node => node.Any(condition))?.Get<Hero>(condition);
     }
 
     void FindAbilities() {
@@ -127,7 +130,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
 
     void RemoveNodeOnDead() {
         if (!GetAbility<HeroAttributes>().IsAlive && mapNode != null) {
-            mapNode.objects.Remove(this);
+            mapNode.Remove(this);
             mapNode = null;
         }
     }

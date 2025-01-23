@@ -30,24 +30,57 @@ public class Map : Singleton<Map> {
     MapNode[,] nodes;
     
     const int SIZE = 8;
+    
+    public List<Dev_MapNode> dev_mapNodes = new();
+
+    [Serializable]
+    public class Dev_MapNode {
+        public Vector2 xy;
+        public List<string> objs;
+
+        public Dev_MapNode(MapNode node) {
+            xy = new Vector2(node.X, node.Y);
+            objs = new List<string>();
+            node.Process(x => {
+                if (x is Hero h) {
+                    objs.Add(h.name);
+                }
+                else {
+                    objs.Add("mark");
+                }
+            });
+        }
+    }
 
     void Start() {
         SpawnNodes();
     }
 
     void Update() {
+        dev_mapNodes.Clear();
+        
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
-                MapVisual.Instance.Highlight(nodes[i,j],nodes[i,j].objects.Count > 0);
+                MapVisual.Instance.Highlight(nodes[i,j],nodes[i,j].Any(x=>x is Hero));
+
+                if (!nodes[i, j].HasNone()) {
+                    dev_mapNodes.Add(new Dev_MapNode(nodes[i, j]));
+                }
             }
         }
     }
+    
+    public bool CheckAdjacency(MapNode origin, MapNode target, int radius = 1) {
+        var potentialNodes = GetCircle(target.X, target.Y, radius);
+        return potentialNodes.Any(x => x == origin);
+    }
 
-    public MapNode GetNearestAdjacentNode(MapNode origin, MapNode target, int radius) {
-        var potentialNodes = GetAdjacentNodes(target.X, target.Y, radius);
+    public MapNode GetNearestAdjacentNode(MapNode origin, MapNode target, int radius, Func<MapNode,bool> condition = null) {
+        var potentialNodes = GetCircle(target.X, target.Y, radius);
         var minDist = Mathf.Infinity;
         var node = default(MapNode);
         foreach (var n in potentialNodes) {
+            if (condition != null && !condition(n)) continue;
             var dist = Vector3.Distance(origin.Position, n.Position);
             if (dist < minDist) {
                 minDist = dist;
@@ -58,33 +91,12 @@ public class Map : Singleton<Map> {
         return node;
     }
     
-    public MapNode GetNearestNonEmptyNode(MapNode origin) {
+    public MapNode GetNearestNode(MapNode origin, Func<MapNode, bool> condition) {
         var minDist = Mathf.Infinity;
         var node = default(MapNode);
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
-                if (nodes[i,j] != origin && nodes[i, j].objects.Count > 0) {
-                    var dist = Vector3.Distance(nodes[i, j].Position, origin.Position);
-                    if (dist < minDist) {
-                        minDist = dist;
-                        node = nodes[i, j];
-                    }
-                }
-            }
-        }
-        
-        return node;
-    }
-    
-    public MapNode GetNearestNonEmptyNode<T>(MapNode origin, Func<IMapNodeObject[], bool> condition = null) where T : IMapNodeObject {
-        var minDist = Mathf.Infinity;
-        var node = default(MapNode);
-        for (int i=0; i<SIZE; i++) {
-            for (int j=0; j<SIZE; j++) {
-                if (nodes[i,j] != origin && nodes[i, j].objects.Count > 0 
-                                         && nodes[i, j].objects.Any(x=>x is T) 
-                                         && (condition == null || condition(nodes[i,j].objects.Where(x=>x is T).ToArray()))) {
-                    
+                if (condition(nodes[i, j])) {
                     var dist = Vector3.Distance(nodes[i, j].Position, origin.Position);
                     if (dist < minDist) {
                         minDist = dist;
@@ -121,21 +133,30 @@ public class Map : Singleton<Map> {
         return null;
     }
 
-    public MapNode[] GetAdjacentNodes(int x, int y, int range) {
+    public MapNode[] GetCircle(int x, int y, int range, bool containRoot = false) {
         var result = new HashSet<MapNode>();
-        GetAdjacentNodes(x, y, range, result);
+        if (containRoot) {
+            result.Add(GetNode(x, y));
+        }
+        GetCircle(x, y, range, result);
         return result.ToArray();
     }
 
-    public MapNode[] GetLineOfNodes(int x, int y, Direction direction, int range) {
+    public MapNode[] GetLine(int x, int y, Direction direction, int range, bool containRoot = false) {
         var result = new HashSet<MapNode>();
-        GetLineOfNodes(x, y, direction, range, result);
+        if (containRoot) {
+            result.Add(GetNode(x, y));
+        }
+        GetLine(x, y, direction, range, result);
         return result.ToArray();
     }
     
-    public MapNode[] GetSectorOfNodes(int x, int y, Direction direction, int range) {
+    public MapNode[] GetSector(int x, int y, Direction direction, int range, bool containRoot = false) {
         var result = new HashSet<MapNode>();
-        GetSectorOfNodes(x, y, direction, range, result);
+        if (containRoot) {
+            result.Add(GetNode(x, y));
+        }
+        GetSector(x, y, direction, range, result);
         return result.ToArray();
     }
 
@@ -184,64 +205,64 @@ public class Map : Singleton<Map> {
         return null;
     }
 
-    void GetAdjacentNodes(int x, int y, int range, HashSet<MapNode> result) {
+    void GetCircle(int x, int y, int range, HashSet<MapNode> result) {
         if (range == 0) return;
         
         var topLeftNode = GetAdjacentNode(x, y, Direction.TopLeft);
         if (topLeftNode != null) {
             result.Add(topLeftNode);
-            GetAdjacentNodes(topLeftNode.X, topLeftNode.Y, range - 1, result);
+            GetCircle(topLeftNode.X, topLeftNode.Y, range - 1, result);
         }
         
         var topRightNode = GetAdjacentNode(x, y, Direction.TopRight);
         if (topRightNode != null) {
             result.Add(topRightNode);
-            GetAdjacentNodes(topRightNode.X, topRightNode.Y, range - 1, result);
+            GetCircle(topRightNode.X, topRightNode.Y, range - 1, result);
         }
         
         var leftNode = GetAdjacentNode(x, y, Direction.Left);
         if (leftNode != null) {
             result.Add(leftNode);
-            GetAdjacentNodes(leftNode.X, leftNode.Y, range - 1, result);
+            GetCircle(leftNode.X, leftNode.Y, range - 1, result);
         }
         
         var rightNode = GetAdjacentNode(x, y, Direction.Right);
         if (rightNode != null) {
             result.Add(rightNode);
-            GetAdjacentNodes(rightNode.X, rightNode.Y, range - 1, result);
+            GetCircle(rightNode.X, rightNode.Y, range - 1, result);
         }
         
         var botLeftNode = GetAdjacentNode(x, y, Direction.BotLeft);
         if (botLeftNode != null) {
             result.Add(botLeftNode);
-            GetAdjacentNodes(botLeftNode.X, botLeftNode.Y, range - 1, result);
+            GetCircle(botLeftNode.X, botLeftNode.Y, range - 1, result);
         }
         
         var botRightNode = GetAdjacentNode(x, y, Direction.BotRight);
         if (botRightNode != null) {
             result.Add(botRightNode);
-            GetAdjacentNodes(botRightNode.X, botRightNode.Y, range - 1, result);
+            GetCircle(botRightNode.X, botRightNode.Y, range - 1, result);
         }
     }
 
-    void GetLineOfNodes(int x, int y, Direction direction, int range, HashSet<MapNode> result) {
+    void GetLine(int x, int y, Direction direction, int range, HashSet<MapNode> result) {
         if (range == 0) return;
 
         var node = GetAdjacentNode(x, y, direction);
         if (node != null) {
             result.Add(node);
-            GetLineOfNodes(node.X, node.Y, direction, range - 1, result);
+            GetLine(node.X, node.Y, direction, range - 1, result);
         }
     }
 
-    void GetSectorOfNodes(int x, int y, Direction direction, int range, HashSet<MapNode> result) {
+    void GetSector(int x, int y, Direction direction, int range, HashSet<MapNode> result) {
         if (range == 0) return;
 
         if (direction is Direction.Left or Direction.TopLeft or Direction.TopRight) {
             var topLeftNode = GetAdjacentNode(x, y, Direction.TopLeft);
             if (topLeftNode != null) {
                 result.Add(topLeftNode);
-                GetSectorOfNodes(topLeftNode.X, topLeftNode.Y, direction, range - 1, result);
+                GetSector(topLeftNode.X, topLeftNode.Y, direction, range - 1, result);
             }
         }
 
@@ -249,7 +270,7 @@ public class Map : Singleton<Map> {
             var topRightNode = GetAdjacentNode(x, y, Direction.TopRight);
             if (topRightNode != null) {
                 result.Add(topRightNode);
-                GetSectorOfNodes(topRightNode.X, topRightNode.Y, direction, range - 1, result);
+                GetSector(topRightNode.X, topRightNode.Y, direction, range - 1, result);
             }
         }
 
@@ -257,7 +278,7 @@ public class Map : Singleton<Map> {
             var leftNode = GetAdjacentNode(x, y, Direction.Left);
             if (leftNode != null) {
                 result.Add(leftNode);
-                GetSectorOfNodes(leftNode.X, leftNode.Y, direction, range - 1, result);
+                GetSector(leftNode.X, leftNode.Y, direction, range - 1, result);
             }
         }
         
@@ -265,7 +286,7 @@ public class Map : Singleton<Map> {
             var rightNode = GetAdjacentNode(x, y, Direction.Right);
             if (rightNode != null) {
                 result.Add(rightNode);
-                GetSectorOfNodes(rightNode.X, rightNode.Y, direction, range - 1, result);
+                GetSector(rightNode.X, rightNode.Y, direction, range - 1, result);
             }
         }
 
@@ -273,7 +294,7 @@ public class Map : Singleton<Map> {
             var botLeftNode = GetAdjacentNode(x, y, Direction.BotLeft);
             if (botLeftNode != null) {
                 result.Add(botLeftNode);
-                GetSectorOfNodes(botLeftNode.X, botLeftNode.Y, direction, range - 1, result);
+                GetSector(botLeftNode.X, botLeftNode.Y, direction, range - 1, result);
             }
         }
         
@@ -281,7 +302,7 @@ public class Map : Singleton<Map> {
             var botRightNode = GetAdjacentNode(x, y, Direction.BotRight);
             if (botRightNode != null) {
                 result.Add(botRightNode);
-                GetSectorOfNodes(botRightNode.X, botRightNode.Y, direction, range - 1, result);
+                GetSector(botRightNode.X, botRightNode.Y, direction, range - 1, result);
             }
         }
     }
@@ -290,7 +311,7 @@ public class Map : Singleton<Map> {
     public void Dev_DetectObject() {
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
-                if (nodes[i, j].objects.Count > 0) {
+                if (!nodes[i, j].HasNone()) {
                     Debug.Log($"[{i},{j}] has object");
                 }
             }

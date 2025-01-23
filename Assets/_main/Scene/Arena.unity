@@ -285,7 +285,7 @@ MonoBehaviour:
     dataString: UEsDBBQAAAgIAAA4IewDXjJNVQEAAD8CAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFtUctuwjAQ/JXI51KRhCSkZyjqoRTx+ICtvUlWJHZkO5SA+PfavCv1tNZoZndmfGRaKcvegiObQ4PuweZKoGEvAVv37RnYSLL9VJYk8XWtQZpC6cYTZpuPiSeEoyxLQ54UUVSkIooHGCHkRZomo+8cIBPs5NgGQfNqDaWTyK6uHdTAfkLGguT+UOSQmhqyxvsJ2N6NocP66zz4GfhVGnoOxtu2ukMHdAajyaLqDXEvLqA2HrYV8e3yTv4PXoKgzmtCvxd5pw3t8IncgNle/Oyg7vDuQbXWeT3gu9KrFrTBmYa2ehJKlxeN9XXeQn66961iX2DZkfi7m6XDGOMceZLECADhQGQ8+s6zIh4X0XiUD9n5Ork/IagXKKG2t4JUi/LRibz+50KRtMHFnYOFhp8ZHRplHlSShVpxjSi/LituGQxqd8WlFFNB1iVFa0mWXsqOJ3b6BVBLAwQUAAAICAAAOCHsTTeoV20AAAB4AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDVM9Qz0lFQSi9KLMgoBgoYgjilmSkgdrSSmYFxqrFlarKpqXFqYmKioW6KebJRkqV5mrFFmpGFiaWBUixQfUllQapfYm4qRE9AYklGWmZeSmZeul5AfmZeiTvIbKXYWgBQSwECLQAUAAAICAAAOCHsA14yTVUBAAA/AgAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAAOCHsTTeoV20AAAB4AAAACQAkAAAAAAAAAAAAAACiAQAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAAFoCAAAAAA==
     file_cachedStartup: {fileID: 0}
     cacheStartup: 0
-  showNavGraphs: 1
+  showNavGraphs: 0
   showUnwalkableNodes: 1
   debugMode: 0
   debugFloor: 0
@@ -293,7 +293,7 @@ MonoBehaviour:
   manualDebugFloorRoof: 0
   showSearchTree: 0
   unwalkableNodeDebugSize: 0.3
-  logPathResults: 1
+  logPathResults: 4
   maxNearestNodeDistance: 100
   scanOnStartup: 0
   fullGetNearestSearch: 0
@@ -1057,6 +1057,7 @@ MonoBehaviour:
   nodeWidth: 1.88
   nodeHeight: 1.89
   aStarPath: {fileID: 36020082}
+  dev_mapNodes: []
 --- !u!1 &1473852638
 GameObject:
   m_ObjectHideFlags: 0
@@ -1089,33 +1090,31 @@ MonoBehaviour:
   heroPrefab: {fileID: 276282976127478005, guid: 9b00a5bcaa357bd4e812117e914f0359,
     type: 3}
   myTeam:
-  - id: Yasuo
+  - active: 1
+    id: Yasuo
     level: 0
-    mapNode: {x: 0, y: 0}
+    mapNode: {x: 0, y: 3}
     items:
     - {fileID: 11400000, guid: 8d105db34d57d72429a7dafadd916efe, type: 2}
-  - id: Yasuo
+  - active: 1
+    id: Yasuo
     level: 0
-    mapNode: {x: 0, y: 1}
+    mapNode: {x: 0, y: 4}
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
-  - id: Yasuo
-    level: 0
-    mapNode: {x: 0, y: 2}
-    items:
-    - {fileID: 11400000, guid: b538eec87a753f34a992d366a3cd4321, type: 2}
   enemyTeam:
-  - id: Aatrox
+  - active: 1
+    id: Aatrox
     level: 0
-    mapNode: {x: 7, y: 7}
-    items:
-    - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
-  - id: Aatrox
-    level: 0
-    mapNode: {x: 7, y: 0}
+    mapNode: {x: 7, y: 4}
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
+  - active: 1
+    id: Aatrox
+    level: 0
+    mapNode: {x: 7, y: 3}
+    items: []
 --- !u!4 &1473852640
 Transform:
   m_ObjectHideFlags: 0

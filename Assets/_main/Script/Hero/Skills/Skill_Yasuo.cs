@@ -22,19 +22,21 @@ public class Skill_Yasuo : Skill {
     }
 
     void SpinSlash() {
+        if (hero.Target == null) return;
+        
         var success = false;
-        var affectedNodes = Map.Instance.GetAdjacentNodes(hero.MapNode.X, hero.MapNode.Y, RANGE);
+        var affectedNodes = Map.Instance.GetCircle(hero.MapNode.X, hero.MapNode.Y, RANGE);
         foreach (var node in affectedNodes) {
-            if (node.objects.Count > 0) {
-                foreach (var obj in node.objects) {
-                    if (obj is Hero target) {
-                        target.GetAbility<HeroAttributes>().TakeDamage(
+            if (!node.HasNone()) {
+                node.Process(x => {
+                    if (x is Hero h) {
+                        h.GetAbility<HeroAttributes>().TakeDamage(
                             hero.GetAbility<HeroAttributes>().PhysicalDamage * DMG_MUL, 
                             DamageType.Physical, 
                             hero.GetAbility<HeroAttributes>().PhysicalPenetration);
                         success = true;
                     }
-                }
+                });
             }
         }
 

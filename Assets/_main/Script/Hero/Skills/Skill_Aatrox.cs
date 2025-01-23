@@ -27,6 +27,8 @@ public class Skill_Aatrox : Skill {
     }
 
     void LightSlash() {
+        if (hero.Target == null) return;
+        
         var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
             hero.GetAbility<HeroAttributes>().PhysicalDamage * DMG_MUL_0, 
             DamageType.Physical, 
@@ -36,6 +38,8 @@ public class Skill_Aatrox : Skill {
     }
     
     void MediumSlash() {
+        if (hero.Target == null) return;
+        
         var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
             hero.GetAbility<HeroAttributes>().PhysicalDamage * DMG_MUL_1,
             DamageType.Physical, 
@@ -45,6 +49,8 @@ public class Skill_Aatrox : Skill {
     }
     
     void HeavySlash() {
+        if (hero.Target == null) return;
+        
         var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
             hero.GetAbility<HeroAttributes>().PhysicalDamage * DMG_MUL_2, 
             DamageType.Physical, 

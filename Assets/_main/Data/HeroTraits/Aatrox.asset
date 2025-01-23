@@ -18,7 +18,7 @@ MonoBehaviour:
   price: 0
   mecanim: {fileID: 6030379420075625112, guid: 48f63ca32561734469484b7530049159, type: 3}
   maxHp: 1270
-  physicalDamage: 130
+  physicalDamage: 150
   magicalDamage: 0
   armor: 32
   resistance: 24

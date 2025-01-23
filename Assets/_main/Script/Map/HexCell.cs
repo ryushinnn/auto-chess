@@ -13,7 +13,7 @@ public class HexCell : Indicator {
         X = x;
         Y = y;
         label.text = $"({x},{y})";
-        label.gameObject.SetActive(false);
+        label.gameObject.SetActive(true);
     }
 
     public void Dev_SwitchLabel(bool state) {

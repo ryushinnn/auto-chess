@@ -122,13 +122,13 @@ public class MapVisual : Singleton<MapVisual> {
                     hero.transform.position = selectedCell.transform.position;
                     
                     if (selectNodeMethod == SelectNodeMethod.Adjacent) {
-                        selectedCells = Map.Instance.GetAdjacentNodes(hex.X, hex.Y, range).Select(GetHexIndicator).ToArray();
+                        selectedCells = Map.Instance.GetCircle(hex.X, hex.Y, range).Select(GetHexIndicator).ToArray();
                     }
                     else if (selectNodeMethod == SelectNodeMethod.Line) {
-                        selectedCells = Map.Instance.GetLineOfNodes(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
+                        selectedCells = Map.Instance.GetLine(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
                     }
                     else if (selectNodeMethod == SelectNodeMethod.Sector) {
-                        selectedCells = Map.Instance.GetSectorOfNodes(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
+                        selectedCells = Map.Instance.GetSector(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
                     }
 
                     if (selectedCells != null) {
