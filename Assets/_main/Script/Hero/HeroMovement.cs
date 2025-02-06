@@ -7,12 +7,9 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class HeroMovement : HeroAbility {
-    public bool IsMoving => isMoving;
-    public bool DestinationReached => destinationReached;
+    public bool IsMoving => destination != null;
     
     Sequence moveSequence;
-    bool isMoving;
-    bool destinationReached;
     MapNode destination;
     DestinationMark mark;
 
@@ -22,9 +19,8 @@ public class HeroMovement : HeroAbility {
     }
 
     public override void Process() {
-        if (isMoving) {
+        if (destination != null) {
             hero.SetNode(Map.Instance.GetNode(hero.transform.position));
-            destinationReached = hero.MapNode == destination;
         }
         
         hero.dev_destinationNode = destination != null ? new Vector2(destination.X, destination.Y) : new Vector2(-1, -1);
@@ -33,22 +29,23 @@ public class HeroMovement : HeroAbility {
     public void StartMove() {
         if (Map.Instance.CheckAdjacency(hero.Target.MapNode, hero.MapNode, hero.Trait.attackRange)
             && hero.MapNode.HasAtFirst(hero)) {
-            
-            Debug.Log($"{hero.name} inspect");
-            hero.MapNode.Process(x=>Debug.Log($"{hero.name}.MapNode: {((MonoBehaviour)x).name}"));
-            
-            destination?.Remove(mark);
-            destination = hero.MapNode;
-            Debug.Log($"{hero.name} already has target in range, stop at ({destination.X}, {destination.Y})");
-            StopMove(true);
+
+            if (destination != null) {
+                Debug.Log($"{hero.name} already has target in range, stop at ({destination.X}, {destination.Y})");
+                destination.Remove(mark);
+                StopMove(true);
+            }
             return;
         }
 
-        Func<MapNode, bool> acceptableDest = x => x.HasNone() || x == destination;
-        var newDest = Map.Instance.GetNearestAdjacentNode(hero.Target.MapNode, hero.MapNode, hero.Trait.attackRange, acceptableDest) 
+        Func<MapNode, bool> destCondition = x => x.HasNone() || x == destination;
+        var newDest = Map.Instance.GetNearestAdjacentNode(hero.Target.MapNode, hero.MapNode, hero.Trait.attackRange, destCondition) 
                       ??
-                      Map.Instance.GetNearestNode(hero.Target.MapNode, acceptableDest);
+                      Map.Instance.GetNearestNode(hero.Target.MapNode, destCondition);
 
+        // known issue: new dest and current dest has same distance to target
+        // sometimes hero move between 2 nodes repeatedly
+        
         if (newDest == destination) return;
 
         destination?.Remove(mark);
@@ -56,8 +53,8 @@ public class HeroMovement : HeroAbility {
         destination.Add(mark = new DestinationMark(hero));
 
         Debug.Log($"{hero.name} change destination to ({destination.X}, {destination.Y})");
-        isMoving = true;
         hero.Mecanim.Run();
+        
         hero.Seeker.StartPath(hero.transform.position, destination.Position, path => {
             moveSequence?.Kill();
             moveSequence = DOTween.Sequence();
@@ -73,18 +70,18 @@ public class HeroMovement : HeroAbility {
             moveSequence.AppendCallback(() => {
                 Debug.Log($"{hero.name} reached ({destination.X}, {destination.Y})");
                 hero.GetAbility<HeroRotation>().Rotate(hero.Target.MapNode.Position - hero.transform.position);
-                StopMove();
                 destination.Remove(mark);
+                StopMove();
             });
         });
     }
 
     public void StopMove(bool resetPosition = false) {
-        isMoving = false;
+        destination = null;
         hero.Mecanim.Idle();
         moveSequence?.Kill();
         if (resetPosition) {
-            var emptyNode = Map.Instance.GetNearestNode(hero.MapNode, x => x.HasOnly(hero) || x.HasNone());
+            var emptyNode = Map.Instance.GetNearestNode(hero.MapNode, x => x.HasAtFirst(hero) || x.HasNone());
             hero.SetNode(emptyNode);
             hero.ResetPosition();
         }
@@ -96,7 +93,7 @@ public class HeroMovement : HeroAbility {
     }
 
     void OnDrawGizmos() {
-        if (destination != null) {
+        if (hero.MapNode != null && destination != null && hero.Target?.MapNode != null) {
             var offset = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
             Gizmos.color = Color.red;
             Utils.DrawArrow(hero.MapNode.Position, destination.Position + offset);

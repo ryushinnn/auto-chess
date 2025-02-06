@@ -1,27 +1,31 @@
 ﻿using UnityEngine;
 
 public class HeroAttack : HeroAbility {
+    AttackProcessor processor;
     float currentAttackCooldown;
+
+    public override void Initialize(Hero hero) {
+        base.Initialize(hero);
+        processor = hero.Trait.id switch {
+            "Yasuo" => new AttackProcessor_Yasuo(hero),
+            _ => new AttackProcessor(hero)
+        };
+    }
 
     public override void Process() {
         if (currentAttackCooldown > 0) {
             currentAttackCooldown -= Time.deltaTime;
         }
+        processor.Process();
     }
 
     public bool Attack() {
         if (currentAttackCooldown > 0 
-            || hero.GetAbility<HeroSkill>().IsUsingSkill
-            || hero.GetAbility<HeroStatusEffects>().IsAirborne
-            || hero.GetAbility<HeroStatusEffects>().IsStun) return false;
+            || BlockedByOtherActions()
+            || BlockedByStatusEffects()) return false;
         
         hero.GetAbility<HeroRotation>().Rotate(hero.Target.transform.position - hero.transform.position);
-        CalculateDamage(out var dmg, out var type, out var pen);
-        hero.Mecanim.Attack(() => {
-            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen);
-            hero.GetAbility<HeroAttributes>().Heal(outputDamage * hero.GetAbility<HeroAttributes>().LifeSteal);
-            hero.GetAbility<HeroAttributes>().RegenEnergy(hero.Trait.energyRegenPerAttack);
-        });
+        processor.Execute();
         currentAttackCooldown = 1 / hero.GetAbility<HeroAttributes>().AttackSpeed;
         return true;
     }
@@ -35,38 +39,18 @@ public class HeroAttack : HeroAbility {
         currentAttackCooldown = Mathf.Min(currentAttackCooldown, 1 / hero.GetAbility<HeroAttributes>().AttackSpeed);
     }
 
-    void CalculateDamage(out float damage, out DamageType type, out float penetration) {
-        if (hero.GetAbility<HeroAttributes>().PhysicalDamage > hero.GetAbility<HeroAttributes>().MagicalDamage) {
-            damage = hero.GetAbility<HeroAttributes>().PhysicalDamage;
-            type = DamageType.Physical;
-            penetration = hero.GetAbility<HeroAttributes>().PhysicalPenetration;
-        }
-        else if (hero.GetAbility<HeroAttributes>().PhysicalDamage < hero.GetAbility<HeroAttributes>().MagicalDamage) {
-            damage = hero.GetAbility<HeroAttributes>().MagicalDamage;
-            type = DamageType.Magical;
-            penetration = hero.GetAbility<HeroAttributes>().MagicalPenetration;
-        }
-        else {
-            if (hero.GetAbility<HeroAttributes>().PhysicalPenetration > hero.GetAbility<HeroAttributes>().MagicalPenetration) {
-                damage = hero.GetAbility<HeroAttributes>().PhysicalDamage;
-                type = DamageType.Physical;
-                penetration = hero.GetAbility<HeroAttributes>().PhysicalPenetration;
-            }
-            else {
-                damage = hero.GetAbility<HeroAttributes>().MagicalDamage;
-                type = DamageType.Magical;
-                penetration = hero.GetAbility<HeroAttributes>().MagicalPenetration;
-            }
-        }
+    bool BlockedByOtherActions() {
+        return hero.GetAbility<HeroSkill>().IsUsingSkill;
+    }
 
-        if (Random.value < hero.GetAbility<HeroAttributes>().CriticalChance) {
-            damage *= hero.GetAbility<HeroAttributes>().CriticalDamage;
-        }
+    bool BlockedByStatusEffects() {
+        return hero.GetAbility<HeroStatusEffects>().IsAirborne 
+               || hero.GetAbility<HeroStatusEffects>().IsStun;
     }
 }
 
 public enum DamageType {
     Physical,
     Magical,
-    Pure
+    True
 }

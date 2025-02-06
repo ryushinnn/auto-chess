@@ -16,7 +16,7 @@ public class MoveToTarget : BTNode {
         }
         
         hero.GetAbility<HeroMovement>().StartMove();
-        State = movement.DestinationReached && !movement.IsMoving ? NodeState.Success : NodeState.Running;
+        State = !movement.IsMoving ? NodeState.Success : NodeState.Running;
         return State;
     }
 }

@@ -94,7 +94,7 @@ public class HeroAttributes : HeroAbility {
         var dmgReduction = type switch {
             DamageType.Physical => Mathf.Min(armor * (1-penetration), HeroTrait.MAX_DMG_REDUCTION * damage),
             DamageType.Magical => Mathf.Min(resistance * (1-penetration), HeroTrait.MAX_DMG_REDUCTION * damage),
-            DamageType.Pure => 0
+            DamageType.True => 0
         };
         
         damage -= dmgReduction;

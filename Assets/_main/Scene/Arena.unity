@@ -1090,7 +1090,7 @@ MonoBehaviour:
   heroPrefab: {fileID: 276282976127478005, guid: 9b00a5bcaa357bd4e812117e914f0359,
     type: 3}
   myTeam:
-  - active: 1
+  - active: 0
     id: Yasuo
     level: 0
     mapNode: {x: 0, y: 3}
@@ -1103,7 +1103,7 @@ MonoBehaviour:
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   enemyTeam:
-  - active: 1
+  - active: 0
     id: Aatrox
     level: 0
     mapNode: {x: 7, y: 4}

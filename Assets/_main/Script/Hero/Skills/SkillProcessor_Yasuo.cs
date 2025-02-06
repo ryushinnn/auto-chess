@@ -5,8 +5,7 @@ using UnityEngine;
 /// chem xoay pham vi 1 xung quanh, gay 150% st vat ly
 /// neu chem trung it nhat 1 muc tieu, tang 20% toc danh, duy tri 5s (ko stack)
 /// </summary>
-public class Skill_Yasuo : Skill {
-    Hero hero;
+public class SkillProcessor_Yasuo : SkillProcessor {
     string lastAttackSpeedModifierId;
 
     const float DMG_MUL = 1.5f;
@@ -14,9 +13,8 @@ public class Skill_Yasuo : Skill {
     const float ATK_SPD_MUL = 0.2f;
     const float ATK_SPD_DURATION = 10f;
     
-    public Skill_Yasuo(Hero hero) {
+    public SkillProcessor_Yasuo(Hero hero) : base(hero) {
         this.hero = hero;
-
         events = new Action[]{SpinSlash};
         unstoppable = false;
     }
@@ -28,8 +26,10 @@ public class Skill_Yasuo : Skill {
         var affectedNodes = Map.Instance.GetCircle(hero.MapNode.X, hero.MapNode.Y, RANGE);
         foreach (var node in affectedNodes) {
             if (!node.HasNone()) {
+                // known issue: InvalidOperationException: Collection was modified; enumeration operation may not execute.
+                
                 node.Process(x => {
-                    if (x is Hero h) {
+                    if (x is Hero h && h.Side != hero.Side) {
                         h.GetAbility<HeroAttributes>().TakeDamage(
                             hero.GetAbility<HeroAttributes>().PhysicalDamage * DMG_MUL, 
                             DamageType.Physical, 

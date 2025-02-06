@@ -44,7 +44,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         PostProcess();
 
         dev_mapNode = mapNode != null ? new Vector2(mapNode.X, mapNode.Y) : new Vector2(-1, -1);
-        dev_targetNode = target != null ? new Vector2(target.mapNode.X, target.mapNode.Y) : new Vector2(-1, -1);
+        dev_targetNode = target?.MapNode != null ? new Vector2(target.mapNode.X, target.mapNode.Y) : new Vector2(-1, -1);
     }
 
     void LateUpdate() {

@@ -28,7 +28,7 @@ public class HeroBT : MonoBehaviour {
         var action = new SelectorNode();
         moveAndAction.AddChild(findTarget);
         moveAndAction.AddChild(moveToTarget);
-        // moveAndAction.AddChild(action);
+        moveAndAction.AddChild(action);
         var useSkill = new UseSkill(hero);
         var attack = new Attack(hero);
         action.AddChild(useSkill);
