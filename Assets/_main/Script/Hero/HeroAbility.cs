@@ -10,6 +10,10 @@ public abstract class HeroAbility : MonoBehaviour {
     public virtual void Initialize(Hero hero) {
         this.hero = hero;
     }
+
+    public virtual void Reset() {
+        
+    }
     
     public virtual void PreProcess() { }
     public virtual void Process() { }

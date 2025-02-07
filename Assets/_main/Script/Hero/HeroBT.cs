@@ -2,6 +2,7 @@
 using UnityEngine;
 
 public class HeroBT : MonoBehaviour {
+    Hero hero;
     BTNode root;
 
     void Update() {
@@ -9,7 +10,7 @@ public class HeroBT : MonoBehaviour {
     }
 
     public void Initialize() {
-        var hero = GetComponent<Hero>();
+        hero ??= GetComponent<Hero>();
         
         // root (>) -----> isAlive
         //         |-----> moveAndAction (>) -----> findTarget
@@ -33,5 +34,9 @@ public class HeroBT : MonoBehaviour {
         var attack = new Attack(hero);
         action.AddChild(useSkill);
         action.AddChild(attack);
+    }
+
+    public void Reset() {
+        root = null;
     }
 }

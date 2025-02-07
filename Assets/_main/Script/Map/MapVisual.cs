@@ -95,49 +95,49 @@ public class MapVisual : Singleton<MapVisual> {
         }
         
         if (Input.GetMouseButton(0)) {
-            var ray = cam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit, 1000, layerMask)) {
-                var minDist = Mathf.Infinity;
-                for (int i = 0; i < hexCells.GetLength(0); i++) {
-                    for (int j = 0; j < hexCells.GetLength(1); j++) {
-                        var dist = Vector3.Distance(hexCells[i, j].transform.position, hit.point);
-                        if (dist < minDist) {
-                            minDist = dist;
-                            selectedCell = hexCells[i, j];     
-                        }
-                    }
-                }
-                
-                for (int i=0; i<9; i++) {
-                    var dist = Vector3.Distance(squareCells[i].transform.position, hit.point);
-                    if (dist < minDist) {
-                        minDist = dist;
-                        selectedCell = squareCells[i];
-                    }
-                }
-                
-                selectedCell?.SetHighlight(true);
-
-                if (selectedCell != null && selectedCell is HexCell hex) {
-                    hero.transform.position = selectedCell.transform.position;
-                    
-                    if (selectNodeMethod == SelectNodeMethod.Adjacent) {
-                        selectedCells = Map.Instance.GetCircle(hex.X, hex.Y, range).Select(GetHexIndicator).ToArray();
-                    }
-                    else if (selectNodeMethod == SelectNodeMethod.Line) {
-                        selectedCells = Map.Instance.GetLine(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
-                    }
-                    else if (selectNodeMethod == SelectNodeMethod.Sector) {
-                        selectedCells = Map.Instance.GetSector(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
-                    }
-
-                    if (selectedCells != null) {
-                        foreach (var cell in selectedCells) {
-                            cell?.SetHighlight(true);
-                        }
-                    }
-                }
-            }
+            // var ray = cam.ScreenPointToRay(Input.mousePosition);
+            // if (Physics.Raycast(ray, out var hit, 1000, layerMask)) {
+            //     var minDist = Mathf.Infinity;
+            //     for (int i = 0; i < hexCells.GetLength(0); i++) {
+            //         for (int j = 0; j < hexCells.GetLength(1); j++) {
+            //             var dist = Vector3.Distance(hexCells[i, j].transform.position, hit.point);
+            //             if (dist < minDist) {
+            //                 minDist = dist;
+            //                 selectedCell = hexCells[i, j];     
+            //             }
+            //         }
+            //     }
+            //     
+            //     for (int i=0; i<9; i++) {
+            //         var dist = Vector3.Distance(squareCells[i].transform.position, hit.point);
+            //         if (dist < minDist) {
+            //             minDist = dist;
+            //             selectedCell = squareCells[i];
+            //         }
+            //     }
+            //     
+            //     selectedCell?.SetHighlight(true);
+            //
+            //     if (selectedCell != null && selectedCell is HexCell hex) {
+            //         hero.transform.position = selectedCell.transform.position;
+            //         
+            //         if (selectNodeMethod == SelectNodeMethod.Adjacent) {
+            //             selectedCells = Map.Instance.GetCircle(hex.X, hex.Y, range).Select(GetHexIndicator).ToArray();
+            //         }
+            //         else if (selectNodeMethod == SelectNodeMethod.Line) {
+            //             selectedCells = Map.Instance.GetLine(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
+            //         }
+            //         else if (selectNodeMethod == SelectNodeMethod.Sector) {
+            //             selectedCells = Map.Instance.GetSector(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
+            //         }
+            //
+            //         if (selectedCells != null) {
+            //             foreach (var cell in selectedCells) {
+            //                 cell?.SetHighlight(true);
+            //             }
+            //         }
+            //     }
+            // }
         }
         else if (Input.GetMouseButton(1)) {
             var ray = cam.ScreenPointToRay(Input.mousePosition);

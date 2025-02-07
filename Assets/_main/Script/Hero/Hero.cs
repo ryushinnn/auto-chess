@@ -64,6 +64,10 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         bt.Initialize();
     }
 
+    public void Reset() {
+        
+    }
+
     public T GetAbility<T>() where T : HeroAbility {
         if (!cachedAbilities.ContainsKey(typeof(T))) {
             cachedAbilities.Add(typeof(T), abilities.Find(ab => ab is T));

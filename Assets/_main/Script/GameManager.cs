@@ -50,6 +50,18 @@ public class GameManager : MonoBehaviour {
             heroes.Add(hero);
         }
     }
+
+    [Button]
+    void Pause() {
+        
+    }
+
+    [Button]
+    void Clear() {
+        foreach (var h in heroes) {
+            Destroy(h.gameObject);
+        }
+    }
 }
 
 [Serializable]

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Yasuo
   realm: 0
   role: 0
-  price: 0
+  price: 3
   mecanim: {fileID: 6263284951136927269, guid: 9e8b37a48673ed14fad1c2dd36e1ecbb, type: 3}
   maxHp: 1000
   physicalDamage: 128
