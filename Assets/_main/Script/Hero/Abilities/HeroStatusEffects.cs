@@ -9,7 +9,8 @@ public class HeroStatusEffects : HeroAbility {
     public bool IsSilent => isSilent;
     public bool IsAntiHeal => isAntiHeal;
 
-    [SerializeField, ReadOnly] float tenacity;
+    HeroAttributes attributes;
+
     [SerializeField, ReadOnly] bool isAirborne;
     [SerializeField, ReadOnly] bool isUnstoppable;
     [SerializeField, ReadOnly] bool isStun;
@@ -23,9 +24,16 @@ public class HeroStatusEffects : HeroAbility {
     
     const float AIRBORNE_MAX_HEIGHT = 2;
 
-    public override void Initialize(Hero hero) {
-        base.Initialize(hero);
-        tenacity = hero.Trait.tenacity;
+    public override void ResetAll() {
+        isAirborne = false;
+        isUnstoppable = false;
+        isStun = false;
+        isSilent = false;
+        isAntiHeal = false;
+        airborneSequence?.Kill();
+        stunDuration = 0;
+        silenceDuration = 0;
+        antiHealDuration = 0;
     }
 
     public override void Process() {
@@ -42,6 +50,10 @@ public class HeroStatusEffects : HeroAbility {
                 isSilent = false;
             }
         }
+    }
+
+    protected override void FindReferences() {
+        attributes = hero.GetAbility<HeroAttributes>();
     }
 
     public void Airborne(float duration) {
@@ -71,7 +83,7 @@ public class HeroStatusEffects : HeroAbility {
     public void Stun(float duration) {
         if (isUnstoppable) return;
 
-        duration *= (1-tenacity);
+        duration *= (1-attributes.Tenacity);
         isStun = true;
         stunDuration = Mathf.Max(stunDuration, duration);
         hero.GetAbility<HeroAttack>().Interrupt();
@@ -82,7 +94,7 @@ public class HeroStatusEffects : HeroAbility {
     public void Silent(float duration) {
         if (isUnstoppable) return;
         
-        duration *= (1-tenacity);
+        duration *= (1-attributes.Tenacity);
         isSilent = true;
         silenceDuration = Mathf.Max(silenceDuration, duration);
         hero.GetAbility<HeroSkill>().Interrupt();

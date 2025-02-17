@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class HeroSkill : HeroAbility {
     public bool IsUsingSkill => isUsingSkill;
+
+    HeroAttributes attributes;
+    HeroRotation rotation;
+    HeroStatusEffects effects;
     
     SkillProcessor processor;
     bool isUsingSkill;
@@ -16,18 +20,29 @@ public class HeroSkill : HeroAbility {
         };
     }
 
+    public override void ResetAll() {
+        isUsingSkill = false;
+        resetUsingSkillTween?.Kill();
+    }
+
     public override void Process() {
         processor.Process();
     }
 
+    protected override void FindReferences() {
+        attributes = hero.GetAbility<HeroAttributes>();
+        rotation = hero.GetAbility<HeroRotation>();
+        effects = hero.GetAbility<HeroStatusEffects>();
+    }
+
     public bool UseSkill() {
-        if (hero.GetAbility<HeroAttributes>().Energy < HeroTrait.MAX_ENERGY 
+        if (attributes.Energy < HeroTrait.MAX_ENERGY 
             || isUsingSkill
             || BlockedByOtherActions()
             || BlockedByStatusEffects()) return false;
         
         isUsingSkill = true;
-        hero.GetAbility<HeroRotation>().Rotate(hero.Target.transform.position - hero.transform.position);
+        rotation.Rotate(hero.Target.transform.position - hero.transform.position);
         processor.Execute(out var duration);
         resetUsingSkillTween?.Kill();
         resetUsingSkillTween = DOVirtual.DelayedCall(duration, () => {
@@ -47,8 +62,6 @@ public class HeroSkill : HeroAbility {
     }
     
     bool BlockedByStatusEffects() {
-        return hero.GetAbility<HeroStatusEffects>().IsAirborne
-               || hero.GetAbility<HeroStatusEffects>().IsStun
-               || hero.GetAbility<HeroStatusEffects>().IsSilent;
+        return effects.IsAirborne || effects.IsStun || effects.IsSilent;
     }
 }

@@ -9,13 +9,13 @@ public abstract class HeroAbility : MonoBehaviour {
     
     public virtual void Initialize(Hero hero) {
         this.hero = hero;
+        FindReferences();
     }
 
-    public virtual void Reset() {
-        
-    }
-    
+    public virtual void ResetAll() { }
     public virtual void PreProcess() { }
     public virtual void Process() { }
     public virtual void PostProcess() { }
+    
+    protected virtual void FindReferences() { }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 public class HeroBT : MonoBehaviour {
     Hero hero;
     BTNode root;
+    SequenceNode mainLoop;
 
     void Update() {
         root?.Evaluate();
@@ -18,8 +19,7 @@ public class HeroBT : MonoBehaviour {
         //                                  |-----> action (?) -----> attack
         //                                                    |-----> useSkill
         
-        var mainLoop = new SequenceNode();
-        root = mainLoop;
+        mainLoop = new SequenceNode();
         var isAlive = new IsAlive(hero);
         var moveAndAction = new SequenceNode();
         mainLoop.AddChild(isAlive);
@@ -36,7 +36,7 @@ public class HeroBT : MonoBehaviour {
         action.AddChild(attack);
     }
 
-    public void Reset() {
-        root = null;
+    public void Switch(bool active) {
+        root = active ? mainLoop : null;
     }
 }

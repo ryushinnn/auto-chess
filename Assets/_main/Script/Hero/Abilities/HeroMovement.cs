@@ -8,13 +8,18 @@ using Random = UnityEngine.Random;
 
 public class HeroMovement : HeroAbility {
     public bool IsMoving => destination != null;
+
+    HeroRotation rotation;
+    HeroAttributes attributes;
     
     Sequence moveSequence;
     MapNode destination;
     DestinationMark mark;
 
-    public override void Initialize(Hero hero) {
-        base.Initialize(hero);
+    public override void ResetAll() {
+        moveSequence?.Kill();
+        destination = null;
+        mark = null;
         hero.Mecanim.Idle();
     }
 
@@ -24,6 +29,11 @@ public class HeroMovement : HeroAbility {
         }
         
         hero.dev_destinationNode = destination != null ? new Vector2(destination.X, destination.Y) : new Vector2(-1, -1);
+    }
+
+    protected override void FindReferences() {
+        rotation = hero.GetAbility<HeroRotation>();
+        attributes = hero.GetAbility<HeroAttributes>();
     }
 
     public void StartMove() {
@@ -62,14 +72,14 @@ public class HeroMovement : HeroAbility {
             for (int i = 1; i < path.vectorPath.Count; i++) {
                 var wp = path.vectorPath[i];
                 moveSequence.AppendCallback(() => {
-                        hero.GetAbility<HeroRotation>().Rotate(wp - hero.transform.position);
+                        rotation.Rotate(wp - hero.transform.position);
                     })
-                    .Append(hero.transform.DOMove(wp, 1 / hero.GetAbility<HeroAttributes>().MovementSpeed).SetEase(Ease.Linear));
+                    .Append(hero.transform.DOMove(wp, 1 / attributes.MovementSpeed).SetEase(Ease.Linear));
             }
 
             moveSequence.AppendCallback(() => {
                 Debug.Log($"{hero.name} reached ({destination.X}, {destination.Y})");
-                hero.GetAbility<HeroRotation>().Rotate(hero.Target.MapNode.Position - hero.transform.position);
+                rotation.Rotate(hero.Target.MapNode.Position - hero.transform.position);
                 destination.Remove(mark);
                 StopMove();
             });

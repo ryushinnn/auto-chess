@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour {
 public class TeamMember {
     public bool active;
     public string id;
-    public int level;
+    public int star;
     public Vector2Int mapNode;
     public Item[] items;
 }

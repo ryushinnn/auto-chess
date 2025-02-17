@@ -6,6 +6,12 @@ using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
+public enum HeroState {
+    Preparation,
+    ReadyToFight,
+    InBattle
+}
+
 public class Hero : MonoBehaviour, IMapNodeObject {
     [SerializeField] Transform model;
     [SerializeField] Transform abilitiesContainer;
@@ -22,6 +28,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     HeroBT bt;
     [SerializeField, ReadOnly] HeroTrait trait;
     [SerializeField, ReadOnly] TeamSide side;
+    [SerializeField, ReadOnly] HeroState state;
     Mecanim mecanim;
     List<HeroAbility> abilities = new();
     Dictionary<Type, HeroAbility> cachedAbilities = new();
@@ -32,11 +39,6 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     public Vector2 dev_mapNode;
     public Vector2 dev_targetNode;
     public Vector2 dev_destinationNode;
-    
-    void Awake() {
-        FindAbilities();
-        FindComponents();
-    }
 
     void Update() {
         PreProcess();
@@ -54,18 +56,28 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     public void Initialize(HeroTrait trait, TeamSide side) {
         this.trait = trait;
         this.side = side;
-        foreach (Transform child in model) {
-            if (child.TryGetComponent(out Mecanim _)) {
-                Destroy(child.gameObject);
-            }
-        }
-        mecanim = Instantiate(trait.mecanim, model);
+        FindAbilities();
+        FindComponents();
+        SetUpModel();
         abilities.ForEach(x=>x.Initialize(this));
         bt.Initialize();
     }
 
-    public void Reset() {
-        
+    public void Switch(HeroState state) {
+        this.state = state;
+        switch (this.state) {
+            case HeroState.Preparation:
+                bt.Switch(false);
+                break;
+            
+            case HeroState.ReadyToFight:
+                abilities.ForEach(x => x.ResetAll());
+                break;
+            
+            case HeroState.InBattle:
+                bt.Switch(true);
+                break;
+        }
     }
 
     public T GetAbility<T>() where T : HeroAbility {
@@ -109,6 +121,15 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         bt = GetComponent<HeroBT>();
     }
 
+    void SetUpModel() {
+        foreach (Transform child in model) {
+            if (child.TryGetComponent(out Mecanim _)) {
+                Destroy(child.gameObject);
+            }
+        }
+        mecanim = Instantiate(trait.mecanim, model);
+    }
+
     void PreProcess() {
         foreach (var ab in abilities) {
             if (ab.IsActive) {
@@ -134,7 +155,9 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     }
 
     void RemoveNodeOnDead() {
-        if (!GetAbility<HeroAttributes>().IsAlive && mapNode != null) {
+        if (state == HeroState.InBattle
+            && !GetAbility<HeroAttributes>().IsAlive && mapNode != null) {
+            
             mapNode.Remove(this);
             mapNode = null;
         }
@@ -144,5 +167,15 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     void Dev_ChangeNode(int x, int y) {
         SetNode(Map.Instance.GetNode(x,y));
         ResetPosition(true);
+    }
+    
+    [Button]
+    void Dev_ChangeState(HeroState state) {
+        Switch(state);
+    }
+
+    [Button]
+    void Dev_CheckNullMapNode() {
+        Debug.Log("mapNode is null: " + (mapNode == null));
     }
 }

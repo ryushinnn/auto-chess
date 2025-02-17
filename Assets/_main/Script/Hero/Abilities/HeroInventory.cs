@@ -5,20 +5,32 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class HeroInventory : HeroAbility {
+    HeroAttributes attributes;
+    
+    
     [SerializeField] Image[] itemIcons;
     [SerializeField] RectTransform ui;
-    [SerializeField,ReadOnly] List<ItemSlot> itemSlots = new();
+    [SerializeField,ReadOnly] List<ItemSlot> itemSlots;
     
     const int CAPACITY = 3;
     const float UI_HEIGHT_NO_ITEM = 2.5f;
     const float UI_HEIGHT_WITH_ITEM = 3.25f;
 
-    public override void Initialize(Hero hero) {
-        base.Initialize(hero);
+    public override void ResetAll() {
         foreach (var i in itemIcons) {
             i.enabled = false;
         }
         ui.anchoredPosition = new Vector2(ui.anchoredPosition.x, UI_HEIGHT_NO_ITEM);
+        if (itemSlots == null) {
+            itemSlots = new List<ItemSlot>();
+        }
+        else {
+            itemSlots.Clear();
+        }
+    }
+
+    protected override void FindReferences() {
+        attributes = hero.GetAbility<HeroAttributes>();
     }
 
     public void Add(Item item) {
@@ -36,7 +48,7 @@ public class HeroInventory : HeroAbility {
 
         foreach (var m in slot.item.modifiers) {
             var modifier = AttributeModifier.Create(m);
-            hero.GetAbility<HeroAttributes>().AddAttributeModifier(modifier);
+            attributes.AddAttributeModifier(modifier);
             slot.modifierIds.Add(modifier.id);
         }
         itemSlots.Add(slot);
@@ -66,7 +78,7 @@ public class HeroInventory : HeroAbility {
     void Dev_RemoveAll() {
         foreach (var s in itemSlots) {
             foreach (var id in s.modifierIds) {
-                hero.GetAbility<HeroAttributes>().RemoveAttributeModifier(id);
+                attributes.RemoveAttributeModifier(id);
             }
         }
         itemSlots.Clear();

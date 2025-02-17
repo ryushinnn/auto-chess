@@ -5,6 +5,10 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class HeroAttributes : HeroAbility {
+    HeroStatusEffects effects;
+    HeroMovement movement;
+    HeroAttack attack;
+    
     [SerializeField] ProgressBar healthBar;
     [SerializeField] ProgressBar energyBar;
     [SerializeField] Canvas canvas;
@@ -49,12 +53,7 @@ public class HeroAttributes : HeroAbility {
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
-        isAlive = true;
         maxHp = this.hero.Trait.maxHp;
-        hp = maxHp;
-        energy = 0;
-        healthBar.UpdateAmount(1, true);
-        energyBar.UpdateAmount(0, true);
         armor = this.hero.Trait.armor;
         resistance = this.hero.Trait.resistance;
         attackSpeed = this.hero.Trait.attackSpeed;
@@ -68,6 +67,14 @@ public class HeroAttributes : HeroAbility {
         magicalPenetration = this.hero.Trait.magicalPenetration;
         lifeSteal = this.hero.Trait.lifeSteal;
         tenacity = this.hero.Trait.tenacity;
+    }
+
+    public override void ResetAll() {
+        isAlive = true;
+        hp = maxHp;
+        energy = 0;
+        healthBar.UpdateAmount(1, true);
+        energyBar.UpdateAmount(0, true);
     }
 
     public override void Process() {
@@ -88,6 +95,12 @@ public class HeroAttributes : HeroAbility {
             }
             RecalculateAttributes(key);
         }
+    }
+
+    protected override void FindReferences() {
+        effects = hero.GetAbility<HeroStatusEffects>();
+        movement = hero.GetAbility<HeroMovement>();
+        attack = hero.GetAbility<HeroAttack>();
     }
 
     public float TakeDamage(float damage, DamageType type, float penetration) {
@@ -113,7 +126,7 @@ public class HeroAttributes : HeroAbility {
     public void Heal(float amount) {
         if (!isAlive) return;
         
-        if (hero.GetAbility<HeroStatusEffects>().IsAntiHeal) {
+        if (effects.IsAntiHeal) {
             amount *= HeroTrait.HEAL_UPON_ANTI_HEALTH;
         }
 
@@ -218,7 +231,7 @@ public class HeroAttributes : HeroAbility {
                 modifiers?.ForEach(x => {
                     attackSpeed = Mathf.Max(attackSpeed + (x.type == ModifierType.FixedValue ? x.value : attackSpeed * x.value), HeroTrait.MIN_ATTACK_SPEED);
                 });
-                hero.GetAbility<HeroAttack>().RefreshAttackCooldown();
+                attack.RefreshAttackCooldown();
                 break;
             
             case AttributeModifierKey.CriticalChance:
@@ -275,7 +288,7 @@ public class HeroAttributes : HeroAbility {
 
     void Die() {
         isAlive = false;
-        hero.GetAbility<HeroMovement>().StopMove(true);
+        movement.StopMove(true);
         hero.Mecanim.Death();
         hero.Mecanim.InterruptAttack();
         hero.Mecanim.InterruptSkill();
