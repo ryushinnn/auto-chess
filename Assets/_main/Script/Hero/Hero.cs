@@ -26,6 +26,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
 
     Seeker seeker;
     HeroBT bt;
+    HeroPicker picker;
     [SerializeField, ReadOnly] HeroTrait trait;
     [SerializeField, ReadOnly] TeamSide side;
     [SerializeField, ReadOnly] HeroState state;
@@ -61,6 +62,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         SetUpModel();
         abilities.ForEach(x=>x.Initialize(this));
         bt.Initialize();
+        Switch(HeroState.Preparation);
     }
 
     public void Switch(HeroState state) {
@@ -68,10 +70,12 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         switch (this.state) {
             case HeroState.Preparation:
                 bt.Switch(false);
+                // picker.enabled = true;
                 break;
             
             case HeroState.ReadyToFight:
                 abilities.ForEach(x => x.ResetAll());
+                // picker.enabled = false;
                 break;
             
             case HeroState.InBattle:
@@ -119,6 +123,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     void FindComponents() {
         seeker = GetComponent<Seeker>();
         bt = GetComponent<HeroBT>();
+        picker = GetComponent<HeroPicker>();
     }
 
     void SetUpModel() {

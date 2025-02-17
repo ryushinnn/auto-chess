@@ -103,7 +103,11 @@ public class HeroMovement : HeroAbility {
     }
 
     void OnDrawGizmos() {
-        if (hero.MapNode != null && destination != null && hero.Target?.MapNode != null) {
+        if (hero != null 
+            && hero.MapNode != null 
+            && destination != null 
+            && hero.Target?.MapNode != null) {
+            
             var offset = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
             Gizmos.color = Color.red;
             Utils.DrawArrow(hero.MapNode.Position, destination.Position + offset);
