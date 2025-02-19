@@ -27,6 +27,9 @@ public class MapVisual : Singleton<MapVisual> {
     float updateInterval;
     float updateTimer;
     
+    Indicator highlightCell;
+    Indicator notAvailableCell;
+    
     public SelectNodeMethod selectNodeMethod;
     public int range;
     public Direction direction;
@@ -64,8 +67,24 @@ public class MapVisual : Singleton<MapVisual> {
 
     }
 
-    public void Highlight(MapNode node, bool active) {
-        hexCells[node.X, node.Y].SetHighlight(active);
+    public void MarkAsNonEmpty(MapNode node, bool nonEmpty) {
+        hexCells[node.X, node.Y].SetNonEmpty(nonEmpty);
+    }
+
+    public void MarkAsNotAvailable(bool value, MapNode node = null) {
+        notAvailableCell?.SetNotAvailable(false);
+        if (value && node != null) {
+            notAvailableCell = hexCells[node.X, node.Y];
+            notAvailableCell.SetNotAvailable(true);
+        }
+    }
+
+    public void Highlight(bool value, MapNode node = null) {
+        highlightCell?.SetHighlight(false);
+        if (value && node != null) {
+            highlightCell = hexCells[node.X, node.Y];
+            highlightCell.SetHighlight(true);
+        }
     }
 
     void SpawnSquareIndicators() {

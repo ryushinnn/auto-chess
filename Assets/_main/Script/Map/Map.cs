@@ -29,7 +29,7 @@ public class Map : Singleton<Map> {
     
     MapNode[,] nodes;
     
-    const int SIZE = 8;
+    public const int SIZE = 8;
     
     public List<Dev_MapNode> dev_mapNodes = new();
 
@@ -61,7 +61,7 @@ public class Map : Singleton<Map> {
         
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
-                MapVisual.Instance.Highlight(nodes[i,j],nodes[i,j].Any(x=>x is Hero));
+                MapVisual.Instance.MarkAsNonEmpty(nodes[i,j],nodes[i,j].Any(x=>x is Hero));
 
                 if (!nodes[i, j].HasNone()) {
                     dev_mapNodes.Add(new Dev_MapNode(nodes[i, j]));
@@ -109,13 +109,13 @@ public class Map : Singleton<Map> {
         return node;
     }
 
-    public MapNode GetNode(Vector3 position) {
+    public MapNode GetNode(Vector3 position, Func<int,int,bool> condition = null) {
         var minDist = Mathf.Infinity;
         var node = default(MapNode);
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {;
                 var dist = Vector3.Distance(nodes[i, j].Position, position);
-                if (dist < minDist) {
+                if (dist < minDist && (condition == null || condition(i, j))) {
                     minDist = dist;
                     node = nodes[i, j];
                 }

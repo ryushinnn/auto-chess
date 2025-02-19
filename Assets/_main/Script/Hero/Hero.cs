@@ -70,12 +70,12 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         switch (this.state) {
             case HeroState.Preparation:
                 bt.Switch(false);
-                // picker.enabled = true;
+                picker.enabled = true;
                 break;
             
             case HeroState.ReadyToFight:
                 abilities.ForEach(x => x.ResetAll());
-                // picker.enabled = false;
+                picker.enabled = false;
                 break;
             
             case HeroState.InBattle:
