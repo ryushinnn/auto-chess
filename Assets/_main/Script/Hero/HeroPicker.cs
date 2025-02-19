@@ -35,7 +35,19 @@ public class HeroPicker : MonoBehaviour {
         if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mapLayerMask) && hit.collider != null) {
             var pointXZ = new Vector3(hit.point.x, 0, hit.point.z);
             hero.transform.position = pointXZ + offset;
-            node = Map.Instance.GetNode(pointXZ, (x, _) => x < Map.SIZE / 2);
+            var newNode = Map.Instance.GetNode(pointXZ, (x, _) => x < Map.SIZE / 2);
+            var distanceLimit = 2;
+            if (Vector3.Distance(newNode.Position, pointXZ) > distanceLimit) {
+                // check if touch the deck
+            }
+            else {
+                node = newNode;
+            }
+            if (node == null) {
+                MapVisual.Instance.Highlight(false);
+                MapVisual.Instance.MarkAsNotAvailable(false);
+                return;
+            }
             if (node.HasNone() || node.HasOnly(hero)) {
                 MapVisual.Instance.Highlight(true, node);
                 MapVisual.Instance.MarkAsNotAvailable(false);
@@ -52,6 +64,11 @@ public class HeroPicker : MonoBehaviour {
         
         tween?.Kill();
         tween = hero.Model.DOLocalMoveY(0, 0.2f);
+        if (node == null) {
+            MapVisual.Instance.Highlight(false);
+            MapVisual.Instance.MarkAsNotAvailable(false);
+            return;
+        }
         if (node.HasNone() || node.HasOnly(hero)) {
             hero.SetNode(node);
             hero.ResetPosition();
