@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class MapNode {
+public class MapNode : Node {
     public int X { get; private set; }
     public int Y { get; private set; }
-    public Vector3 Position { get; private set; }
     
     List<IMapNodeObject> objects = new();
     

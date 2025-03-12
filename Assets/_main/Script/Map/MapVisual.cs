@@ -30,6 +30,9 @@ public class MapVisual : Singleton<MapVisual> {
     Indicator highlightCell;
     Indicator notAvailableCell;
     
+    readonly Vector2 deckLowerCorner = new Vector2(-8.5f, -8.5f);
+    readonly Vector2 deckUpperCorner = new Vector2(8.5f, 8.5f);
+    
     public SelectNodeMethod selectNodeMethod;
     public int range;
     public Direction direction;
