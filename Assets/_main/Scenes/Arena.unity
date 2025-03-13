@@ -1037,6 +1037,7 @@ MonoBehaviour:
   heroTraits:
   - {fileID: 11400000, guid: 9cd4d9a7c9d8546439df095c97d96ecc, type: 2}
   - {fileID: 11400000, guid: 3497b5ea78b8c9a4b9efb1fddb0d2fc3, type: 2}
+  - {fileID: 11400000, guid: 59b7c4baa14a8e940b9f1338c146bd0a, type: 2}
   completeItems:
   - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
 --- !u!4 &1019160392
@@ -1145,15 +1146,15 @@ MonoBehaviour:
     mapNode: {x: 0, y: 3}
     items:
     - {fileID: 11400000, guid: 8d105db34d57d72429a7dafadd916efe, type: 2}
-  - active: 1
+  - active: 0
     id: Yasuo
     star: 0
     mapNode: {x: 0, y: 4}
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   enemyTeam:
-  - active: 0
-    id: Aatrox
+  - active: 1
+    id: Zed
     star: 0
     mapNode: {x: 7, y: 4}
     items:
@@ -1232,11 +1233,10 @@ MonoBehaviour:
   squareParent: {fileID: 97593393}
   squareCell: {fileID: 8085342610786647693, guid: 8ae0000caf99ab14da17a4df0d3c1fb8,
     type: 3}
-  squareWidth: 1.68
-  squareHeight: 1.72
   updateRate: 30
-  row: 0
-  column: 0
+  mapRow: 0
+  mapColumn: 0
+  deckSize: 0
   selectedCell: {fileID: 0}
   selectNodeMethod: 0
   range: 0

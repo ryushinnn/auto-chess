@@ -12,15 +12,15 @@ public class HeroStatusEffects : HeroAbility {
     HeroAttributes attributes;
 
     [SerializeField, ReadOnly] bool isAirborne;
-    [SerializeField, ReadOnly] bool isUnstoppable;
-    [SerializeField, ReadOnly] bool isStun;
-    [SerializeField, ReadOnly] bool isSilent;
-    [SerializeField, ReadOnly] bool isAntiHeal;
+    [SerializeField, ReadOnly, HorizontalGroup("UNSTOPPABLE"), LabelWidth(100)] bool isUnstoppable;
+    [SerializeField, ReadOnly, HorizontalGroup("STUN"), LabelWidth(100)]        bool isStun;
+    [SerializeField, ReadOnly, HorizontalGroup("SILENT"), LabelWidth(100)]      bool isSilent;
+    [SerializeField, ReadOnly, HorizontalGroup("ANTI_HEAL"), LabelWidth(100)]   bool isAntiHeal;
     
     Sequence airborneSequence;
-    float stunDuration;
-    float silenceDuration;
-    float antiHealDuration;
+    [SerializeField, ReadOnly, HorizontalGroup("STUN"), LabelText(""), ShowIf("isStun")]          float stunDuration;
+    [SerializeField, ReadOnly, HorizontalGroup("SILENT"), LabelText(""), ShowIf("isSilent")]      float silenceDuration;
+    [SerializeField, ReadOnly, HorizontalGroup("ANTI_HEAL"), LabelText(""), ShowIf("isAntiHeal")] float antiHealDuration;
     
     const float AIRBORNE_MAX_HEIGHT = 2;
 
@@ -48,6 +48,13 @@ public class HeroStatusEffects : HeroAbility {
             silenceDuration -= Time.deltaTime;
             if (silenceDuration <= 0) {
                 isSilent = false;
+            }
+        }
+
+        if (isAntiHeal) {
+            antiHealDuration -= Time.deltaTime;
+            if (antiHealDuration <= 0) {
+                isAntiHeal = false;
             }
         }
     }

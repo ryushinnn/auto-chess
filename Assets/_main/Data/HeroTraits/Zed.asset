@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Zed
   m_EditorClassIdentifier: 
-  id: Yasuo
+  id: Zed
   realm: 3
   role: 3
   price: 5
-  mecanim: {fileID: 6263284951136927269, guid: 9e8b37a48673ed14fad1c2dd36e1ecbb, type: 3}
+  mecanim: {fileID: 5526161963982385637, guid: 9ce5cf6b7c1d3b848be1116c77fbe31e, type: 3}
   maxHp: 850
   physicalDamage: 225
   magicalDamage: 0
@@ -31,8 +31,8 @@ MonoBehaviour:
   magicalPenetration: 0
   lifeSteal: 0
   tenacity: 0
-  energyRegenPerAttack: 25
-  energyRegenPerHit: 10
+  energyRegenPerAttack: 10
+  energyRegenPerHit: 9
   attackRange: 1
   minDps: 112.5
   avgDps: 147.65625

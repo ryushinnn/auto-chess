@@ -17,6 +17,7 @@ public class HeroSkill : HeroAbility {
         processor = hero.Trait.id switch {
             "Aatrox" => new SkillProcessor_Aatrox(hero),
             "Yasuo" => new SkillProcessor_Yasuo(hero),
+            "Zed" => new SkillProcessor_Zed(hero),
         };
     }
 

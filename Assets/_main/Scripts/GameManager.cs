@@ -62,6 +62,17 @@ public class GameManager : MonoBehaviour {
             Destroy(h.gameObject);
         }
     }
+
+    [Button]
+    void dev_ChangeState(HeroState state) {
+        heroes.ForEach(x=>x.Switch(state));
+    }
+
+    [Button]
+    void dev_Battle() {
+        heroes.ForEach(x=>x.Switch(HeroState.ReadyToFight));
+        heroes.ForEach(x=>x.Switch(HeroState.InBattle));
+    }
 }
 
 [Serializable]
