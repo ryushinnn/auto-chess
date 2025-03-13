@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -45,4 +46,16 @@ public class HeroTrait : ScriptableObject {
     public const float MIN_DAMAGE = 1;
     public const float MIN_ATTACK_SPEED = 0.1f;
     public const float MIN_MOVEMENT_SPEED = 0.1f;
+
+    [TitleGroup("Calculated Result")]
+    [SerializeField, ReadOnly] float minDps;
+    [SerializeField, ReadOnly] float avgDps;
+    [SerializeField, ReadOnly] DamageType damageType;
+
+    void OnValidate() {
+        var outputDamage = physicalDamage + magicalDamage;
+        minDps = outputDamage * attackSpeed;
+        avgDps = minDps * (1 + criticalChance * (criticalDamage - 1));
+        damageType = physicalDamage > magicalDamage ? DamageType.Physical : DamageType.Magical;
+    }
 }

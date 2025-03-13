@@ -10,30 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
-  m_Name: Aatrox
+  m_Name: Zed
   m_EditorClassIdentifier: 
-  id: Aatrox
+  id: Yasuo
   realm: 3
-  role: 0
+  role: 3
   price: 5
-  mecanim: {fileID: 6030379420075625112, guid: 48f63ca32561734469484b7530049159, type: 3}
-  maxHp: 1270
-  physicalDamage: 150
+  mecanim: {fileID: 6263284951136927269, guid: 9e8b37a48673ed14fad1c2dd36e1ecbb, type: 3}
+  maxHp: 850
+  physicalDamage: 225
   magicalDamage: 0
-  armor: 32
-  resistance: 24
-  attackSpeed: 0.45
-  movementSpeed: 2
-  criticalChance: 0.1
-  criticalDamage: 2
+  armor: 18
+  resistance: 21
+  attackSpeed: 0.5
+  movementSpeed: 2.2
+  criticalChance: 0.25
+  criticalDamage: 2.25
   energyRegenEfficient: 1
   physicalPenetration: 0
   magicalPenetration: 0
   lifeSteal: 0
   tenacity: 0
-  energyRegenPerAttack: 8
-  energyRegenPerHit: 12
+  energyRegenPerAttack: 25
+  energyRegenPerHit: 10
   attackRange: 1
-  minDps: 67.5
-  avgDps: 74.25
+  minDps: 112.5
+  avgDps: 147.65625
   damageType: 0
