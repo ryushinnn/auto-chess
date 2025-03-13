@@ -8,6 +8,8 @@ public enum DamageType {
 }
 
 public class HeroAttack : HeroAbility {
+    public AttackProcessor Processor => processor;
+    
     HeroAttributes attributes;
     HeroRotation rotation;
     HeroSkill skill;
@@ -20,6 +22,7 @@ public class HeroAttack : HeroAbility {
         base.Initialize(hero);
         processor = hero.Trait.id switch {
             "Yasuo" => new AttackProcessor_Yasuo(hero),
+            "Yone" => new AttackProcessor_Yone(hero),
             _ => new AttackProcessor(hero)
         };
     }

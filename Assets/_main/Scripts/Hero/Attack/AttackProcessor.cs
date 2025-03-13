@@ -13,40 +13,42 @@ public class AttackProcessor {
 
     public virtual void Execute() {
         CalculateDamage(out var dmg, out var type, out var pen);
+        var attributes = hero.GetAbility<HeroAttributes>();
         hero.Mecanim.Attack(() => {
             if (hero.Target == null) return;
             var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen);
-            hero.GetAbility<HeroAttributes>().Heal(outputDamage * hero.GetAbility<HeroAttributes>().LifeSteal);
-            hero.GetAbility<HeroAttributes>().RegenEnergy(hero.Trait.energyRegenPerAttack);
+            attributes.Heal(outputDamage * attributes.LifeSteal);
+            attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
         });
     }
     
     protected virtual void CalculateDamage(out float damage, out DamageType type, out float penetration) {
-        if (hero.GetAbility<HeroAttributes>().PhysicalDamage > hero.GetAbility<HeroAttributes>().MagicalDamage) {
-            damage = hero.GetAbility<HeroAttributes>().PhysicalDamage;
+        var attributes = hero.GetAbility<HeroAttributes>();
+        if (attributes.PhysicalDamage > attributes.MagicalDamage) {
+            damage = attributes.PhysicalDamage;
             type = DamageType.Physical;
-            penetration = hero.GetAbility<HeroAttributes>().PhysicalPenetration;
+            penetration = attributes.PhysicalPenetration;
         }
-        else if (hero.GetAbility<HeroAttributes>().PhysicalDamage < hero.GetAbility<HeroAttributes>().MagicalDamage) {
-            damage = hero.GetAbility<HeroAttributes>().MagicalDamage;
+        else if (attributes.PhysicalDamage < attributes.MagicalDamage) {
+            damage = attributes.MagicalDamage;
             type = DamageType.Magical;
-            penetration = hero.GetAbility<HeroAttributes>().MagicalPenetration;
+            penetration = attributes.MagicalPenetration;
         }
         else {
-            if (hero.GetAbility<HeroAttributes>().PhysicalPenetration > hero.GetAbility<HeroAttributes>().MagicalPenetration) {
-                damage = hero.GetAbility<HeroAttributes>().PhysicalDamage;
+            if (attributes.PhysicalPenetration > attributes.MagicalPenetration) {
+                damage = attributes.PhysicalDamage;
                 type = DamageType.Physical;
-                penetration = hero.GetAbility<HeroAttributes>().PhysicalPenetration;
+                penetration = attributes.PhysicalPenetration;
             }
             else {
-                damage = hero.GetAbility<HeroAttributes>().MagicalDamage;
+                damage = attributes.MagicalDamage;
                 type = DamageType.Magical;
-                penetration = hero.GetAbility<HeroAttributes>().MagicalPenetration;
+                penetration = attributes.MagicalPenetration;
             }
         }
 
-        if (Random.value < hero.GetAbility<HeroAttributes>().CriticalChance) {
-            damage *= hero.GetAbility<HeroAttributes>().CriticalDamage;
+        if (Random.value < attributes.CriticalChance) {
+            damage *= attributes.CriticalDamage;
         }
     }
 }

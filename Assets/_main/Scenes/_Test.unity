@@ -209,13 +209,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 996735580}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: -0, y: -0.240518, z: -0, w: 0.9706448}
+  m_LocalPosition: {x: 5.15, y: 1, z: -6.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -27.834, z: 0}
 --- !u!114 &996735584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,6 +570,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: chibi_prestige_dragonmancer_yasuo
       objectReference: {fileID: 0}
+    - target: {fileID: 2510497704773642200, guid: 9e8b37a48673ed14fad1c2dd36e1ecbb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6083431918177424386, guid: 9e8b37a48673ed14fad1c2dd36e1ecbb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -625,6 +630,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e8b37a48673ed14fad1c2dd36e1ecbb, type: 3}
+--- !u!1001 &6435790680674540309
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6329303845076159547, guid: acacc7ffae828af479be1b7552135b27,
+        type: 3}
+      propertyPath: m_Name
+      value: chibi_spirit_blossom_yone_1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: acacc7ffae828af479be1b7552135b27, type: 3}
 --- !u!1001 &7702366431411890129
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -703,3 +776,4 @@ SceneRoots:
   - {fileID: 5288507665102310088}
   - {fileID: 7702366431411890129}
   - {fileID: 2137227181}
+  - {fileID: 6435790680674540309}
