@@ -23,7 +23,7 @@ public class SkillProcessor_Yasuo : SkillProcessor {
         if (hero.Target == null) return;
         
         var success = false;
-        var affectedNodes = Map.Instance.GetCircle(hero.MapNode.X, hero.MapNode.Y, RANGE);
+        var affectedNodes = Map.Instance.GetCircle(hero.MNode.X, hero.MNode.Y, RANGE);
         foreach (var node in affectedNodes) {
             if (!node.HasNone()) {
                 // known issue: InvalidOperationException: Collection was modified; enumeration operation may not execute.

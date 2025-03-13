@@ -111,7 +111,7 @@ public class Map : Singleton<Map> {
 
     public MapNode GetNode(Vector3 position, Func<int,int,bool> condition = null) {
         var minDist = Mathf.Infinity;
-        var node = default(MapNode);
+        MapNode node = null;
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {;
                 var dist = Vector3.Distance(nodes[i, j].Position, position);

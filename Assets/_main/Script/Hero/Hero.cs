@@ -21,7 +21,8 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     public Seeker Seeker => seeker;
     public Transform Model => model;
     public Mecanim Mecanim => mecanim;
-    public MapNode MapNode => mapNode;
+    public MapNode MNode => node as MapNode;
+    public DeckNode DNode => node as DeckNode;
     public Hero Target => target;
 
     Seeker seeker;
@@ -33,7 +34,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     Mecanim mecanim;
     List<HeroAbility> abilities = new();
     Dictionary<Type, HeroAbility> cachedAbilities = new();
-    MapNode mapNode;
+    Node node;
     [SerializeField, ReadOnly] Hero target;
     Tween snapTween;
 
@@ -45,9 +46,9 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         PreProcess();
         Process();
         PostProcess();
-
-        dev_mapNode = mapNode != null ? new Vector2(mapNode.X, mapNode.Y) : new Vector2(-1, -1);
-        dev_targetNode = target?.MapNode != null ? new Vector2(target.mapNode.X, target.mapNode.Y) : new Vector2(-1, -1);
+        
+        dev_mapNode = MNode != null ? new Vector2(MNode.X, MNode.Y) : new Vector2(-1, -1);
+        dev_targetNode = target?.MNode != null ? new Vector2(target.MNode.X, target.MNode.Y) : new Vector2(-1, -1);
     }
 
     void LateUpdate() {
@@ -91,25 +92,34 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         return cachedAbilities[typeof(T)] as T;
     }
 
-    public void SetNode(MapNode mapNode) {
-        this.mapNode?.Remove(this);
-        this.mapNode = mapNode;
-        this.mapNode.Add(this);
+    public void SetNode(Node node) {
+        this.node?.Remove(this);
+        this.node = node;
+        this.node.Add(this);
+    }
+
+    public void SwapNode(Hero hero) {
+        var currentNode = node;
+        var newNode = (Node)hero.DNode ?? hero.MNode;
+        SetNode(newNode);
+        ResetPosition();
+        hero.SetNode(currentNode);
+        hero.ResetPosition();
     }
 
     public void ResetPosition(bool skipAnimation = false) {
         snapTween?.Kill();
         if (skipAnimation) {
-            transform.position = mapNode.Position;
+            transform.position = node.Position;
         }
         else {
-            snapTween = transform.DOMove(mapNode.Position, 0.1f);
+            snapTween = transform.DOMove(node.Position, 0.1f);
         }
     }
     
     public void FindTarget() {
         Func<IMapNodeObject, bool> condition = x => x is Hero h && h.side != side;
-        target = Map.Instance.GetNearestNode(mapNode, node => node.Any(condition))?.Get<Hero>(condition);
+        target = Map.Instance.GetNearestNode(MNode, node => node.Any(condition))?.Get<Hero>(condition);
     }
 
     void FindAbilities() {
@@ -161,10 +171,10 @@ public class Hero : MonoBehaviour, IMapNodeObject {
 
     void RemoveNodeOnDead() {
         if (state == HeroState.InBattle
-            && !GetAbility<HeroAttributes>().IsAlive && mapNode != null) {
+            && !GetAbility<HeroAttributes>().IsAlive && node != null) {
             
-            mapNode.Remove(this);
-            mapNode = null;
+            node.Remove(this);
+            node = null;
         }
     }
 
@@ -181,6 +191,6 @@ public class Hero : MonoBehaviour, IMapNodeObject {
 
     [Button]
     void Dev_CheckNullMapNode() {
-        Debug.Log("mapNode is null: " + (mapNode == null));
+        Debug.Log("mapNode is null: " + (MNode == null));
     }
 }

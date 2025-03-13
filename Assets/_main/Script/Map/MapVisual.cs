@@ -12,12 +12,11 @@ public class MapVisual : Singleton<MapVisual> {
     [SerializeField] HexCell hexCell;
     [SerializeField] Transform squareParent;
     [SerializeField] SquareCell squareCell;
-    [SerializeField] float squareWidth;
-    [SerializeField] float squareHeight;
     [SerializeField] float updateRate;
 
-    [SerializeField, ReadOnly] int row;
-    [SerializeField, ReadOnly] int column;
+    [SerializeField, ReadOnly] int mapRow;
+    [SerializeField, ReadOnly] int mapColumn;
+    [SerializeField, ReadOnly] int deckSize;
     HexCell[,] hexCells;
     [SerializeField, ReadOnly] Indicator selectedCell;
     HexCell[] selectedCells;
@@ -27,11 +26,12 @@ public class MapVisual : Singleton<MapVisual> {
     float updateInterval;
     float updateTimer;
     
-    Indicator highlightCell;
-    Indicator notAvailableCell;
+    Indicator highlightHexCell;
+    Indicator notAvailableHexCell;
+    Indicator highlightSquareCell;
+    Indicator notAvailableSquareCell;
     
-    readonly Vector2 deckLowerCorner = new Vector2(-8.5f, -8.5f);
-    readonly Vector2 deckUpperCorner = new Vector2(8.5f, 8.5f);
+    
     
     public SelectNodeMethod selectNodeMethod;
     public int range;
@@ -45,59 +45,77 @@ public class MapVisual : Singleton<MapVisual> {
         updateTimer = 0;
     }
     
-    void Start() {
-        SpawnSquareIndicators();
-    }
-    
     void Update() {
         HandleHighlightCell();   
     }
 
     public void SpawnHexIndicators(MapNode[,] nodes, float width, float height) {
-        row = nodes.GetLength(0);
-        column = nodes.GetLength(1);
-        hexCells = new HexCell[row, column];
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < column; j++) {
+        mapRow = nodes.GetLength(0);
+        mapColumn = nodes.GetLength(1);
+        hexCells = new HexCell[mapRow, mapColumn];
+        for (int i = 0; i < mapRow; i++) {
+            for (int j = 0; j < mapColumn; j++) {
                 var cell = Instantiate(hexCell, hexParent);
                 cell.transform.localPosition = new Vector3(nodes[i, j].Position.x, 0, nodes[i, j].Position.z);
                 cell.transform.localScale = new Vector3(width, 1, height);
                 cell.name = $"Hex[{i},{j}]";
-                cell.SaveIndex(i,j);
+                cell.dev_SaveIndex(i,j);
                 hexCells[i, j] = cell;
             }
         }
-
     }
 
-    public void MarkAsNonEmpty(MapNode node, bool nonEmpty) {
-        hexCells[node.X, node.Y].SetNonEmpty(nonEmpty);
-    }
-
-    public void MarkAsNotAvailable(bool value, MapNode node = null) {
-        notAvailableCell?.SetNotAvailable(false);
-        if (value && node != null) {
-            notAvailableCell = hexCells[node.X, node.Y];
-            notAvailableCell.SetNotAvailable(true);
-        }
-    }
-
-    public void Highlight(bool value, MapNode node = null) {
-        highlightCell?.SetHighlight(false);
-        if (value && node != null) {
-            highlightCell = hexCells[node.X, node.Y];
-            highlightCell.SetHighlight(true);
-        }
-    }
-
-    void SpawnSquareIndicators() {
-        squareCells = new SquareCell[9];
-        for (int i = 0; i < 9; i++) {
+    public void SpawnSquareIndicators(DeckNode[] nodes, float width, float height) {
+        deckSize = nodes.Length;
+        squareCells = new SquareCell[deckSize];
+        for (int i = 0; i < deckSize; i++) {
             var cell = Instantiate(squareCell, squareParent);
-            cell.transform.transform.localPosition = new Vector3((i-4)*squareWidth, 0, 0);
-            cell.transform.transform.localScale = new Vector3(squareWidth, 1, squareHeight);
+            cell.transform.localPosition = new Vector3(nodes[i].Position.x, 0, nodes[i].Position.z);
+            cell.transform.localScale = new Vector3(width, 1, height);
             cell.name = $"Square[{i}]";
+            cell.dev_SaveIndex(i);
             squareCells[i] = cell;
+        }
+    }
+
+    public void MarkAsNonEmpty(Node node, bool nonEmpty) {
+        if (node is MapNode mNode) {
+            hexCells[mNode.X, mNode.Y].SetNonEmpty(nonEmpty);
+        }
+        else if (node is DeckNode dNode) {
+            squareCells[dNode.Index].SetNonEmpty(nonEmpty);
+        }
+    }
+
+    public void MarkAsNotAvailable(bool value, Node node = null) {
+        notAvailableHexCell?.SetNotAvailable(false);
+        notAvailableSquareCell?.SetNotAvailable(false);
+        
+        if (value) {
+            if (node is MapNode mNode) {
+                notAvailableHexCell = hexCells[mNode.X, mNode.Y];
+                notAvailableHexCell.SetNotAvailable(true);
+            }
+            else if (node is DeckNode dNode) {
+                notAvailableSquareCell = squareCells[dNode.Index];
+                notAvailableSquareCell.SetNotAvailable(true);
+            }
+        }
+    }
+
+    public void Highlight(bool value, Node node = null) {
+        highlightHexCell?.SetHighlight(false);
+        highlightSquareCell?.SetHighlight(false);
+
+        if (value) {
+            if (node is MapNode mNode) {
+                highlightHexCell = hexCells[mNode.X, mNode.Y];
+                highlightHexCell.SetHighlight(true);
+            }
+            else if (node is DeckNode dNode) {
+                highlightSquareCell = squareCells[dNode.Index];
+                highlightSquareCell.SetHighlight(true);
+            }
         }
     }
     
@@ -182,7 +200,7 @@ public class MapVisual : Singleton<MapVisual> {
     }
 
     HexCell GetHexIndicator(MapNode mapNode) {
-        if (mapNode == null || mapNode.X < 0 || mapNode.X >= row || mapNode.Y < 0 || mapNode.Y >= column) {
+        if (mapNode == null || mapNode.X < 0 || mapNode.X >= mapRow || mapNode.Y < 0 || mapNode.Y >= mapColumn) {
             return null;
         }
         
@@ -191,19 +209,25 @@ public class MapVisual : Singleton<MapVisual> {
 
     [Button]
     void TurnOnLabels() {
-        for (int i=0; i<row; i++) {
-            for (int j=0; j<column; j++) {
-                hexCells[i, j].Dev_SwitchLabel(true);
+        for (int i=0; i<mapRow; i++) {
+            for (int j=0; j<mapColumn; j++) {
+                hexCells[i, j].dev_SwitchLabel(true);
             }
+        }
+        for (int i=0;i<deckSize;i++) {
+            squareCells[i].dev_SwitchLabel(true);
         }
     }
     
     [Button]
     void TurnOffLabels() {
-        for (int i=0; i<row; i++) {
-            for (int j=0; j<column; j++) {
-                hexCells[i, j].Dev_SwitchLabel(false);
+        for (int i=0; i<mapRow; i++) {
+            for (int j=0; j<mapColumn; j++) {
+                hexCells[i, j].dev_SwitchLabel(false);
             }
+        }
+        for (int i=0;i<deckSize;i++) {
+            squareCells[i].dev_SwitchLabel(false);
         }
     }
 }

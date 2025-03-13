@@ -157,7 +157,10 @@ MonoBehaviour:
   highlightMat: {fileID: 2100000, guid: 023b07ac2503b6843a43a1ca3ad2c0c9, type: 2}
   nonEmptyMat: {fileID: 2100000, guid: 1fe01a96b6ba3854282c51028dd8462a, type: 2}
   notAvailableMat: {fileID: 2100000, guid: 5b285d00ba6aebd4e91e6cd2591ab556, type: 2}
-  label: {fileID: 638574127236860979}
+  highlight: 0
+  nonEmpty: 0
+  notAvailable: 0
+  dev_label: {fileID: 638574127236860979}
 --- !u!1 &7821913969956637531
 GameObject:
   m_ObjectHideFlags: 0

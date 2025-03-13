@@ -15,15 +15,15 @@ public class MapNode : Node {
         Position = position;
     }
 
-    public void Add(IMapNodeObject obj) {
+    public override void Add(IMapNodeObject obj) {
         objects.Add(obj);
     }
     
-    public void Remove(IMapNodeObject obj) {
+    public override void Remove(IMapNodeObject obj) {
         objects.Remove(obj);
     }
 
-    public T Get<T>(Func<T, bool> condition = null) where T : IMapNodeObject {
+    public override T Get<T>(Func<T, bool> condition = null) {
         return (T)objects.FirstOrDefault(x=> x is T obj && (condition == null || condition(obj)));
     }
 

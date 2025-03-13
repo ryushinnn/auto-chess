@@ -3,26 +3,56 @@ using RExt.Core;
 using UnityEngine;
 
 public class Deck : Singleton<Deck> {
-    [SerializeField] float nodeWidth;       
+    [SerializeField] Transform nodeParent;
+    [SerializeField] float nodeWidth;
     [SerializeField] float nodeHeight;
 
     DeckNode[] nodes;
     
-    public const int SIZE = 9;
-    const float DECK_OFFSET_X = -0.66f;
-    const float DECK_OFFSET_Z = 7.65f;
-
+    const int SIZE = 9;
+    const float LIMIT_X_LEFT = -8.4f;
+    const float LIMIT_X_RIGHT = 7.1f;
+    const float LIMIT_Z_UP = -6.6f;
+    
     void Start() {
         SpawnNodes();
+    }
+
+    void LateUpdate() {
+        for (int i = 0; i < SIZE; i++) {
+            MapVisual.Instance.MarkAsNonEmpty(nodes[i], !nodes[i].HasNone());
+        }
+    }
+
+    public DeckNode GetNode(Vector3 position, Func<int, bool> condition = null) {
+        if (position.x < LIMIT_X_LEFT || position.x > LIMIT_X_RIGHT || position.z > LIMIT_Z_UP) {
+            return null;
+        }
+
+        var minDist = Mathf.Infinity;
+        DeckNode node = null;
+        for (int i = 0; i < SIZE; i++) {
+            var dist = Vector3.Distance(nodes[i].Position, position);
+            if (dist < minDist && (condition == null || condition(i))) {
+                minDist = dist;
+                node = nodes[i];
+            }
+        }
+
+        return node;
     }
 
     void SpawnNodes() {
         nodes = new DeckNode[SIZE];
         for (int i = 0; i < SIZE; i++) {
             var node = new DeckNode();
-            node.Initialize(i, new Vector3((i - SIZE / 2) * nodeWidth + DECK_OFFSET_X, 0, DECK_OFFSET_Z));
+            node.Initialize(i, new Vector3((i - SIZE / 2) * nodeWidth, 0, 0) + nodeParent.position);
             nodes[i] = node;
             var nodeVisual = new GameObject($"[{i}]");
+            nodeVisual.transform.SetParent(nodeParent);
+            nodeVisual.transform.position = node.Position;
         }
+        
+        MapVisual.Instance.SpawnSquareIndicators(nodes, nodeWidth, nodeHeight);
     }
 }

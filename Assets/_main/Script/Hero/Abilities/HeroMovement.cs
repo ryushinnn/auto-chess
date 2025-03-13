@@ -37,8 +37,8 @@ public class HeroMovement : HeroAbility {
     }
 
     public void StartMove() {
-        if (Map.Instance.CheckAdjacency(hero.Target.MapNode, hero.MapNode, hero.Trait.attackRange)
-            && hero.MapNode.HasAtFirst(hero)) {
+        if (Map.Instance.CheckAdjacency(hero.Target.MNode, hero.MNode, hero.Trait.attackRange)
+            && hero.MNode.HasAtFirst(hero)) {
 
             if (destination != null) {
                 Debug.Log($"{hero.name} already has target in range, stop at ({destination.X}, {destination.Y})");
@@ -49,9 +49,9 @@ public class HeroMovement : HeroAbility {
         }
 
         Func<MapNode, bool> destCondition = x => x.HasNone() || x == destination;
-        var newDest = Map.Instance.GetNearestAdjacentNode(hero.Target.MapNode, hero.MapNode, hero.Trait.attackRange, destCondition) 
+        var newDest = Map.Instance.GetNearestAdjacentNode(hero.Target.MNode, hero.MNode, hero.Trait.attackRange, destCondition) 
                       ??
-                      Map.Instance.GetNearestNode(hero.Target.MapNode, destCondition);
+                      Map.Instance.GetNearestNode(hero.Target.MNode, destCondition);
 
         // known issue: new dest and current dest has same distance to target
         // sometimes hero move between 2 nodes repeatedly
@@ -79,7 +79,7 @@ public class HeroMovement : HeroAbility {
 
             moveSequence.AppendCallback(() => {
                 Debug.Log($"{hero.name} reached ({destination.X}, {destination.Y})");
-                rotation.Rotate(hero.Target.MapNode.Position - hero.transform.position);
+                rotation.Rotate(hero.Target.MNode.Position - hero.transform.position);
                 destination.Remove(mark);
                 StopMove();
             });
@@ -91,7 +91,7 @@ public class HeroMovement : HeroAbility {
         hero.Mecanim.Idle();
         moveSequence?.Kill();
         if (resetPosition) {
-            var emptyNode = Map.Instance.GetNearestNode(hero.MapNode, x => x.HasAtFirst(hero) || x.HasNone());
+            var emptyNode = Map.Instance.GetNearestNode(hero.MNode, x => x.HasAtFirst(hero) || x.HasNone());
             hero.SetNode(emptyNode);
             hero.ResetPosition();
         }
@@ -104,17 +104,17 @@ public class HeroMovement : HeroAbility {
 
     void OnDrawGizmos() {
         if (hero != null 
-            && hero.MapNode != null 
+            && hero.MNode != null 
             && destination != null 
-            && hero.Target?.MapNode != null) {
+            && hero.Target?.MNode != null) {
             
             var offset = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
             Gizmos.color = Color.red;
-            Utils.DrawArrow(hero.MapNode.Position, destination.Position + offset);
+            Utils.DrawArrow(hero.MNode.Position, destination.Position + offset);
             Gizmos.color = Color.green;
-            Utils.DrawArrow(destination.Position + offset, hero.Target.MapNode.Position);
+            Utils.DrawArrow(destination.Position + offset, hero.Target.MNode.Position);
             Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(hero.MapNode.Position + new Vector3(0,5,0), 0.25f);
+            Gizmos.DrawSphere(hero.MNode.Position + new Vector3(0,5,0), 0.25f);
         }
     }
 }
