@@ -20,6 +20,7 @@ public class HeroSkill : HeroAbility {
             "Zed" => new SkillProcessor_Zed(hero),
             "Yone" => new SkillProcessor_Yone(hero),
             "Akali" => new SkillProcessor_Akali(hero),
+            "Ashe" => new SkillProcessor_Ashe(hero),
         };
     }
 
