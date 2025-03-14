@@ -44,11 +44,5 @@ public class Mecanim_Ashe : Mecanim {
         DoAction(Action.Skill, (paramSkill, 1));
         yield return new WaitForSeconds(0.75f);
         events[0]();
-        yield return new WaitForSeconds(0.37f);
-        events[1]();
-        yield return new WaitForSeconds(0.75f);
-        events[2]();
-        yield return new WaitForSeconds(1);
-        events[3]();
     }
 }
