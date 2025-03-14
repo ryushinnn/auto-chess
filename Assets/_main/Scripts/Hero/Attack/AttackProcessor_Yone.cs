@@ -8,15 +8,7 @@ using UnityEngine;
 /// thanh kiem cuoi cung duoc su dung cung quyet dinh skill la gi
 /// </summary>
 public class AttackProcessor_Yone : AttackProcessor {
-    public enum Sword {
-        Divine,
-        Devil
-    }
-    
-    public Sword CurrentSword => sword;
-    
-    Sword sword;
-    List<string> reduceDmgModifierIds = new List<string>();
+    List<string> reduceDmgModifierIds = new();
     
     const float DIVINE_WEAKENING_PER_STACK = -0.05f;
     const int DIVINE_WEAKENING_MAX_STACK = 3;
@@ -26,6 +18,8 @@ public class AttackProcessor_Yone : AttackProcessor {
 
     public AttackProcessor_Yone(Hero hero) : base(hero) {
         this.hero = hero;
+        customInt = new CustomData<int>();
+        customInt["sword"] = (int)YoneSword.Divine;
     }
 
     public override void Execute() {
@@ -35,12 +29,12 @@ public class AttackProcessor_Yone : AttackProcessor {
             if (hero.Target == null) return;
             var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen);
             var healAmount = outputDamage * attributes.LifeSteal;
-            if (sword == Sword.Devil) {
+            if ((YoneSword)customInt["sword"] == YoneSword.Devil) {
                 healAmount += outputDamage * ((attributes.Hp / attributes.MaxHp) * (DEVIL_VAMP_MAX - DEVIL_VAMP_MIN) + DEVIL_VAMP_MIN);
             }
             attributes.Heal(healAmount);
 
-            if (sword == Sword.Divine) {
+            if ((YoneSword)customInt["sword"] == YoneSword.Divine) {
                 reduceDmgModifierIds.ForEach(x=>hero.Target.GetAbility<HeroAttributes>().RemoveAttributeModifier(x));
                 reduceDmgModifierIds.Clear();
                 var modifier0 = AttributeModifier.Create(AttributeModifierKey.PhysicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
@@ -51,6 +45,11 @@ public class AttackProcessor_Yone : AttackProcessor {
                 reduceDmgModifierIds.Add(modifier1.id);
             }
         });
-        sword = (Sword)(((int)sword + 1) % 2);
+        customInt["sword"] = (customInt["sword"] + 1) % 2;
     }
+}
+
+public enum YoneSword {
+    Divine,
+    Devil
 }

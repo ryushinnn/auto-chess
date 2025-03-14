@@ -1,7 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using Random = UnityEngine.Random;
 
+[Serializable]
 public class AttackProcessor {
+    public CustomData<int> CustomInt => customInt;
+    
     protected Hero hero;
+    protected CustomData<int> customInt;
     
     public AttackProcessor(Hero hero) {
         this.hero = hero;

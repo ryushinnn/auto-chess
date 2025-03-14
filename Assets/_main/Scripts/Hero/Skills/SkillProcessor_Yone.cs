@@ -28,6 +28,7 @@ public class SkillProcessor_Yone : SkillProcessor {
             attribute.PhysicalDamage * DIVINE_DMG_MUL,
             DamageType.Physical, 
             attribute.PhysicalPenetration);
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(DIVINE_AIRBORNE_TIME);
         
         if (!hero.Target.GetAbility<HeroAttributes>().IsAlive){
             attribute.RegenEnergy(DIVINE_REGEN_ENERGY);

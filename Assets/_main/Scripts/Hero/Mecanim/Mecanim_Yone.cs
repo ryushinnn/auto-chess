@@ -29,12 +29,12 @@ public class Mecanim_Yone : Mecanim {
     IEnumerator DoAttack(System.Action atkEvent) {
         if (hero.GetAbility<HeroAttack>().Processor is not AttackProcessor_Yone atkProcessor) yield break;
         
-        if (atkProcessor.CurrentSword == AttackProcessor_Yone.Sword.Divine) {
+        if (atkProcessor.CustomInt["sword"] == (int)YoneSword.Divine) {
             DoAction(Action.Skill, (paramSkill, 0));
             yield return new WaitForSeconds(0.26f);
             atkEvent.Invoke();
         }
-        else if (atkProcessor.CurrentSword == AttackProcessor_Yone.Sword.Devil) {
+        else if (atkProcessor.CustomInt["sword"] == (int)YoneSword.Devil) {
             DoAction(Action.Skill, (paramSkill, 0));
             yield return new WaitForSeconds(0.26f);
             atkEvent.Invoke();
@@ -48,14 +48,14 @@ public class Mecanim_Yone : Mecanim {
 
         if (hero.GetAbility<HeroAttack>().Processor is not AttackProcessor_Yone atkProcessor) return 0;
         
-        if (atkProcessor.CurrentSword == AttackProcessor_Yone.Sword.Divine) {
-            useSkillCoroutine = StartCoroutine(DoUseSkill(atkProcessor.CurrentSword, events));
-            return 6f;
+        if (atkProcessor.CustomInt["sword"] == (int)YoneSword.Divine) {
+            useSkillCoroutine = StartCoroutine(DoUseSkill(YoneSword.Divine, events));
+            return 4f;
         }
         
-        if (atkProcessor.CurrentSword == AttackProcessor_Yone.Sword.Devil) {
-            useSkillCoroutine = StartCoroutine(DoUseSkill(atkProcessor.CurrentSword, events));
-            return 6f;
+        if (atkProcessor.CustomInt["sword"] == (int)YoneSword.Devil) {
+            useSkillCoroutine = StartCoroutine(DoUseSkill(YoneSword.Devil, events));
+            return 4.25f;
         }
 
         return 0;
@@ -68,19 +68,13 @@ public class Mecanim_Yone : Mecanim {
         }
     }
 
-    IEnumerator DoUseSkill(AttackProcessor_Yone.Sword sword, System.Action[] events) {
-        DoAction(Action.Skill, (paramSkill, 1));
-        yield return new WaitForSeconds(0.83f);
-        events[0]();
-        yield return new WaitForSeconds(0.83f);
-        events[1]();
-
-        if (sword == AttackProcessor_Yone.Sword.Divine) {
+    IEnumerator DoUseSkill(YoneSword sword, System.Action[] events) {
+        if (sword == YoneSword.Divine) {
             DoAction(Action.Skill, (paramSkill, 2));
             yield return new WaitForSeconds(1.66f);
             events[0]();
         }
-        else if (sword == AttackProcessor_Yone.Sword.Devil) {
+        else if (sword == YoneSword.Devil) {
             DoAction(Action.Skill, (paramSkill, 3));
             yield return new WaitForSeconds(0.12f);
             events[1]();

@@ -30,7 +30,7 @@ public class Mecanim_Zed : Mecanim {
             StopCoroutine(useSkillCoroutine);
         }
         useSkillCoroutine = StartCoroutine(DoUseSkill(events));
-        return 2f;
+        return 3f;
     }
     
     public override void InterruptSkill() {
