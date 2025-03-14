@@ -1039,6 +1039,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3497b5ea78b8c9a4b9efb1fddb0d2fc3, type: 2}
   - {fileID: 11400000, guid: 59b7c4baa14a8e940b9f1338c146bd0a, type: 2}
   - {fileID: 11400000, guid: b3d0a57c7c0ac194683bf78d377a0599, type: 2}
+  - {fileID: 11400000, guid: 1f826fe26e91e574c85178f9a754812c, type: 2}
   completeItems:
   - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
 --- !u!4 &1019160392
@@ -1155,7 +1156,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   enemyTeam:
   - active: 1
-    id: Yone
+    id: Akali
     star: 0
     mapNode: {x: 7, y: 4}
     items:

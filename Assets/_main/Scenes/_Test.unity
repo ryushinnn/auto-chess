@@ -630,7 +630,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e8b37a48673ed14fad1c2dd36e1ecbb, type: 3}
---- !u!1001 &6435790680674540309
+--- !u!1001 &6153632783602307756
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -638,66 +638,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+    - target: {fileID: 2505858074522300481, guid: 233d9d1010477c649a73ae30ec5c60de,
+        type: 3}
+      propertyPath: m_Name
+      value: chibi_k_da_all_out_akali
+      objectReference: {fileID: 0}
+    - target: {fileID: 6088090308811703195, guid: 233d9d1010477c649a73ae30ec5c60de,
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+    - target: {fileID: 6088090308811703195, guid: 233d9d1010477c649a73ae30ec5c60de,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+    - target: {fileID: 6088090308811703195, guid: 233d9d1010477c649a73ae30ec5c60de,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.01
       objectReference: {fileID: 0}
-    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+    - target: {fileID: 6088090308811703195, guid: 233d9d1010477c649a73ae30ec5c60de,
         type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+    - target: {fileID: 6088090308811703195, guid: 233d9d1010477c649a73ae30ec5c60de,
         type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+    - target: {fileID: 6088090308811703195, guid: 233d9d1010477c649a73ae30ec5c60de,
         type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+    - target: {fileID: 6088090308811703195, guid: 233d9d1010477c649a73ae30ec5c60de,
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+    - target: {fileID: 6088090308811703195, guid: 233d9d1010477c649a73ae30ec5c60de,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+    - target: {fileID: 6088090308811703195, guid: 233d9d1010477c649a73ae30ec5c60de,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2408740897191444449, guid: acacc7ffae828af479be1b7552135b27,
+    - target: {fileID: 6088090308811703195, guid: 233d9d1010477c649a73ae30ec5c60de,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6329303845076159547, guid: acacc7ffae828af479be1b7552135b27,
-        type: 3}
-      propertyPath: m_Name
-      value: chibi_spirit_blossom_yone_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: acacc7ffae828af479be1b7552135b27, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 233d9d1010477c649a73ae30ec5c60de, type: 3}
 --- !u!1001 &7702366431411890129
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -776,4 +776,4 @@ SceneRoots:
   - {fileID: 5288507665102310088}
   - {fileID: 7702366431411890129}
   - {fileID: 2137227181}
-  - {fileID: 6435790680674540309}
+  - {fileID: 6153632783602307756}

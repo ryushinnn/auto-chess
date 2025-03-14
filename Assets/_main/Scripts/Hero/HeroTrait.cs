@@ -37,7 +37,7 @@ public class HeroTrait : ScriptableObject {
     [TitleGroup("Configs")]
     public const float MAX_ENERGY = 100;
     public const float MAX_DMG_REDUCTION = 0.9f;
-    public const float MAX_CRITICAL_CHANCE = 0.99f;
+    public const float MAX_CRITICAL_CHANCE = 0.9999f;
     public const float MAX_PENETRATION = 0.7f;
     public const float MAX_LIFE_STEAL = 1;
     public const float MAX_TENACITY = 0.5f;
