@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Random = UnityEngine.Random;
 
@@ -13,6 +14,8 @@ public class SkillProcessor_Ashe : SkillProcessor {
     const float DMG_MUL = 0.2f;
     const float PENETRATION = 0.5f;
     
+    List<Hero> affectedTargets = new();
+    
     public SkillProcessor_Ashe(Hero hero) : base(hero) {
         this.hero = hero;
         events = new Action[] { ShotArrows };
@@ -20,6 +23,7 @@ public class SkillProcessor_Ashe : SkillProcessor {
     }
 
     async void ShotArrows() {
+        affectedTargets.Clear();
         var set = Random.Range(MIN_ARROW_SET, MAX_ARROW_SET + 1);
         var totalTime = 2000; //ms
         var timePerSet = totalTime / set;
@@ -37,6 +41,9 @@ public class SkillProcessor_Ashe : SkillProcessor {
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
             attribute.PhysicalDamage * DMG_MUL,
             DamageType.Physical, 
-            PENETRATION);
+            PENETRATION,
+            !affectedTargets.Contains(hero.Target));
+        
+        affectedTargets.Add(hero.Target);
     }
 }

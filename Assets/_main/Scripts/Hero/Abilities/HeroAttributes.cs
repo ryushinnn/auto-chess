@@ -50,6 +50,8 @@ public class HeroAttributes : HeroAbility {
     [SerializeField, ReadOnly] float tenacity;
 
     [SerializeField, ReadOnly] List<AttributeModifierGroup> modifierGroups = new();
+    [SerializeField, ReadOnly] List<DamageOverTime> damageOverTimes = new();
+    [SerializeField, ReadOnly] List<HealOverTime> healOverTimes = new();
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
@@ -78,23 +80,9 @@ public class HeroAttributes : HeroAbility {
     }
 
     public override void Process() {
-        for (int i = modifierGroups.Count - 1; i >= 0; i--) {
-            var key = modifierGroups[i].key;
-            var modifiers = modifierGroups[i].modifiers;
-            for (int j = modifiers.Count - 1; j >= 0; j--) {
-                if (modifiers[j].permanent) continue;
-                modifiers[j].duration -= Time.deltaTime;
-                if (modifiers[j].duration <= 0) {
-                    modifiers[j].onRemove?.Invoke();
-                    modifiers.RemoveAt(j);
-                }
-            }
-
-            if (modifiers.Count == 0) {
-                modifierGroups.RemoveAt(i);
-            }
-            RecalculateAttributes(key);
-        }
+        ProcessAttributeModifiers();
+        ProcessDamageOverTimes();
+        ProcessHealOverTimes();
     }
 
     protected override void FindReferences() {
@@ -103,7 +91,7 @@ public class HeroAttributes : HeroAbility {
         attack = hero.GetAbility<HeroAttack>();
     }
 
-    public float TakeDamage(float damage, DamageType type, float penetration) {
+    public float TakeDamage(float damage, DamageType type, float penetration, bool regenEnergy = true) {
         var dmgReduction = type switch {
             DamageType.Physical => Mathf.Min(armor * (1-penetration), HeroTrait.MAX_DMG_REDUCTION * damage),
             DamageType.Magical => Mathf.Min(resistance * (1-penetration), HeroTrait.MAX_DMG_REDUCTION * damage),
@@ -114,7 +102,9 @@ public class HeroAttributes : HeroAbility {
         hp -= damage;
         healthBar.UpdateAmount(hp / maxHp);
         if (hp > 0) {
-            RegenEnergy(hero.Trait.energyRegenPerHit);
+            if (regenEnergy) {
+                RegenEnergy(hero.Trait.energyRegenPerHit);
+            }
         }
         else {
             Die();
@@ -167,6 +157,76 @@ public class HeroAttributes : HeroAbility {
                 }
                 RecalculateAttributes(key);
                 return;
+            }
+        }
+    }
+
+    public void AddDamageOverTime(DamageOverTime dot) {
+        if (dot.overwrite) {
+            damageOverTimes.RemoveAll(x => x.key == dot.key);
+        }
+        damageOverTimes.Add(dot);
+    }
+    
+    public void AddHealOverTime(HealOverTime hot) {
+        if (hot.overwrite) {
+            healOverTimes.RemoveAll(x => x.key == hot.key);
+        }
+        healOverTimes.Add(hot);
+    }
+
+    void ProcessAttributeModifiers() {
+        for (int i = modifierGroups.Count - 1; i >= 0; i--) {
+            var key = modifierGroups[i].key;
+            var modifiers = modifierGroups[i].modifiers;
+            for (int j = modifiers.Count - 1; j >= 0; j--) {
+                if (modifiers[j].permanent) continue;
+                modifiers[j].duration -= Time.deltaTime;
+                if (modifiers[j].duration <= 0) {
+                    modifiers[j].onRemove?.Invoke();
+                    modifiers.RemoveAt(j);
+                }
+            }
+
+            if (modifiers.Count == 0) {
+                modifierGroups.RemoveAt(i);
+            }
+            RecalculateAttributes(key);
+        }
+    }
+
+    void ProcessDamageOverTimes() {
+        for (int i = damageOverTimes.Count - 1; i >= 0; i--) {
+            var dot = damageOverTimes[i];
+            if (dot.timer <= 0) {
+                TakeDamage(dot.damagePerStack, dot.damageType, dot.penetration, false);
+                if (--dot.stack <= 0) {
+                    damageOverTimes.Remove(dot);
+                }
+                else {
+                    dot.timer = dot.interval;
+                }
+            }
+            else {
+                dot.timer -= Time.deltaTime;
+            }
+        }
+    }
+    
+    void ProcessHealOverTimes() {
+        for (int i = healOverTimes.Count - 1; i >= 0; i--) {
+            var hot = healOverTimes[i];
+            if (hot.timer <= 0) {
+                Heal(hot.healPerStack);
+                if (--hot.stack <= 0) {
+                    healOverTimes.Remove(hot);
+                }
+                else {
+                    hot.timer = hot.interval;
+                }
+            }
+            else {
+                hot.timer -= Time.deltaTime;
             }
         }
     }
@@ -310,6 +370,18 @@ public class HeroAttributes : HeroAbility {
     void Dev_Permanent() {
         AddAttributeModifier(AttributeModifier.Create(AttributeModifierKey.AttackSpeed,0.5f,ModifierType.Percentage));
     }
+
+    [Button]
+    void dev_dot(float dmg, int stack, float interval) {
+        AddDamageOverTime(DamageOverTime.Create("dot", dmg, DamageType.True, 0, stack, interval));
+        
+    }
+    
+    [Button]
+    void dev_hot(float heal, int stack, float interval) {
+        AddHealOverTime(HealOverTime.Create("hot", heal, (int)stack, interval));
+        
+    }
 }
 
 [Serializable]
@@ -390,4 +462,54 @@ public static class AttributeModifierKey {
     public const string MagicalPenetration = "mpen";
     public const string LifeSteal = "lifesteal";
     public const string Tenacity = "tenacity";
+}
+
+[Serializable]
+public class DamageOverTime {
+    public string key;
+    public string id;
+    public float damagePerStack;
+    public DamageType damageType;
+    public float penetration;
+    public int stack;
+    public float interval;
+    public bool overwrite;
+    public float timer;
+    
+    public static DamageOverTime Create(string key, float damagePerStack, DamageType damageType, float penetration, int stack, float interval, bool overwrite = true) {
+        return new DamageOverTime {
+            id = Guid.NewGuid().ToString(),
+            key = key,
+            damagePerStack = damagePerStack,
+            damageType = damageType,
+            penetration = penetration,
+            stack = stack,
+            interval = interval,
+            overwrite = overwrite,
+            timer = 0,
+        };
+    }
+}
+
+[Serializable]
+public class HealOverTime {
+    public string key;
+    public string id;
+    public float healPerStack;
+    public int stack;
+    public float interval;
+    public bool overwrite;
+    public float timer;
+    
+    public static HealOverTime Create(string key, float healPerStack, int stack, float interval, bool overwrite = true) {
+        return new HealOverTime {
+            id = Guid.NewGuid().ToString(),
+            key = key,
+            healPerStack = healPerStack,
+            stack = stack,
+            interval = interval,
+            overwrite = overwrite,
+            timer = 0,
+        };
+    }
 }
