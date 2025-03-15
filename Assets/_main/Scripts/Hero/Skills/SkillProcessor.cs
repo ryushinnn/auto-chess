@@ -3,7 +3,8 @@ using DG.Tweening;
 
 public abstract class SkillProcessor {
     protected Hero hero;
-    
+
+    protected HeroAttributes attributes;
     protected Action[] events;
     protected bool unstoppable;
     
@@ -11,6 +12,7 @@ public abstract class SkillProcessor {
 
     protected SkillProcessor(Hero hero) {
         this.hero = hero;
+        attributes = this.hero.GetAbility<HeroAttributes>();
     }
     
     public virtual void Process() {

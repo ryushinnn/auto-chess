@@ -23,16 +23,18 @@ public class AttackProcessor_Yone : AttackProcessor {
     }
 
     public override void Execute() {
-        CalculateDamage(out var dmg, out var type, out var pen);
-        var attributes = hero.GetAbility<HeroAttributes>();
+        CalculateDamage(out var dmg, out var type, out var pen, out var crit);
         hero.Mecanim.Attack(() => {
             if (hero.Target == null) return;
-            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen);
-            var healAmount = outputDamage * attributes.LifeSteal;
+            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen, crit);
+            var heal = outputDamage * attributes.LifeSteal;
             if ((YoneSword)customInt["sword"] == YoneSword.Devil) {
-                healAmount += outputDamage * ((attributes.Hp / attributes.MaxHp) * (DEVIL_VAMP_MAX - DEVIL_VAMP_MIN) + DEVIL_VAMP_MIN);
+                heal += outputDamage * ((attributes.Hp / attributes.MaxHp) * (DEVIL_VAMP_MAX - DEVIL_VAMP_MIN) + DEVIL_VAMP_MIN);
             }
-            attributes.Heal(healAmount);
+
+            if (heal > 0) {
+                attributes.Heal(heal);
+            }
 
             if ((YoneSword)customInt["sword"] == YoneSword.Divine) {
                 reduceDmgModifierIds.ForEach(x=>hero.Target.GetAbility<HeroAttributes>().RemoveAttributeModifier(x));

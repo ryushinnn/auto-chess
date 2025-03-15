@@ -12,6 +12,7 @@ public class HeroAttributes : HeroAbility {
     [SerializeField] ProgressBar healthBar;
     [SerializeField] ProgressBar energyBar;
     [SerializeField] Canvas canvas;
+    [SerializeField] Transform hpTextParent;
 
     public bool IsAlive => isAlive;
     public float MaxHp => maxHp;
@@ -91,14 +92,14 @@ public class HeroAttributes : HeroAbility {
         attack = hero.GetAbility<HeroAttack>();
     }
 
-    public float TakeDamage(float damage, DamageType type, float penetration, bool regenEnergy = true) {
+    public float TakeDamage(float damage, DamageType type, float penetration, bool crit = false, bool regenEnergy = true) {
         var dmgReduction = type switch {
             DamageType.Physical => Mathf.Min(armor * (1-penetration), HeroTrait.MAX_DMG_REDUCTION * damage),
             DamageType.Magical => Mathf.Min(resistance * (1-penetration), HeroTrait.MAX_DMG_REDUCTION * damage),
             DamageType.True => 0
         };
         
-        damage -= dmgReduction;
+        damage = Mathf.Max(damage - dmgReduction, 1);
         hp -= damage;
         healthBar.UpdateAmount(hp / maxHp);
         if (hp > 0) {
@@ -110,6 +111,7 @@ public class HeroAttributes : HeroAbility {
             Die();
         }
 
+        HpTextSpawner.Instance.SpawnHpTextAsDamage(hpTextParent,damage, type, crit);
         return damage;
     }
 
@@ -122,6 +124,8 @@ public class HeroAttributes : HeroAbility {
 
         hp = Mathf.Min(hp + amount, maxHp);
         healthBar.UpdateAmount(hp / maxHp);
+        
+        HpTextSpawner.Instance.SpawnHpTextAsHeal(hpTextParent,amount);
     }
 
     public void RegenEnergy(float amount) {
@@ -199,7 +203,7 @@ public class HeroAttributes : HeroAbility {
         for (int i = damageOverTimes.Count - 1; i >= 0; i--) {
             var dot = damageOverTimes[i];
             if (dot.timer <= 0) {
-                TakeDamage(dot.damagePerStack, dot.damageType, dot.penetration, false);
+                TakeDamage(dot.damagePerStack, dot.damageType, dot.penetration, false, false);
                 if (--dot.stack <= 0) {
                     damageOverTimes.Remove(dot);
                 }

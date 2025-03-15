@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour {
 
     [Button]
     void dev_Battle() {
+        Initialize();
         heroes.ForEach(x=>x.Switch(HeroState.ReadyToFight));
         heroes.ForEach(x=>x.Switch(HeroState.InBattle));
     }

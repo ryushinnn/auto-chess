@@ -11,9 +11,7 @@ public class SkillProcessor_Akali : SkillProcessor {
     const float STUN_DURATION = 1;
     
     public SkillProcessor_Akali(Hero hero) : base(hero) {
-        this.hero = hero;
         events = new Action[]{ThrowBomb};
-        unstoppable = false;
     }
 
     void ThrowBomb() {

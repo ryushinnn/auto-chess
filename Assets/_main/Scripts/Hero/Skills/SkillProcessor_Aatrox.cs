@@ -6,6 +6,7 @@ using UnityEngine;
 /// hat tung muc tieu 0.2s/0.2s/0.25s
 /// va hoi mau bang 25%/50%/100% st gay ra
 /// neu mau hien tai thap hon 50%, luong mau hoi phuc x2
+/// khi dang dung skill, khong the can pha
 /// </summary>
 public class SkillProcessor_Aatrox : SkillProcessor {
     Hero hero;
@@ -22,7 +23,6 @@ public class SkillProcessor_Aatrox : SkillProcessor {
     const float AIRBORNE_TIME_2 = 0.25f;
 
     public SkillProcessor_Aatrox(Hero hero) : base(hero) {
-        this.hero = hero;
         events = new Action[]{LightSlash, MediumSlash, HeavySlash};
         unstoppable = true;
     }
@@ -30,42 +30,39 @@ public class SkillProcessor_Aatrox : SkillProcessor {
     void LightSlash() {
         if (hero.Target == null) return;
 
-        var attribute = hero.GetAbility<HeroAttributes>();
         var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            attribute.PhysicalDamage * DMG_MUL_0, 
+            attributes.PhysicalDamage * DMG_MUL_0, 
             DamageType.Physical, 
-            attribute.PhysicalPenetration);
+            attributes.PhysicalPenetration);
         
-        var vamp = attribute.Hp / attribute.MaxHp < 0.5f ? VAMP_0 * VAMP_MUL_WHEN_LOW_HP : VAMP_0;
-        attribute.Heal(outputDmg * vamp);
+        var vamp = attributes.Hp / attributes.MaxHp < 0.5f ? VAMP_0 * VAMP_MUL_WHEN_LOW_HP : VAMP_0;
+        attributes.Heal(outputDmg * vamp);
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_0);
     }
     
     void MediumSlash() {
         if (hero.Target == null) return;
         
-        var attribute = hero.GetAbility<HeroAttributes>();
         var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            attribute.PhysicalDamage * DMG_MUL_1,
+            attributes.PhysicalDamage * DMG_MUL_1,
             DamageType.Physical, 
-            attribute.PhysicalPenetration);
+            attributes.PhysicalPenetration);
         
-        var vamp = attribute.Hp / attribute.MaxHp < 0.5f ? VAMP_1 * VAMP_MUL_WHEN_LOW_HP : VAMP_1;
-        attribute.Heal(outputDmg * vamp);
+        var vamp = attributes.Hp / attributes.MaxHp < 0.5f ? VAMP_1 * VAMP_MUL_WHEN_LOW_HP : VAMP_1;
+        attributes.Heal(outputDmg * vamp);
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_1);
     }
     
     void HeavySlash() {
         if (hero.Target == null) return;
         
-        var attribute = hero.GetAbility<HeroAttributes>();
         var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            attribute.PhysicalDamage * DMG_MUL_2, 
+            attributes.PhysicalDamage * DMG_MUL_2, 
             DamageType.Physical, 
-            attribute.PhysicalPenetration);
+            attributes.PhysicalPenetration);
         
-        var vamp = attribute.Hp / attribute.MaxHp < 0.5f ? VAMP_2 * VAMP_MUL_WHEN_LOW_HP : VAMP_2;
-        attribute.Heal(outputDmg * vamp);
+        var vamp = attributes.Hp / attributes.MaxHp < 0.5f ? VAMP_2 * VAMP_MUL_WHEN_LOW_HP : VAMP_2;
+        attributes.Heal(outputDmg * vamp);
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_2);
     }
 }

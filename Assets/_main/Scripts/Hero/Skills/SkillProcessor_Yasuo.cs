@@ -14,9 +14,7 @@ public class SkillProcessor_Yasuo : SkillProcessor {
     const float ATK_SPD_DURATION = 10f;
     
     public SkillProcessor_Yasuo(Hero hero) : base(hero) {
-        this.hero = hero;
         events = new Action[]{SpinSlash};
-        unstoppable = false;
     }
 
     void SpinSlash() {

@@ -14,30 +14,26 @@ public class SkillProcessor_Zed : SkillProcessor {
     const float STUN_OTHERS = 0.5f;
 
     public SkillProcessor_Zed(Hero hero) : base(hero) {
-        this.hero = hero;
         events = new Action[]{ThrowShurikens, TriggerExplosion};
-        unstoppable = false;
     }
 
     void ThrowShurikens() {
         if (hero.Target == null) return;
 
         aimedTarget = hero.Target;
-        var attribute = hero.GetAbility<HeroAttributes>();
         aimedTarget.GetAbility<HeroAttributes>().TakeDamage(
-            attribute.PhysicalDamage * DMG_MUL, 
+            attributes.PhysicalDamage * DMG_MUL, 
             DamageType.Physical, 
-            attribute.PhysicalPenetration);
+            attributes.PhysicalPenetration);
     }
 
     void TriggerExplosion() {
         if (aimedTarget == null) return;
         
-        var attribute = hero.GetAbility<HeroAttributes>();
         aimedTarget.GetAbility<HeroAttributes>().TakeDamage(
-            attribute.PhysicalDamage * attribute.CriticalDamage,
+            attributes.PhysicalDamage * attributes.CriticalDamage,
             DamageType.Physical,
-            attribute.PhysicalPenetration);
+            attributes.PhysicalPenetration);
         aimedTarget.GetAbility<HeroStatusEffects>().Stun(STUN_MAIN);
         
         // same error with yasuo skill, review later

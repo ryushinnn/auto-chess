@@ -12,20 +12,24 @@ public class AttackProcessor_Yasuo : AttackProcessor {
     }
 
     public override void Execute() {
-        CalculateDamage(out var dmg, out var type, out var pen);
+        CalculateDamage(out var dmg, out var type, out var pen, out var crit);
         hero.Mecanim.Attack(() => {
             if (hero.Target == null) return;
             
-            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen);
+            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen, crit);
 
             if (count == COUNT_LIMIT) {
-                outputDamage += hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg * DMG_MUL, DamageType.True, 0);
+                outputDamage += hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg * DMG_MUL, DamageType.True, 0, crit);
                 count = 0;
             }
             else {
                 count++;
             }
-            hero.GetAbility<HeroAttributes>().Heal(outputDamage * hero.GetAbility<HeroAttributes>().LifeSteal);
+
+            var heal = outputDamage * attributes.LifeSteal;
+            if (heal > 0) {
+                hero.GetAbility<HeroAttributes>().Heal(heal);
+            }
             hero.GetAbility<HeroAttributes>().RegenEnergy(hero.Trait.energyRegenPerAttack);
         });
     }

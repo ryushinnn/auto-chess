@@ -10,23 +10,18 @@ public class HeroInventory : HeroAbility {
     
     [SerializeField] Image[] itemIcons;
     [SerializeField] RectTransform ui;
-    [SerializeField,ReadOnly] List<ItemSlot> itemSlots;
+    [SerializeField, ReadOnly] List<ItemSlot> itemSlots = new();
     
     const int CAPACITY = 3;
     const float UI_HEIGHT_NO_ITEM = 2.5f;
     const float UI_HEIGHT_WITH_ITEM = 3.25f;
 
-    public override void ResetAll() {
+    public override void Initialize(Hero hero) {
+        base.Initialize(hero);
         foreach (var i in itemIcons) {
             i.enabled = false;
         }
         ui.anchoredPosition = new Vector2(ui.anchoredPosition.x, UI_HEIGHT_NO_ITEM);
-        if (itemSlots == null) {
-            itemSlots = new List<ItemSlot>();
-        }
-        else {
-            itemSlots.Clear();
-        }
     }
 
     protected override void FindReferences() {

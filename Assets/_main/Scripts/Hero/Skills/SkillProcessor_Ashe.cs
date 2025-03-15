@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 /// <summary>
-/// ban ngau nhien 10-20 loat mua ten vao muc tieu va pham vi 1 xung quanh
-/// moi loat mua ten gay 20% st vat ly kem 50% xuyen giap
+/// ban ngau nhien 5-10 loat mua ten vao muc tieu va pham vi 1 xung quanh
+/// moi loat mua ten gay 25% st vat ly kem 50% xuyen giap va co the chi mang
 /// </summary>
 public class SkillProcessor_Ashe : SkillProcessor {
     const int MIN_ARROW_SET = 10;
@@ -17,9 +18,7 @@ public class SkillProcessor_Ashe : SkillProcessor {
     List<Hero> affectedTargets = new();
     
     public SkillProcessor_Ashe(Hero hero) : base(hero) {
-        this.hero = hero;
         events = new Action[] { ShotArrows };
-        unstoppable = false;
     }
 
     async void ShotArrows() {
@@ -37,11 +36,16 @@ public class SkillProcessor_Ashe : SkillProcessor {
     void ShotArrow() {
         if (hero.Target == null) return;
         
-        var attribute = hero.GetAbility<HeroAttributes>();
+        var dmg = attributes.PhysicalDamage * DMG_MUL;
+        var crit = Random.value < attributes.CriticalChance;
+        if (crit) {
+            dmg *= attributes.CriticalDamage;
+        }
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            attribute.PhysicalDamage * DMG_MUL,
+            dmg,
             DamageType.Physical, 
             PENETRATION,
+            crit,
             !affectedTargets.Contains(hero.Target));
         
         affectedTargets.Add(hero.Target);

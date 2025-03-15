@@ -15,51 +15,46 @@ public class SkillProcessor_Yone : SkillProcessor {
     const float DEVIL_DMG_MUL_1 = 2.5f;
     
     public SkillProcessor_Yone(Hero hero) : base(hero) {
-        this.hero = hero;
         events = new Action[] { Judge, LightSmite, HeavySmite };
-        unstoppable = false;
     }
 
     void Judge() {
         if (hero.Target == null) return;
         
-        var attribute = hero.GetAbility<HeroAttributes>();
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            attribute.PhysicalDamage * DIVINE_DMG_MUL,
+            attributes.PhysicalDamage * DIVINE_DMG_MUL,
             DamageType.Physical, 
-            attribute.PhysicalPenetration);
+            attributes.PhysicalPenetration);
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(DIVINE_AIRBORNE_TIME);
         
         if (!hero.Target.GetAbility<HeroAttributes>().IsAlive){
-            attribute.RegenEnergy(DIVINE_REGEN_ENERGY);
+            attributes.RegenEnergy(DIVINE_REGEN_ENERGY);
         }
     }
 
     void LightSmite() {
         if (hero.Target == null) return;
         
-        var attribute = hero.GetAbility<HeroAttributes>();
-        var dmg = attribute.PhysicalDamage * DEVIL_DMG_MUL_0;
-        if (Random.value < attribute.CriticalChance) {
-            dmg *= attribute.CriticalDamage;
+        var dmg = attributes.PhysicalDamage * DEVIL_DMG_MUL_0;
+        if (Random.value < attributes.CriticalChance) {
+            dmg *= attributes.CriticalDamage;
         }
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
             dmg,
             DamageType.Physical, 
-            attribute.PhysicalPenetration);
+            attributes.PhysicalPenetration);
     }
 
     void HeavySmite() {
         if (hero.Target == null) return;
         
-        var attribute = hero.GetAbility<HeroAttributes>();
-        var dmg = attribute.PhysicalDamage * DEVIL_DMG_MUL_1;
-        if (Random.value < attribute.CriticalChance) {
-            dmg *= attribute.CriticalDamage;
+        var dmg = attributes.PhysicalDamage * DEVIL_DMG_MUL_1;
+        if (Random.value < attributes.CriticalChance) {
+            dmg *= attributes.CriticalDamage;
         }
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
             dmg,
             DamageType.Physical, 
-            attribute.PhysicalPenetration);
+            attributes.PhysicalPenetration);
     }
 }

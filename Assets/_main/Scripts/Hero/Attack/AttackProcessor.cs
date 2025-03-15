@@ -7,9 +7,11 @@ public class AttackProcessor {
     
     protected Hero hero;
     protected CustomData<int> customInt;
+    protected HeroAttributes attributes;
     
     public AttackProcessor(Hero hero) {
         this.hero = hero;
+        attributes = this.hero.GetAbility<HeroAttributes>();
     }
 
     public virtual void Process() {
@@ -17,18 +19,19 @@ public class AttackProcessor {
     }
 
     public virtual void Execute() {
-        CalculateDamage(out var dmg, out var type, out var pen);
-        var attributes = hero.GetAbility<HeroAttributes>();
+        CalculateDamage(out var dmg, out var type, out var pen, out var crit);
         hero.Mecanim.Attack(() => {
             if (hero.Target == null) return;
-            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen);
-            attributes.Heal(outputDamage * attributes.LifeSteal);
+            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen, crit);
+            var heal = outputDamage * attributes.LifeSteal;
+            if (heal > 0) {
+                attributes.Heal(heal);
+            }
             attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
         });
     }
     
-    protected virtual void CalculateDamage(out float damage, out DamageType type, out float penetration) {
-        var attributes = hero.GetAbility<HeroAttributes>();
+    protected virtual void CalculateDamage(out float damage, out DamageType type, out float penetration, out bool crit) {
         if (attributes.PhysicalDamage > attributes.MagicalDamage) {
             damage = attributes.PhysicalDamage;
             type = DamageType.Physical;
@@ -52,7 +55,8 @@ public class AttackProcessor {
             }
         }
 
-        if (Random.value < attributes.CriticalChance) {
+        crit = Random.value < attributes.CriticalChance;
+        if (crit) {
             damage *= attributes.CriticalDamage;
         }
     }
