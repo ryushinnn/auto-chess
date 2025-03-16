@@ -180,6 +180,7 @@ public class HeroAttributes : HeroAbility {
     }
 
     void ProcessAttributeModifiers() {
+        var hasChange = false;
         for (int i = modifierGroups.Count - 1; i >= 0; i--) {
             var key = modifierGroups[i].key;
             var modifiers = modifierGroups[i].modifiers;
@@ -189,13 +190,17 @@ public class HeroAttributes : HeroAbility {
                 if (modifiers[j].duration <= 0) {
                     modifiers[j].onRemove?.Invoke();
                     modifiers.RemoveAt(j);
+                    hasChange = true;
                 }
             }
 
             if (modifiers.Count == 0) {
                 modifierGroups.RemoveAt(i);
             }
-            RecalculateAttributes(key);
+
+            if (hasChange) {
+                RecalculateAttributes(key);
+            }
         }
     }
 

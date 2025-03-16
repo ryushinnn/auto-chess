@@ -17,12 +17,12 @@ MonoBehaviour:
   role: 0
   price: 3
   mecanim: {fileID: 6263284951136927269, guid: 9e8b37a48673ed14fad1c2dd36e1ecbb, type: 3}
-  maxHp: 1000
-  physicalDamage: 127
+  maxHp: 2000
+  physicalDamage: 90
   magicalDamage: 0
   armor: 30
   resistance: 25
-  attackSpeed: 0.75
+  attackSpeed: 0.6
   movementSpeed: 1.8
   criticalChance: 0.1
   criticalDamage: 2
@@ -34,6 +34,6 @@ MonoBehaviour:
   energyRegenPerAttack: 25
   energyRegenPerHit: 3
   attackRange: 1
-  minDps: 95.25
-  avgDps: 104.775
+  minDps: 54.000004
+  avgDps: 59.400005
   damageType: 0

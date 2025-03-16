@@ -17,6 +17,7 @@ public class ProgressBar : MonoBehaviour {
     public void UpdateAmount(float value, bool instantly = false) {
         if (instantly || ignoreAnimation) {
             amount = value;
+            sequence?.Kill();
             main.fillAmount = amount;
             sub.fillAmount = amount;
             return;

@@ -568,6 +568,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fe83e5d7bda3e54e8cfccdad47942f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPersistent: 0
   hpTextPrefab: {fileID: 1688615548058413647, guid: 46962fe764ccba243ae9f42241a85ad8,
     type: 3}
 --- !u!4 &386755913
@@ -1195,6 +1196,8 @@ MonoBehaviour:
     mapNode: {x: 0, y: 3}
     items:
     - {fileID: 11400000, guid: 8d105db34d57d72429a7dafadd916efe, type: 2}
+    - {fileID: 11400000, guid: b538eec87a753f34a992d366a3cd4321, type: 2}
+    - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   - active: 0
     id: Yasuo
     star: 0
@@ -1209,6 +1212,7 @@ MonoBehaviour:
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
+    - {fileID: 11400000, guid: b538eec87a753f34a992d366a3cd4321, type: 2}
   - active: 0
     id: Aatrox
     star: 0
