@@ -5,9 +5,9 @@ using Random = UnityEngine.Random;
 public class AttackProcessor {
     public CustomData<int> CustomInt => customInt;
     
-    protected Hero hero;
+    protected readonly Hero hero;
+    protected readonly HeroAttributes attributes;
     protected CustomData<int> customInt;
-    protected HeroAttributes attributes;
     
     public AttackProcessor(Hero hero) {
         this.hero = hero;

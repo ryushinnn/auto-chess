@@ -1088,6 +1088,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b3d0a57c7c0ac194683bf78d377a0599, type: 2}
   - {fileID: 11400000, guid: 1f826fe26e91e574c85178f9a754812c, type: 2}
   - {fileID: 11400000, guid: 0b18c86d49bec0d4ea717da5fd41db22, type: 2}
+  - {fileID: 11400000, guid: 8bfce0f3b8d1c9d4daabbbff6fb99d24, type: 2}
   completeItems:
   - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
 --- !u!4 &1019160392
@@ -1191,7 +1192,7 @@ MonoBehaviour:
     type: 3}
   myTeam:
   - active: 1
-    id: Akali
+    id: Caitlyn
     star: 0
     mapNode: {x: 0, y: 3}
     items:

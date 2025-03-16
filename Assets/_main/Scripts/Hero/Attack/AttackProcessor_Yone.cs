@@ -17,7 +17,6 @@ public class AttackProcessor_Yone : AttackProcessor {
     const float DEVIL_VAMP_MAX = 0.2f;
 
     public AttackProcessor_Yone(Hero hero) : base(hero) {
-        this.hero = hero;
         customInt = new CustomData<int>();
         customInt["sword"] = (int)YoneSword.Divine;
     }

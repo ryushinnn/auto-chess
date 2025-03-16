@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
+  m_Name: Caitlyn
+  m_EditorClassIdentifier: 
+  id: Caitlyn
+  realm: 1
+  role: 2
+  price: 1
+  mecanim: {fileID: 2403688389232674053, guid: 02537cffa1e84804c80a4e88f1cbe203, type: 3}
+  maxHp: 19800
+  physicalDamage: 150
+  magicalDamage: 0
+  armor: 20
+  resistance: 22
+  attackSpeed: 0.3
+  movementSpeed: 1.8
+  criticalChance: 0.2
+  criticalDamage: 2
+  energyRegenEfficient: 1
+  physicalPenetration: 0
+  magicalPenetration: 0
+  lifeSteal: 0
+  tenacity: 0
+  energyRegenPerAttack: 15
+  energyRegenPerHit: 4
+  attackRange: 4
+  minDps: 45
+  avgDps: 54
+  damageType: 0

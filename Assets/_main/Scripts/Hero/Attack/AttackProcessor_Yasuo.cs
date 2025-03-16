@@ -7,9 +7,7 @@ public class AttackProcessor_Yasuo : AttackProcessor {
     const float DMG_MUL = 0.5f;
     const int COUNT_LIMIT = 2;
     
-    public AttackProcessor_Yasuo(Hero hero) : base(hero) {
-        this.hero = hero;
-    }
+    public AttackProcessor_Yasuo(Hero hero) : base(hero) { }
 
     public override void Execute() {
         CalculateDamage(out var dmg, out var type, out var pen, out var crit);

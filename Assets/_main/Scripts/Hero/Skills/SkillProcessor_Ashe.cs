@@ -14,6 +14,7 @@ public class SkillProcessor_Ashe : SkillProcessor {
     const int MAX_ARROW_SET = 20;
     const float DMG_MUL = 0.2f;
     const float PENETRATION = 0.5f;
+    const int TOTAL_TIME = 2000; //ms
     
     List<Hero> affectedTargets = new();
     
@@ -24,8 +25,7 @@ public class SkillProcessor_Ashe : SkillProcessor {
     async void ShotArrows() {
         affectedTargets.Clear();
         var set = Random.Range(MIN_ARROW_SET, MAX_ARROW_SET + 1);
-        var totalTime = 2000; //ms
-        var timePerSet = totalTime / set;
+        var timePerSet = TOTAL_TIME / set;
         ShotArrow();
         for (int i=1; i<set; i++) {
             await Task.Delay(timePerSet);
