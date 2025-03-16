@@ -17,7 +17,7 @@ MonoBehaviour:
   role: 3
   price: 3
   mecanim: {fileID: 2676055251035741358, guid: 233d9d1010477c649a73ae30ec5c60de, type: 3}
-  maxHp: 1650
+  maxHp: 16500
   physicalDamage: 0
   magicalDamage: 169
   armor: 19
@@ -29,7 +29,7 @@ MonoBehaviour:
   energyRegenEfficient: 1
   physicalPenetration: 0
   magicalPenetration: 0
-  lifeSteal: 0
+  lifeSteal: 0.2
   tenacity: 0
   energyRegenPerAttack: 20
   energyRegenPerHit: 7

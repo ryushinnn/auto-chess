@@ -15,14 +15,17 @@ public class AttackProcessor_Yasuo : AttackProcessor {
         CalculateDamage(out var dmg, out var type, out var pen, out var crit);
         hero.Mecanim.Attack(() => {
             if (hero.Target == null) return;
-            
-            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen, crit);
 
+            float outputDamage;
             if (count == COUNT_LIMIT) {
-                outputDamage += hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg * DMG_MUL, DamageType.True, 0, crit);
+                outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] {
+                    Damage.Create(dmg, type, pen, crit),
+                    Damage.Create(dmg * DMG_MUL, DamageType.True, 0, crit),
+                });
                 count = 0;
             }
             else {
+                outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(Damage.Create(dmg, type, pen, crit));
                 count++;
             }
 

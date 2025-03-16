@@ -22,7 +22,7 @@ public class AttackProcessor {
         CalculateDamage(out var dmg, out var type, out var pen, out var crit);
         hero.Mecanim.Attack(() => {
             if (hero.Target == null) return;
-            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen, crit);
+            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(Damage.Create(dmg,type,pen,crit));
             var heal = outputDamage * attributes.LifeSteal;
             if (heal > 0) {
                 attributes.Heal(heal);

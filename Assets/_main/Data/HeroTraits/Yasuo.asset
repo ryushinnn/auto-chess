@@ -29,7 +29,7 @@ MonoBehaviour:
   energyRegenEfficient: 1
   physicalPenetration: 0
   magicalPenetration: 0
-  lifeSteal: 0
+  lifeSteal: 0.1
   tenacity: 0
   energyRegenPerAttack: 25
   energyRegenPerHit: 3

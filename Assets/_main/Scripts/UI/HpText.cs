@@ -12,6 +12,7 @@ public class HpText : MonoBehaviour, IPoolable{
     [SerializeField] Color magicalDamageColor;
     [SerializeField] Color trueDamageColor;
     [SerializeField] Color healColor;
+    [SerializeField] AnimationCurve damageCurve;
 
     Sequence seq;
     
@@ -30,6 +31,17 @@ public class HpText : MonoBehaviour, IPoolable{
         text.color = color;
         critMark.color = color;
         critMark.gameObject.SetActive(crit);
+
+        seq?.Kill();
+        seq = DOTween.Sequence();
+        transform.localScale = 2f * Vector3.one;
+        cg.alpha = 1f;
+        var targetX = transform.localPosition.x + 0.25f;
+        var targetY = transform.localPosition.y - 0.5f;
+        seq.Append(transform.DOScale(1, 0.25f))
+            .Insert(0.1f, transform.DOLocalMoveX(targetX, 0.5f))
+            .Join(transform.DOLocalMoveY(targetY, 0.5f).SetEase(damageCurve))
+            .Insert(0.4f,cg.DOFade(0, 0.2f));
     }
     
     public void SetAsHeal(float amount) {
@@ -37,10 +49,6 @@ public class HpText : MonoBehaviour, IPoolable{
         text.fontSize = NORMAL_SIZE;
         text.color = healColor;
         critMark.gameObject.SetActive(false);
-    }
-    
-    public void Activate() {
-        gameObject.SetActive(true);
         
         seq?.Kill();
         seq = DOTween.Sequence();
@@ -50,6 +58,10 @@ public class HpText : MonoBehaviour, IPoolable{
         seq.Append(transform.DOScale(1, 0.25f))
             .Insert(0.1f, transform.DOLocalMoveY(targetY, 0.5f))
             .Insert(0.4f,cg.DOFade(0, 0.2f));
+    }
+    
+    public void Activate() {
+        gameObject.SetActive(true);
     }
     public void Deactivate() {
         gameObject.SetActive(false);

@@ -22,18 +22,22 @@ public class SkillProcessor_Zed : SkillProcessor {
 
         aimedTarget = hero.Target;
         aimedTarget.GetAbility<HeroAttributes>().TakeDamage(
-            attributes.PhysicalDamage * DMG_MUL, 
-            DamageType.Physical, 
-            attributes.PhysicalPenetration);
+            Damage.Create(
+                attributes.PhysicalDamage * DMG_MUL, 
+                DamageType.Physical, 
+                attributes.PhysicalPenetration
+            ));
     }
 
     void TriggerExplosion() {
         if (aimedTarget == null) return;
         
         aimedTarget.GetAbility<HeroAttributes>().TakeDamage(
-            attributes.PhysicalDamage * attributes.CriticalDamage,
-            DamageType.Physical,
-            attributes.PhysicalPenetration);
+            Damage.Create(
+                attributes.PhysicalDamage * attributes.CriticalDamage,
+                DamageType.Physical,
+                attributes.PhysicalPenetration
+            ));
         aimedTarget.GetAbility<HeroStatusEffects>().Stun(STUN_MAIN);
         
         // same error with yasuo skill, review later

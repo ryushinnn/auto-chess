@@ -29,9 +29,11 @@ public class SkillProcessor_Yasuo : SkillProcessor {
                 node.Process(x => {
                     if (x is Hero h && h.Side != hero.Side) {
                         h.GetAbility<HeroAttributes>().TakeDamage(
-                            hero.GetAbility<HeroAttributes>().PhysicalDamage * DMG_MUL, 
-                            DamageType.Physical, 
-                            hero.GetAbility<HeroAttributes>().PhysicalPenetration);
+                            Damage.Create(
+                                attributes.PhysicalDamage * DMG_MUL, 
+                                DamageType.Physical, 
+                                attributes.PhysicalPenetration
+                            ));
                         success = true;
                     }
                 });
@@ -40,11 +42,11 @@ public class SkillProcessor_Yasuo : SkillProcessor {
 
         if (success) {
             if (lastAttackSpeedModifierId != null) {
-                hero.GetAbility<HeroAttributes>().RemoveAttributeModifier(lastAttackSpeedModifierId);
+                attributes.RemoveAttributeModifier(lastAttackSpeedModifierId);
             }
 
             var modifier = AttributeModifier.Create(AttributeModifierKey.AttackSpeed, ATK_SPD_MUL, ModifierType.Percentage, ATK_SPD_DURATION);
-            hero.GetAbility<HeroAttributes>().AddAttributeModifier(modifier);
+            attributes.AddAttributeModifier(modifier);
             lastAttackSpeedModifierId = modifier.id;
         }
     }

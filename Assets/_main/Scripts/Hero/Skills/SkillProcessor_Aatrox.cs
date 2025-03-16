@@ -31,9 +31,11 @@ public class SkillProcessor_Aatrox : SkillProcessor {
         if (hero.Target == null) return;
 
         var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            attributes.PhysicalDamage * DMG_MUL_0, 
-            DamageType.Physical, 
-            attributes.PhysicalPenetration);
+            Damage.Create(
+                attributes.PhysicalDamage * DMG_MUL_0,
+                DamageType.Physical,
+                attributes.PhysicalPenetration
+            ));
         
         var vamp = attributes.Hp / attributes.MaxHp < 0.5f ? VAMP_0 * VAMP_MUL_WHEN_LOW_HP : VAMP_0;
         attributes.Heal(outputDmg * vamp);
@@ -44,9 +46,11 @@ public class SkillProcessor_Aatrox : SkillProcessor {
         if (hero.Target == null) return;
         
         var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            attributes.PhysicalDamage * DMG_MUL_1,
-            DamageType.Physical, 
-            attributes.PhysicalPenetration);
+            Damage.Create(
+                attributes.PhysicalDamage * DMG_MUL_1,
+                DamageType.Physical, 
+                attributes.PhysicalPenetration
+            ));
         
         var vamp = attributes.Hp / attributes.MaxHp < 0.5f ? VAMP_1 * VAMP_MUL_WHEN_LOW_HP : VAMP_1;
         attributes.Heal(outputDmg * vamp);
@@ -57,9 +61,11 @@ public class SkillProcessor_Aatrox : SkillProcessor {
         if (hero.Target == null) return;
         
         var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            attributes.PhysicalDamage * DMG_MUL_2, 
-            DamageType.Physical, 
-            attributes.PhysicalPenetration);
+            Damage.Create(
+                attributes.PhysicalDamage * DMG_MUL_2, 
+                DamageType.Physical, 
+                attributes.PhysicalPenetration
+            ));
         
         var vamp = attributes.Hp / attributes.MaxHp < 0.5f ? VAMP_2 * VAMP_MUL_WHEN_LOW_HP : VAMP_2;
         attributes.Heal(outputDmg * vamp);

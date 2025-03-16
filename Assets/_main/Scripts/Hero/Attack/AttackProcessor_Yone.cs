@@ -26,7 +26,7 @@ public class AttackProcessor_Yone : AttackProcessor {
         CalculateDamage(out var dmg, out var type, out var pen, out var crit);
         hero.Mecanim.Attack(() => {
             if (hero.Target == null) return;
-            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, type, pen, crit);
+            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(Damage.Create(dmg,type,pen,crit));
             var heal = outputDamage * attributes.LifeSteal;
             if ((YoneSword)customInt["sword"] == YoneSword.Devil) {
                 heal += outputDamage * ((attributes.Hp / attributes.MaxHp) * (DEVIL_VAMP_MAX - DEVIL_VAMP_MIN) + DEVIL_VAMP_MIN);

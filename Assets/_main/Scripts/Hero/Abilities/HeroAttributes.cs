@@ -92,15 +92,29 @@ public class HeroAttributes : HeroAbility {
         attack = hero.GetAbility<HeroAttack>();
     }
 
-    public float TakeDamage(float damage, DamageType type, float penetration, bool crit = false, bool regenEnergy = true) {
-        var dmgReduction = type switch {
-            DamageType.Physical => Mathf.Min(armor * (1-penetration), HeroTrait.MAX_DMG_REDUCTION * damage),
-            DamageType.Magical => Mathf.Min(resistance * (1-penetration), HeroTrait.MAX_DMG_REDUCTION * damage),
+    public float TakeDamage(Damage damage, bool regenEnergy = true) {
+        return TakeDamage(damage, regenEnergy, true).value;
+    }
+    
+    public float TakeDamage(Damage[] damages, bool regenEnergy = true) {
+        var outputDmgs = new List<Damage>();
+        foreach (var dmg in damages) {
+            outputDmgs.Add(TakeDamage(dmg, regenEnergy, false));
+        }
+
+        HpTextSpawner.Instance.SpawnHpTextAsDamage(hpTextParent, outputDmgs);
+        return outputDmgs.Sum(x=>x.value);
+    }
+
+    Damage TakeDamage(Damage damage, bool regenEnergy, bool showText) {
+        var dmgReduction = damage.type switch {
+            DamageType.Physical => Mathf.Min(armor * (1-damage.penetration), HeroTrait.MAX_DMG_REDUCTION * damage.value),
+            DamageType.Magical => Mathf.Min(resistance * (1-damage.penetration), HeroTrait.MAX_DMG_REDUCTION * damage.value),
             DamageType.True => 0
         };
         
-        damage = Mathf.Max(damage - dmgReduction, 1);
-        hp -= damage;
+        damage.value = Mathf.Max(damage.value - dmgReduction, 1);
+        hp -= damage.value;
         healthBar.UpdateAmount(hp / maxHp);
         if (hp > 0) {
             if (regenEnergy) {
@@ -111,7 +125,9 @@ public class HeroAttributes : HeroAbility {
             Die();
         }
 
-        HpTextSpawner.Instance.SpawnHpTextAsDamage(hpTextParent,damage, type, crit);
+        if (showText) {
+            HpTextSpawner.Instance.SpawnHpTextAsDamage(hpTextParent,damage);
+        }
         return damage;
     }
 
@@ -208,7 +224,7 @@ public class HeroAttributes : HeroAbility {
         for (int i = damageOverTimes.Count - 1; i >= 0; i--) {
             var dot = damageOverTimes[i];
             if (dot.timer <= 0) {
-                TakeDamage(dot.damagePerStack, dot.damageType, dot.penetration, false, false);
+                TakeDamage(Damage.Create(dot.damagePerStack, dot.damageType, dot.penetration), false);
                 if (--dot.stack <= 0) {
                     damageOverTimes.Remove(dot);
                 }
@@ -390,6 +406,22 @@ public class HeroAttributes : HeroAbility {
     void dev_hot(float heal, int stack, float interval) {
         AddHealOverTime(HealOverTime.Create("hot", heal, (int)stack, interval));
         
+    }
+}
+
+public class Damage {
+    public float value;
+    public DamageType type;
+    public float penetration;
+    public bool crit;
+
+    public static Damage Create(float value, DamageType type, float penetration, bool crit = false) {
+        return new Damage {
+            value = value,
+            type = type,
+            penetration = penetration,
+            crit = crit
+        };
     }
 }
 

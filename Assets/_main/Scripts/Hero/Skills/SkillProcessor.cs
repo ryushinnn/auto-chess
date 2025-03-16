@@ -2,9 +2,8 @@ using System;
 using DG.Tweening;
 
 public abstract class SkillProcessor {
-    protected Hero hero;
-
-    protected HeroAttributes attributes;
+    protected readonly Hero hero;
+    protected readonly HeroAttributes attributes;
     protected Action[] events;
     protected bool unstoppable;
     

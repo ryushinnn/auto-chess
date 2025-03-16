@@ -22,9 +22,11 @@ public class SkillProcessor_Yone : SkillProcessor {
         if (hero.Target == null) return;
         
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            attributes.PhysicalDamage * DIVINE_DMG_MUL,
-            DamageType.Physical, 
-            attributes.PhysicalPenetration);
+            Damage.Create(
+                attributes.PhysicalDamage * DIVINE_DMG_MUL,
+                DamageType.Physical, 
+                attributes.PhysicalPenetration
+            ));
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(DIVINE_AIRBORNE_TIME);
         
         if (!hero.Target.GetAbility<HeroAttributes>().IsAlive){
@@ -40,9 +42,11 @@ public class SkillProcessor_Yone : SkillProcessor {
             dmg *= attributes.CriticalDamage;
         }
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            dmg,
-            DamageType.Physical, 
-            attributes.PhysicalPenetration);
+            Damage.Create(
+                dmg,
+                DamageType.Physical, 
+                attributes.PhysicalPenetration
+            ));
     }
 
     void HeavySmite() {
@@ -53,8 +57,10 @@ public class SkillProcessor_Yone : SkillProcessor {
             dmg *= attributes.CriticalDamage;
         }
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            dmg,
-            DamageType.Physical, 
-            attributes.PhysicalPenetration);
+            Damage.Create(
+                dmg,
+                DamageType.Physical, 
+                attributes.PhysicalPenetration
+            ));
     }
 }

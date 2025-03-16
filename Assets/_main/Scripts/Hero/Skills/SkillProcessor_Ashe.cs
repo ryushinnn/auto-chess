@@ -42,11 +42,12 @@ public class SkillProcessor_Ashe : SkillProcessor {
             dmg *= attributes.CriticalDamage;
         }
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            dmg,
-            DamageType.Physical, 
-            PENETRATION,
-            crit,
-            !affectedTargets.Contains(hero.Target));
+            Damage.Create(
+                dmg,
+                DamageType.Physical, 
+                PENETRATION,
+                crit
+            ), !affectedTargets.Contains(hero.Target));
         
         affectedTargets.Add(hero.Target);
     }

@@ -330,6 +330,30 @@ MonoBehaviour:
   magicalDamageColor: {r: 0, g: 0.42745098, b: 1, a: 1}
   trueDamageColor: {r: 1, g: 1, b: 1, a: 1}
   healColor: {r: 0.1745283, g: 1, b: 0.31366158, a: 1}
+  damageCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -2.6734564
+      outSlope: -2.6734564
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.19893976
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 4.556388
+      outSlope: 4.556388
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.141797
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!225 &350216437296433245
 CanvasGroup:
   m_ObjectHideFlags: 0

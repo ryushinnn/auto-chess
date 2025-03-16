@@ -1191,12 +1191,11 @@ MonoBehaviour:
     type: 3}
   myTeam:
   - active: 1
-    id: Yasuo
+    id: Akali
     star: 0
     mapNode: {x: 0, y: 3}
     items:
     - {fileID: 11400000, guid: 8d105db34d57d72429a7dafadd916efe, type: 2}
-    - {fileID: 11400000, guid: b538eec87a753f34a992d366a3cd4321, type: 2}
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   - active: 0
     id: Yasuo
@@ -1212,7 +1211,6 @@ MonoBehaviour:
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
-    - {fileID: 11400000, guid: b538eec87a753f34a992d366a3cd4321, type: 2}
   - active: 0
     id: Aatrox
     star: 0
