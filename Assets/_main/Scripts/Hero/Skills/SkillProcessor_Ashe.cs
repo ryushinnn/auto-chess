@@ -7,13 +7,13 @@ using Random = UnityEngine.Random;
 
 /// <summary>
 /// ban ngau nhien 5-10 loat mua ten vao muc tieu va pham vi 1 xung quanh
-/// moi loat mua ten gay 25% st vat ly kem 50% xuyen giap va co the chi mang
+/// moi loat mua ten gay 25% st vat ly kem 80% xuyen giap va co the chi mang
 /// </summary>
 public class SkillProcessor_Ashe : SkillProcessor {
     const int MIN_ARROW_SET = 10;
     const int MAX_ARROW_SET = 20;
     const float DMG_MUL = 0.2f;
-    const float PENETRATION = 0.5f;
+    const float PENETRATION = 0.8f;
     const int TOTAL_TIME = 2000; //ms
     
     List<Hero> affectedTargets = new();
