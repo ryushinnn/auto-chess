@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Mecanim_Jinx : Mecanim {
+public class Mecanim_Katarina : Mecanim {
     Coroutine attackCoroutine;
     Coroutine useSkillCoroutine;
 
@@ -21,7 +21,7 @@ public class Mecanim_Jinx : Mecanim {
 
     IEnumerator DoAttack(System.Action atkEvent) {
         DoAction(Action.Skill, (paramSkill, 0));
-        yield return new WaitForSeconds(0.37f);
+        yield return new WaitForSeconds(0.14f);
         atkEvent.Invoke();
     }
     
@@ -30,23 +30,19 @@ public class Mecanim_Jinx : Mecanim {
             StopCoroutine(useSkillCoroutine);
         }
         useSkillCoroutine = StartCoroutine(DoUseSkill(events));
-        return 4.2f;
+        return 1.1f;
     }
     
     public override void InterruptSkill() {
         DoNone();
         if (useSkillCoroutine != null) {
             StopCoroutine(useSkillCoroutine);
-            bodyParts.SetBodyParts(0, ("rocket",false));
         }
     }
 
     IEnumerator DoUseSkill(System.Action[] events) {
-        bodyParts.SetBodyParts(0, ("rocket",true));
         DoAction(Action.Skill, (paramSkill, 1));
-        yield return new WaitForSeconds(2f);
         events[0]();
-        yield return new WaitForSeconds(2f);
-        bodyParts.SetBodyParts(0, ("rocket",false));
-    }     
+        yield return new WaitForSeconds(0);
+    }
 }

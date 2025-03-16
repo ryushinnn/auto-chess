@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class Mecanim : MonoBehaviour {
+public abstract class Mecanim : MonoBehaviour {
     public enum State {
         None = 0,
         Idle = 1,

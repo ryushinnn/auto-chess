@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -7,11 +9,25 @@ using Random = UnityEngine.Random;
 /// net la st vat ly hoac st phep thi co 50% xuyen giap
 /// </summary>
 public class SkillProcessor_Jinx : SkillProcessor {
+    public const int ROCKETS = 5;
+    public const int INTERVAL = 200;
     const float DMG_MUL_PER_ROCKET = 0.5f;
     const float PENETRATION = 0.5f;
 
+    List<Hero> affectedTargets = new();
+    
     public SkillProcessor_Jinx(Hero hero) : base(hero) {
-        events = new Action[] { ShotRocket };
+        events = new Action[] { ShotRockets };
+        unstoppable = true;
+    }
+
+    async void ShotRockets() {
+        affectedTargets.Clear();
+        ShotRocket();
+        for (int i = 1; i < ROCKETS; i++) {
+            await Task.Delay(INTERVAL);
+            ShotRocket();
+        }
     }
 
     void ShotRocket() {
@@ -23,6 +39,9 @@ public class SkillProcessor_Jinx : SkillProcessor {
             0 => Damage.Create(attributes.PhysicalDamage * DMG_MUL_PER_ROCKET, DamageType.Physical, PENETRATION, crit),
             1 => Damage.Create(attributes.PhysicalDamage * DMG_MUL_PER_ROCKET, DamageType.Magical, PENETRATION, crit),
             _ => Damage.Create(attributes.PhysicalDamage * DMG_MUL_PER_ROCKET, DamageType.True, 0,crit),
-        });
+        }
+        , !affectedTargets.Contains(hero.Target));
+        
+        affectedTargets.Add(hero.Target);
     }
 }
