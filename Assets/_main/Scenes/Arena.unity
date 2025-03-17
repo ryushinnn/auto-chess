@@ -1092,6 +1092,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e46d7741ba2233545aa710bf8e16d549, type: 2}
   - {fileID: 11400000, guid: 0dcbb8d92cee2f34db55a0d7d1976387, type: 2}
   - {fileID: 11400000, guid: 555518efc1b0379449a4d67fae203ace, type: 2}
+  - {fileID: 11400000, guid: 664afd855757fea4fa7a8bef7f5a8ff7, type: 2}
   completeItems:
   - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
 --- !u!4 &1019160392
@@ -1195,7 +1196,7 @@ MonoBehaviour:
     type: 3}
   myTeam:
   - active: 1
-    id: Katarina
+    id: Irelia
     star: 0
     mapNode: {x: 0, y: 3}
     items:
@@ -1209,7 +1210,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   enemyTeam:
   - active: 1
-    id: Jinx
+    id: Malphite
     star: 0
     mapNode: {x: 7, y: 4}
     items:

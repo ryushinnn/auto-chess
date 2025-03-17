@@ -2,11 +2,11 @@ using System;
 
 /// <summary>
 /// trieu hoi rong tan cong ke dich, gay st phep = 250% st vat ly
-/// hat tung ke dich trong 2s
+/// hat tung ke dich trong 1s
 /// </summary>
 public class SkillProcessor_Irelia : SkillProcessor {
     const float DMG_MUL = 2.5f;
-    const float AIRBRONE_TIME = 2; //ms
+    const float AIRBRONE_TIME = 1; //ms
     
     public SkillProcessor_Irelia(Hero hero) : base(hero) {
         events = new Action[] { SummonDragon };
