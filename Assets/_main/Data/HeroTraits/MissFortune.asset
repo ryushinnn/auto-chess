@@ -10,30 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
-  m_Name: Yone
+  m_Name: MissFortune
   m_EditorClassIdentifier: 
-  id: Yone
-  realm: 3
-  role: 0
-  price: 5
-  mecanim: {fileID: 7410290684134340985, guid: acacc7ffae828af479be1b7552135b27, type: 3}
-  maxHp: 21200
-  physicalDamage: 168
+  id: MissFortune
+  realm: 1
+  role: 12
+  price: 3
+  mecanim: {fileID: 6243125059235353389, guid: 9031a1ae6b88eb146aabda9d9a26083f, type: 3}
+  maxHp: 19800
+  physicalDamage: 125
   magicalDamage: 0
-  armor: 28
-  resistance: 25
-  attackSpeed: 0.35
+  armor: 20
+  resistance: 22
+  attackSpeed: 0.4
   movementSpeed: 1.8
-  criticalChance: 0.1
+  criticalChance: 0.66
   criticalDamage: 2
   energyRegenEfficient: 1
   physicalPenetration: 0
   magicalPenetration: 0
   lifeSteal: 0
   tenacity: 0
-  energyRegenPerAttack: 10
-  energyRegenPerHit: 8
-  attackRange: 1
-  minDps: 58.8
-  avgDps: 64.68
+  energyRegenPerAttack: 15
+  energyRegenPerHit: 4
+  attackRange: 4
+  minDps: 50
+  avgDps: 83
   damageType: 0

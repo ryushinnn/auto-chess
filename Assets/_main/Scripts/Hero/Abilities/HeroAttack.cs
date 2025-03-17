@@ -23,6 +23,7 @@ public class HeroAttack : HeroAbility {
         processor = hero.Trait.id switch {
             "Yasuo" => new AttackProcessor_Yasuo(hero),
             "Yone" => new AttackProcessor_Yone(hero),
+            "MissFortune" => new AttackProcessor_MissFortune(hero),
             _ => new AttackProcessor(hero)
         };
     }

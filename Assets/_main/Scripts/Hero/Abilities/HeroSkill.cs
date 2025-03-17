@@ -26,6 +26,7 @@ public class HeroSkill : HeroAbility {
             "Irelia" => new SkillProcessor_Irelia(hero),
             "Katarina" => new SkillProcessor_Katarina(hero),
             "Malphite" => new SkillProcessor_Malphite(hero),
+            "MissFortune" => new SkillProcessor_MissFortune(hero),
         };
     }
 
