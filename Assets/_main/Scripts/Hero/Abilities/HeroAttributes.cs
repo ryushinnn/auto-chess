@@ -99,9 +99,12 @@ public class HeroAttributes : HeroAbility {
     public float TakeDamage(Damage[] damages, bool regenEnergy = true) {
         var outputDmgs = new List<Damage>();
         foreach (var dmg in damages) {
-            outputDmgs.Add(TakeDamage(dmg, regenEnergy, false));
+            outputDmgs.Add(TakeDamage(dmg, false, false));
         }
 
+        if (hp > 0 && regenEnergy) {
+            RegenEnergy(hero.Trait.energyRegenPerHit);
+        }
         HpTextSpawner.Instance.SpawnHpTextAsDamage(hpTextParent, outputDmgs);
         return outputDmgs.Sum(x=>x.value);
     }
