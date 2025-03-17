@@ -8,10 +8,10 @@ using UnityEngine;
 /// </summary>
 public class AttackProcessor_Teemo : AttackProcessor {
     public const string KEY = "teemo_ignite";
-    const int TOTAL_TIME = 5000; //ms
-    const int INTERVAL = 1000; //ms
-    const float MAX_HP_DMG = 0.004f;
-    const float DMG_MUL_LIMIT = 0.04f;
+    public const int TOTAL_TIME = 5000; //ms
+    public const int INTERVAL = 1000; //ms
+    public const float MAX_HP_DMG = 0.004f;
+    public const float DMG_MUL_LIMIT = 0.04f;
     
     public AttackProcessor_Teemo(Hero hero) : base(hero) { }
 
@@ -43,12 +43,14 @@ public class AttackProcessor_Teemo : AttackProcessor {
             
             hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
                 DamageOverTime.Create(
-                    KEY,
-                    igniteDmg, 
-                    (TOTAL_TIME / INTERVAL) - 1,
-                    INTERVAL.ToSeconds(),
-                    false,
-                    false));
+                        KEY,
+                        igniteDmg, 
+                        (TOTAL_TIME / INTERVAL) - 1,
+                        INTERVAL.ToSeconds(),
+                        false,
+                        false,
+                        true
+                    ));
             // why subtract 1 from stack???
             // 1 stack is already applied in TakeDamage
         });

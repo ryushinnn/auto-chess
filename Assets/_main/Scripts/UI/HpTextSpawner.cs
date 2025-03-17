@@ -13,7 +13,7 @@ public class HpTextSpawner : Singleton<HpTextSpawner> {
     
     const float LEFT_POS = -0.5f;
     const float RIGHT_POS = 0.5f;
-    const float POS_Y_GAP = 0.4f;
+    const float POS_Y_GAP = 0.5f;
     
     protected override void OnAwake() {
         pool = ObjectPools.Instance.CreatePool(hpTextPrefab, 10, 20, 5);

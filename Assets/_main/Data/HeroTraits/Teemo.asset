@@ -24,8 +24,8 @@ MonoBehaviour:
   resistance: 24
   attackSpeed: 0.5
   movementSpeed: 2
-  criticalChance: 0.5
-  criticalDamage: 1.5
+  criticalChance: 0.05
+  criticalDamage: 10
   energyRegenEfficient: 1
   physicalPenetration: 0
   magicalPenetration: 0
@@ -35,5 +35,5 @@ MonoBehaviour:
   energyRegenPerHit: 7
   attackRange: 2
   minDps: 65
-  avgDps: 81.25
+  avgDps: 94.25
   damageType: 1

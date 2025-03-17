@@ -8,6 +8,7 @@ public class HeroAttributes : HeroAbility {
     HeroStatusEffects effects;
     HeroMovement movement;
     HeroAttack attack;
+    HeroMark mark;
     
     [SerializeField] ProgressBar healthBar;
     [SerializeField] ProgressBar energyBar;
@@ -90,6 +91,7 @@ public class HeroAttributes : HeroAbility {
         effects = hero.GetAbility<HeroStatusEffects>();
         movement = hero.GetAbility<HeroMovement>();
         attack = hero.GetAbility<HeroAttack>();
+        mark = hero.GetAbility<HeroMark>();
     }
 
     public float TakeDamage(Damage damage, bool regenEnergy = true) {
@@ -186,16 +188,26 @@ public class HeroAttributes : HeroAbility {
 
     public void AddDamageOverTime(DamageOverTime dot) {
         if (dot.overwrite) {
-            damageOverTimes.RemoveAll(x => x.key == dot.key);
+            var existDot = damageOverTimes.Find(x => x.key == dot.key);
+            damageOverTimes.Remove(existDot);
+            if (existDot.mark != null) {
+                mark.RemoveMark(existDot.mark.id);
+            }
         }
         damageOverTimes.Add(dot);
+        if (dot.mark != null) {
+            mark.AddMark(dot.mark);
+        }
     }
     
     public void AddHealOverTime(HealOverTime hot) {
         if (hot.overwrite) {
-            healOverTimes.RemoveAll(x => x.key == hot.key);
+            var existHot = healOverTimes.Find(x => x.key == hot.key);
+            healOverTimes.Remove(existHot);
+            mark.RemoveMark(existHot.mark.id);
         }
         healOverTimes.Add(hot);
+        mark.AddMark(hot.mark);
     }
 
     void ProcessAttributeModifiers() {
@@ -230,6 +242,9 @@ public class HeroAttributes : HeroAbility {
                 TakeDamage(dot.damagePerStack, false);
                 if (--dot.stack <= 0) {
                     damageOverTimes.Remove(dot);
+                    if (dot.mark != null) {
+                        mark.RemoveMark(dot.mark.id);
+                    }
                 }
                 else {
                     dot.timer = dot.interval;
@@ -248,6 +263,9 @@ public class HeroAttributes : HeroAbility {
                 Heal(hot.healPerStack);
                 if (--hot.stack <= 0) {
                     healOverTimes.Remove(hot);
+                    if (hot.mark != null) {
+                        mark.RemoveMark(hot.mark.id);
+                    }
                 }
                 else {
                     hot.timer = hot.interval;
@@ -516,9 +534,10 @@ public class DamageOverTime {
     public int stack;
     public float interval;
     public bool overwrite;
+    public Mark mark;
     public float timer;
     
-    public static DamageOverTime Create(string key, Damage dmgPerStack, int stack, float interval, bool applyDmgInstantly = true, bool overwrite = true) {
+    public static DamageOverTime Create(string key, Damage dmgPerStack, int stack, float interval, bool applyDmgInstantly = true, bool overwrite = true, bool createMark = false) {
         return new DamageOverTime {
             id = Guid.NewGuid().ToString(),
             key = key,
@@ -526,6 +545,7 @@ public class DamageOverTime {
             stack = stack,
             interval = interval,
             overwrite = overwrite,
+            mark = createMark ? Mark.Create(key) : null, 
             timer = applyDmgInstantly ? 0 : interval,
         };
     }
@@ -539,9 +559,10 @@ public class HealOverTime {
     public int stack;
     public float interval;
     public bool overwrite;
+    public Mark mark;
     public float timer;
     
-    public static HealOverTime Create(string key, float healPerStack, int stack, float interval, bool overwrite = true) {
+    public static HealOverTime Create(string key, float healPerStack, int stack, float interval, bool overwrite = true, bool createMark = false) {
         return new HealOverTime {
             id = Guid.NewGuid().ToString(),
             key = key,
@@ -549,6 +570,7 @@ public class HealOverTime {
             stack = stack,
             interval = interval,
             overwrite = overwrite,
+            mark = createMark ? Mark.Create(key) : null,
             timer = 0,
         };
     }

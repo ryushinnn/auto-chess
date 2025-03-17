@@ -91,6 +91,7 @@ public class HeroMovement : HeroAbility {
         hero.Mecanim.Idle();
         moveSequence?.Kill();
         if (resetPosition) {
+            // known issue: null ref exception here??? maybe because of current node is null
             var emptyNode = Map.Instance.GetNearestNode(hero.MNode, x => x.HasAtFirst(hero) || x.HasNone());
             hero.SetNode(emptyNode);
             hero.ResetPosition();
