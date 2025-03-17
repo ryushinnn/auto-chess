@@ -24,6 +24,7 @@ public class HeroAttack : HeroAbility {
             "Yasuo" => new AttackProcessor_Yasuo(hero),
             "Yone" => new AttackProcessor_Yone(hero),
             "MissFortune" => new AttackProcessor_MissFortune(hero),
+            "Teemo" => new AttackProcessor_Teemo(hero),
             _ => new AttackProcessor(hero)
         };
     }

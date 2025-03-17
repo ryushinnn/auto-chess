@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
+  m_Name: Teemo
+  m_EditorClassIdentifier: 
+  id: Teemo
+  realm: 2
+  role: 2
+  price: 3
+  mecanim: {fileID: 5778484270824746890, guid: 212cc5669baec5647bbbba991b380344, type: 3}
+  maxHp: 25400
+  physicalDamage: 0
+  magicalDamage: 130
+  armor: 32
+  resistance: 24
+  attackSpeed: 0.5
+  movementSpeed: 2
+  criticalChance: 0.5
+  criticalDamage: 1.5
+  energyRegenEfficient: 1
+  physicalPenetration: 0
+  magicalPenetration: 0
+  lifeSteal: 0
+  tenacity: 0
+  energyRegenPerAttack: 15
+  energyRegenPerHit: 7
+  attackRange: 2
+  minDps: 65
+  avgDps: 81.25
+  damageType: 1

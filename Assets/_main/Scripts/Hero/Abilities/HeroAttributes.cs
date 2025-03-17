@@ -227,7 +227,7 @@ public class HeroAttributes : HeroAbility {
         for (int i = damageOverTimes.Count - 1; i >= 0; i--) {
             var dot = damageOverTimes[i];
             if (dot.timer <= 0) {
-                TakeDamage(Damage.Create(dot.damagePerStack, dot.damageType, dot.penetration), false);
+                TakeDamage(dot.damagePerStack, false);
                 if (--dot.stack <= 0) {
                     damageOverTimes.Remove(dot);
                 }
@@ -401,7 +401,7 @@ public class HeroAttributes : HeroAbility {
 
     [Button]
     void dev_dot(float dmg, int stack, float interval) {
-        AddDamageOverTime(DamageOverTime.Create("dot", dmg, DamageType.True, 0, stack, interval));
+        // AddDamageOverTime(DamageOverTime.Create("dot", dmg, DamageType.True, 0, stack, interval));
         
     }
     
@@ -512,25 +512,21 @@ public static class AttributeModifierKey {
 public class DamageOverTime {
     public string key;
     public string id;
-    public float damagePerStack;
-    public DamageType damageType;
-    public float penetration;
+    public Damage damagePerStack;
     public int stack;
     public float interval;
     public bool overwrite;
     public float timer;
     
-    public static DamageOverTime Create(string key, float damagePerStack, DamageType damageType, float penetration, int stack, float interval, bool overwrite = true) {
+    public static DamageOverTime Create(string key, Damage dmgPerStack, int stack, float interval, bool applyDmgInstantly = true, bool overwrite = true) {
         return new DamageOverTime {
             id = Guid.NewGuid().ToString(),
             key = key,
-            damagePerStack = damagePerStack,
-            damageType = damageType,
-            penetration = penetration,
+            damagePerStack = dmgPerStack,
             stack = stack,
             interval = interval,
             overwrite = overwrite,
-            timer = 0,
+            timer = applyDmgInstantly ? 0 : interval,
         };
     }
 }
