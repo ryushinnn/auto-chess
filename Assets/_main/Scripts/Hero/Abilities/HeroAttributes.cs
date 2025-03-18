@@ -187,11 +187,12 @@ public class HeroAttributes : HeroAbility {
     }
 
     public void AddDamageOverTime(DamageOverTime dot) {
-        if (dot.overwrite) {
-            var existDot = damageOverTimes.Find(x => x.key == dot.key);
-            damageOverTimes.Remove(existDot);
-            if (existDot.mark != null) {
-                mark.RemoveMark(existDot.mark.id);
+        for (int i = damageOverTimes.Count - 1; i >= 0; i--) {
+            if (damageOverTimes[i].SameAs(dot)) {
+                if (damageOverTimes[i].mark != null) {
+                    mark.RemoveMark(damageOverTimes[i].mark.id);
+                }
+                damageOverTimes.RemoveAt(i);
             }
         }
         damageOverTimes.Add(dot);
@@ -201,13 +202,18 @@ public class HeroAttributes : HeroAbility {
     }
     
     public void AddHealOverTime(HealOverTime hot) {
-        if (hot.overwrite) {
-            var existHot = healOverTimes.Find(x => x.key == hot.key);
-            healOverTimes.Remove(existHot);
-            mark.RemoveMark(existHot.mark.id);
+        for (int i = healOverTimes.Count - 1; i >= 0; i--) {
+            if (healOverTimes[i].SameAs(hot)) {
+                if (healOverTimes[i].mark != null) {
+                    mark.RemoveMark(healOverTimes[i].mark.id);
+                }
+                healOverTimes.RemoveAt(i);
+            }
         }
         healOverTimes.Add(hot);
-        mark.AddMark(hot.mark);
+        if (hot.mark != null) {
+            mark.AddMark(hot.mark);
+        }
     }
 
     void ProcessAttributeModifiers() {
@@ -239,8 +245,8 @@ public class HeroAttributes : HeroAbility {
         for (int i = damageOverTimes.Count - 1; i >= 0; i--) {
             var dot = damageOverTimes[i];
             if (dot.timer <= 0) {
-                TakeDamage(dot.damagePerStack, false);
-                if (--dot.stack <= 0) {
+                TakeDamage(dot.damage, false);
+                if (--dot.times <= 0) {
                     damageOverTimes.Remove(dot);
                     if (dot.mark != null) {
                         mark.RemoveMark(dot.mark.id);
@@ -260,8 +266,8 @@ public class HeroAttributes : HeroAbility {
         for (int i = healOverTimes.Count - 1; i >= 0; i--) {
             var hot = healOverTimes[i];
             if (hot.timer <= 0) {
-                Heal(hot.healPerStack);
-                if (--hot.stack <= 0) {
+                Heal(hot.amount);
+                if (--hot.times <= 0) {
                     healOverTimes.Remove(hot);
                     if (hot.mark != null) {
                         mark.RemoveMark(hot.mark.id);
@@ -417,18 +423,6 @@ public class HeroAttributes : HeroAbility {
     void Dev_Permanent() {
         AddAttributeModifier(AttributeModifier.Create(AttributeModifierKey.AttackSpeed,0.5f,ModifierType.Percentage));
     }
-
-    [Button]
-    void dev_dot(float dmg, int stack, float interval) {
-        // AddDamageOverTime(DamageOverTime.Create("dot", dmg, DamageType.True, 0, stack, interval));
-        
-    }
-    
-    [Button]
-    void dev_hot(float heal, int stack, float interval) {
-        AddHealOverTime(HealOverTime.Create("hot", heal, (int)stack, interval));
-        
-    }
 }
 
 public class Damage {
@@ -531,24 +525,30 @@ public static class AttributeModifierKey {
 public class DamageOverTime {
     public string key;
     public string id;
-    public Damage damagePerStack;
-    public int stack;
+    public Hero owner;
+    public Damage damage;
+    public int times;
     public float interval;
-    public bool overwrite;
+    public int stacks;
     public Mark mark;
     public float timer;
     
-    public static DamageOverTime Create(string key, Damage dmgPerStack, int stack, float interval, bool applyDmgInstantly = true, bool overwrite = true, bool createMark = false) {
+    public static DamageOverTime Create(string key, Hero owner, Damage damage, int times, float interval, int stacks = 1, bool applyDmgInstantly = true, bool createMark = false) {
         return new DamageOverTime {
             id = Guid.NewGuid().ToString(),
             key = key,
-            damagePerStack = dmgPerStack,
-            stack = stack,
+            owner = owner,
+            damage = damage,
+            times = times,
             interval = interval,
-            overwrite = overwrite,
-            mark = createMark ? Mark.Create(key) : null, 
+            stacks = stacks,
+            mark = createMark ? Mark.Create(key, owner, stacks, interval * times, false) : null, 
             timer = applyDmgInstantly ? 0 : interval,
         };
+    }
+
+    public bool SameAs(DamageOverTime other) {
+        return key == other.key && owner == other.owner;
     }
 }
 
@@ -556,23 +556,27 @@ public class DamageOverTime {
 public class HealOverTime {
     public string key;
     public string id;
-    public float healPerStack;
-    public int stack;
+    public Hero owner;
+    public float amount;
+    public int times;
     public float interval;
-    public bool overwrite;
     public Mark mark;
     public float timer;
     
-    public static HealOverTime Create(string key, float healPerStack, int stack, float interval, bool overwrite = true, bool createMark = false) {
+    public static HealOverTime Create(string key, Hero owner, float amount, int times, float interval, bool createMark = false) {
         return new HealOverTime {
             id = Guid.NewGuid().ToString(),
             key = key,
-            healPerStack = healPerStack,
-            stack = stack,
+            owner = owner,
+            amount = amount,
+            times = times,
             interval = interval,
-            overwrite = overwrite,
-            mark = createMark ? Mark.Create(key) : null,
+            mark = createMark ? Mark.Create(key,owner,1, interval * times, false) : null,
             timer = 0,
         };
+    }
+    
+    public bool SameAs(HealOverTime other) {
+        return key == other.key && owner == other.owner;
     }
 }

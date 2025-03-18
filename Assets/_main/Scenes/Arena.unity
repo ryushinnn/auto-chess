@@ -1099,6 +1099,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bea835d0c066f0b4a997166e8ee271c2, type: 2}
   completeItems:
   - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
+  markIcons:
+  - key: caitlyn_tea
+    value: {fileID: 21300000, guid: 92401a37c687d974ead787e947956b60, type: 3}
+  - key: teemo_hell_flame
+    value: {fileID: 21300000, guid: 292c77a806916f24f9218961a06ed371, type: 3}
 --- !u!4 &1019160392
 Transform:
   m_ObjectHideFlags: 0
@@ -1200,7 +1205,7 @@ MonoBehaviour:
     type: 3}
   myTeam:
   - active: 1
-    id: Tristana
+    id: Teemo
     star: 0
     mapNode: {x: 0, y: 3}
     items:
@@ -1214,7 +1219,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   enemyTeam:
   - active: 1
-    id: MissFortune
+    id: Caitlyn
     star: 0
     mapNode: {x: 7, y: 4}
     items:

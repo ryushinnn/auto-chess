@@ -32,9 +32,11 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
         attributes.AddHealOverTime(
             HealOverTime.Create(
                 HOT_KEY,
+                hero,
                 attributes.MaxHp * HP_MUL_TO_HEAL + attributes.PhysicalDamage * DMG_MUL_TO_HEAL,
                 TOTAL_TIME / INTERVAL,
-                INTERVAL.ToSeconds()
+                INTERVAL.ToSeconds(),
+                true
             ));
     }
 

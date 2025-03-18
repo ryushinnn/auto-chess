@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class HeroInventory : HeroAbility {
     HeroAttributes attributes;
     
-    
     [SerializeField] Image[] itemIcons;
     [SerializeField] RectTransform ui;
     [SerializeField, ReadOnly] List<ItemSlot> itemSlots = new();

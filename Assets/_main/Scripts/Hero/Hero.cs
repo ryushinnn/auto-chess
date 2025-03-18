@@ -28,6 +28,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     Seeker seeker;
     HeroBT bt;
     HeroPicker picker;
+
     [SerializeField, ReadOnly] HeroTrait trait;
     [SerializeField, ReadOnly] TeamSide side;
     [SerializeField, ReadOnly] HeroState state;

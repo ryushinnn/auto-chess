@@ -2,16 +2,17 @@
 using UnityEngine;
 
 /// <summary>
-/// don danh se gay them st thieu dot trong 5s
-/// moi 1s gay st chuan = 0.4% maxhp cua ke dich, toi da = 4% st phep
-/// ke dich co the nhan hieu ung thieu dot nhieu lan
+/// don danh se kem theo 1 cong don hoa nguc trong 5s
+/// moi 1s gay st chuan = 0.1% maxhp cua ke dich, toi da = 1% st phep
+/// cong don toi da 5 lan
 /// </summary>
 public class AttackProcessor_Teemo : AttackProcessor {
-    public const string KEY = "teemo_ignite";
+    public const string DOT_KEY = "teemo_hell_flame";
+    public const int MAX_STACKS = 5;
     public const int TOTAL_TIME = 5000; //ms
     public const int INTERVAL = 1000; //ms
-    public const float MAX_HP_DMG = 0.004f;
-    public const float DMG_MUL_LIMIT = 0.04f;
+    public const float MAX_HP_DMG = 0.001f;
+    public const float DMG_MUL_LIMIT = 0.01f;
     
     public AttackProcessor_Teemo(Hero hero) : base(hero) { }
 
@@ -20,8 +21,11 @@ public class AttackProcessor_Teemo : AttackProcessor {
         hero.Mecanim.Attack(() => {
             if (hero.Target == null) return;
             
+            var currentStacks = hero.Target.GetAbility<HeroMark>().GetMark(DOT_KEY, hero)?.stacks ?? 0;
+            var nextStacks = Mathf.Min(currentStacks + 1, MAX_STACKS);
+            
             var igniteDmg = Damage.Create(
-                Mathf.Min(attributes.MagicalDamage * DMG_MUL_LIMIT, hero.Target.GetAbility<HeroAttributes>().MaxHp * MAX_HP_DMG),
+                nextStacks * Mathf.Min(attributes.MagicalDamage * DMG_MUL_LIMIT, hero.Target.GetAbility<HeroAttributes>().MaxHp * MAX_HP_DMG),
                 DamageType.True,
                 0
             );
@@ -43,11 +47,12 @@ public class AttackProcessor_Teemo : AttackProcessor {
             
             hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
                 DamageOverTime.Create(
-                        KEY,
+                        DOT_KEY,
+                        hero,
                         igniteDmg, 
                         (TOTAL_TIME / INTERVAL) - 1,
                         INTERVAL.ToSeconds(),
-                        false,
+                        nextStacks,
                         false,
                         true
                     ));
