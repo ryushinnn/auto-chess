@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
+  m_Name: Tristana
+  m_EditorClassIdentifier: 
+  id: Tristana
+  realm: 1
+  role: 6
+  price: 3
+  mecanim: {fileID: 8864082493877353897, guid: 1f34d2d1205ca1a42a0590da7d2fbc94, type: 3}
+  maxHp: 19800
+  physicalDamage: 125
+  magicalDamage: 0
+  armor: 20
+  resistance: 22
+  attackSpeed: 0.4
+  movementSpeed: 1.8
+  criticalChance: 0.5
+  criticalDamage: 2
+  energyRegenEfficient: 1
+  physicalPenetration: 0
+  magicalPenetration: 0
+  lifeSteal: 0
+  tenacity: 0
+  energyRegenPerAttack: 15
+  energyRegenPerHit: 4
+  attackRange: 4
+  minDps: 50
+  avgDps: 75
+  damageType: 0

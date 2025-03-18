@@ -1096,6 +1096,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 12b73276a8808ce41a4940ae7569a14d, type: 2}
   - {fileID: 11400000, guid: 0248b22d785c69c4ab91f6f258865538, type: 2}
   - {fileID: 11400000, guid: aa1c11f0e6ca9d54983e3196ddc976b1, type: 2}
+  - {fileID: 11400000, guid: bea835d0c066f0b4a997166e8ee271c2, type: 2}
   completeItems:
   - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
 --- !u!4 &1019160392
@@ -1199,7 +1200,7 @@ MonoBehaviour:
     type: 3}
   myTeam:
   - active: 1
-    id: Teemo
+    id: Tristana
     star: 0
     mapNode: {x: 0, y: 3}
     items:
