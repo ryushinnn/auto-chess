@@ -4,7 +4,7 @@
 /// tang 200% toc do danh, 20% ti le chi mang, trong 4s
 /// </summary>
 public class SkillProcessor_Tristana : SkillProcessor {
-    const float ATK_SPD_MUL = 2f;
+    const float ATK_SPD_MUL = 5f;
     const float CRIT_CHANCE_MUL = 0.2f;
     const float DURATION = 4f;
     

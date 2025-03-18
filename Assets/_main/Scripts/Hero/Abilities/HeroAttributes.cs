@@ -338,6 +338,7 @@ public class HeroAttributes : HeroAbility {
                     attackSpeed = Mathf.Max(attackSpeed + (x.type == ModifierType.FixedValue ? x.value : attackSpeed * x.value), HeroTrait.MIN_ATTACK_SPEED);
                 });
                 attack.RefreshAttackCooldown();
+                hero.Mecanim.ModifyAttackTime(attackSpeed);
                 break;
             
             case AttributeModifierKey.CriticalChance:

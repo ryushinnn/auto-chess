@@ -1342,9 +1342,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9c5eb081ae7474692442fd231c41f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultAttackTime: 1.367
   currentState: 0
   lastState: 0
-  lastAction: 0
+  lastInteraction: 0
 --- !u!1 &7284421001385271952 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4082682768607072629, guid: 8963b8c7554433843969bacfdf2f7c6e,

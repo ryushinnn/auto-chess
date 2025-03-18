@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class Mecanim_Teemo : Mecanim {
     Coroutine attackCoroutine;
     Coroutine useSkillCoroutine;
 
-    public override void Attack(System.Action atkEvent) {
+    public override void Attack(Action atkEvent) {
         if (attackCoroutine != null) {
             StopCoroutine(attackCoroutine);
         }
@@ -19,13 +20,13 @@ public class Mecanim_Teemo : Mecanim {
         }
     }
 
-    IEnumerator DoAttack(System.Action atkEvent) {
-        DoAction(Action.Skill, (paramSkill, 0));
-        yield return new WaitForSeconds(0.17f);
+    IEnumerator DoAttack(Action atkEvent) {
+        Interact(Interaction.Attack);
+        yield return new WaitForSeconds(0.17f / attackTimeMultiplier);
         atkEvent.Invoke();
     }
     
-    public override float UseSkill(System.Action[] events) {
+    public override float UseSkill(Action[] events) {
         if (useSkillCoroutine != null) {
             StopCoroutine(useSkillCoroutine);
         }
@@ -41,8 +42,8 @@ public class Mecanim_Teemo : Mecanim {
         }
     }
 
-    IEnumerator DoUseSkill(System.Action[] events) {
-        DoAction(Action.Skill, (paramSkill, 1));
+    IEnumerator DoUseSkill(Action[] events) {
+        Interact(Interaction.Skill, (paramSkill, 0));
         bodyParts.SetBodyParts(0, ("bomb_0",true),("bomb_1",true),("bomb_2",true));
         yield return new WaitForSeconds(1.56f);
         bodyParts.SetBodyParts(0,("bomb_2",false));

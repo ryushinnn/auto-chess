@@ -1,43 +1,48 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 public abstract class Mecanim : MonoBehaviour {
-    public enum State {
+    protected enum State {
         None = 0,
         Idle = 1,
         Run = 2,
         Death = 99
     }
-    
-    public enum Action {
+
+    protected enum Interaction {
         None = 0,
         Dive = 1,
-        Skill = 2
+        Attack = 2,
+        Skill = 3
     }
     
-    protected readonly int paramStateOn = Animator.StringToHash("state_on");
+    protected readonly int paramChangeState = Animator.StringToHash("change_state");
     protected readonly int paramState = Animator.StringToHash("state");
     protected readonly int paramLastState = Animator.StringToHash("last_state");
-    protected readonly int paramHasIdleIn = Animator.StringToHash("has_idle_in");
-    protected readonly int paramHasRunIn = Animator.StringToHash("has_run_in");
-    protected readonly int paramActionOn = Animator.StringToHash("action_on");
-    protected readonly int paramAction = Animator.StringToHash("action");
+    protected readonly int paramIdleIn = Animator.StringToHash("idle_in");
+    protected readonly int paramRunIn = Animator.StringToHash("run_in");
+    protected readonly int paramInteract = Animator.StringToHash("interact");
+    protected readonly int paramInteraction = Animator.StringToHash("interaction");
     protected readonly int paramDiveIn = Animator.StringToHash("dive_in");
     protected readonly int paramSkill= Animator.StringToHash("skill");
-    protected readonly int paramHasSkill0In = Animator.StringToHash("has_skill_0_in");
-    protected readonly int paramHasSkill0Out = Animator.StringToHash("has_skill_0_out");
-    protected readonly int paramSkill0Multiplier = Animator.StringToHash("skill_0_multiplier");
+    protected readonly int paramAttackIn = Animator.StringToHash("attack_in");
+    protected readonly int paramAttackOut = Animator.StringToHash("attack_out");
+    protected readonly int paramAttackMultiplier = Animator.StringToHash("attack_multiplier");
 
+    [SerializeField] float defaultAttackTime;
     [SerializeField, ReadOnly] protected State currentState;
     [SerializeField, ReadOnly] protected State lastState;
-    [SerializeField, ReadOnly] protected Action lastAction;
+    [SerializeField, ReadOnly] protected Interaction lastInteraction;
     
     protected Animator animator;
     protected BodyParts bodyParts;
+    protected float attackTimeMultiplier;
 
     protected virtual void Awake() {
         animator = GetComponent<Animator>();
         bodyParts = GetComponent<BodyParts>();
+        attackTimeMultiplier = 1;
         SetUp();
     }
 
@@ -57,34 +62,40 @@ public abstract class Mecanim : MonoBehaviour {
     }
 
     public virtual void DoNone() {
-        DoAction(Action.None);
+        Interact(Interaction.None);
     }
 
-    public virtual void Attack(System.Action atkEvent) {
-        DoAction(Action.Skill, (paramSkill, 0));
+    public virtual void Attack(Action atkEvent) {
+        Interact(Interaction.Attack);
     }
     
     public virtual void InterruptAttack() { }
 
-    public virtual float UseSkill(System.Action[] events) {
+    public virtual float UseSkill(Action[] events) {
         return 0;
     }
 
     public virtual void InterruptSkill() { }
 
-    protected virtual void ChangeState(State state) {
+    public void ModifyAttackTime(float atkSpd) {
+        var time = 1 / atkSpd;
+        attackTimeMultiplier = Mathf.Max(1, defaultAttackTime / time);
+        animator.SetFloat(paramAttackMultiplier, attackTimeMultiplier);
+    }
+
+    protected void ChangeState(State state) {
         if (state == currentState) return;
 
         lastState = currentState;
         currentState = state;
         animator.SetInteger(paramState, (int)currentState);
         animator.SetInteger(paramLastState, (int)lastState);
-        animator.SetTrigger(paramStateOn);
+        animator.SetTrigger(paramChangeState);
 
         ModifyBodyParts();
     }
 
-    protected virtual void DoAction(Action action, params (int, object)[] metaDatas) {
+    protected void Interact(Interaction interaction, params (int, object)[] metaDatas) {
         foreach (var data in metaDatas) {
             switch (data.Item2) {
                 case int i:
@@ -99,9 +110,9 @@ public abstract class Mecanim : MonoBehaviour {
             }
         }
         
-        lastAction = action;
-        animator.SetInteger(paramAction, (int)lastAction);
-        animator.SetTrigger(paramActionOn);
+        lastInteraction = interaction;
+        animator.SetInteger(paramInteraction, (int)lastInteraction);
+        animator.SetTrigger(paramInteract);
     }
     
     protected virtual void SetUp() {
@@ -110,5 +121,20 @@ public abstract class Mecanim : MonoBehaviour {
 
     protected virtual void ModifyBodyParts() {
         
+    }
+
+    [Button]
+    void dev_Attack() {
+        Interact(Interaction.Attack);
+    }
+    
+    [Button]
+    void dev_DiveIn() {
+        Interact(Interaction.Dive, (paramDiveIn, true));
+    }
+    
+    [Button]
+    void dev_DiveOut() {
+        Interact(Interaction.Dive, (paramDiveIn, false));
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,11 +9,11 @@ public class Mecanim_Yone : Mecanim {
     
     protected override void SetUp() {
         hero = GetComponentInParent<Hero>();
-        animator.SetBool(paramHasSkill0In, true);
-        animator.SetBool(paramHasSkill0Out, true);
+        animator.SetBool(paramAttackIn, true);
+        animator.SetBool(paramAttackOut, true);
     }
 
-    public override void Attack(System.Action atkEvent) {
+    public override void Attack(Action atkEvent) {
         if (attackCoroutine != null) {
             StopCoroutine(attackCoroutine);
         }
@@ -26,22 +27,13 @@ public class Mecanim_Yone : Mecanim {
         }
     }
 
-    IEnumerator DoAttack(System.Action atkEvent) {
-        if (hero.GetAbility<HeroAttack>().Processor is not AttackProcessor_Yone atkProcessor) yield break;
-        
-        if (atkProcessor.CustomInt["sword"] == (int)YoneSword.Divine) {
-            DoAction(Action.Skill, (paramSkill, 0));
-            yield return new WaitForSeconds(0.26f);
-            atkEvent.Invoke();
-        }
-        else if (atkProcessor.CustomInt["sword"] == (int)YoneSword.Devil) {
-            DoAction(Action.Skill, (paramSkill, 0));
-            yield return new WaitForSeconds(0.26f);
-            atkEvent.Invoke();
-        }
+    IEnumerator DoAttack(Action atkEvent) {
+        Interact(Interaction.Attack);
+        yield return new WaitForSeconds(0.26f / attackTimeMultiplier);
+        atkEvent.Invoke();
     }
     
-    public override float UseSkill(System.Action[] events) {
+    public override float UseSkill(Action[] events) {
         if (useSkillCoroutine != null) {
             StopCoroutine(useSkillCoroutine);
         }
@@ -68,14 +60,14 @@ public class Mecanim_Yone : Mecanim {
         }
     }
 
-    IEnumerator DoUseSkill(YoneSword sword, System.Action[] events) {
+    IEnumerator DoUseSkill(YoneSword sword, Action[] events) {
         if (sword == YoneSword.Divine) {
-            DoAction(Action.Skill, (paramSkill, 2));
+            Interact(Interaction.Skill, (paramSkill, 0));
             yield return new WaitForSeconds(1.66f);
             events[0]();
         }
         else if (sword == YoneSword.Devil) {
-            DoAction(Action.Skill, (paramSkill, 3));
+            Interact(Interaction.Skill, (paramSkill, 1));
             yield return new WaitForSeconds(0.12f);
             events[1]();
             yield return new WaitForSeconds(0.6f);

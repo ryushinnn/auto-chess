@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Mecanim_Yasuo : Mecanim {
     Coroutine attackCoroutine;
     Coroutine useSkillCoroutine;
 
-    public override void Attack(System.Action atkEvent) {
+    public override void Attack(Action atkEvent) {
         if (attackCoroutine != null) {
             StopCoroutine(attackCoroutine);
         }
@@ -21,13 +20,13 @@ public class Mecanim_Yasuo : Mecanim {
         }
     }
 
-    IEnumerator DoAttack(System.Action atkEvent) {
-        DoAction(Action.Skill, (paramSkill, 0));
-        yield return new WaitForSeconds(0.33f);
+    IEnumerator DoAttack(Action atkEvent) {
+        Interact(Interaction.Attack);
+        yield return new WaitForSeconds(0.33f / attackTimeMultiplier);
         atkEvent.Invoke();
     }
 
-    public override float UseSkill(System.Action[] events) {
+    public override float UseSkill(Action[] events) {
         if (useSkillCoroutine != null) {
             StopCoroutine(useSkillCoroutine);
         }
@@ -43,11 +42,9 @@ public class Mecanim_Yasuo : Mecanim {
         }
     }
 
-    IEnumerator DoUseSkill(System.Action[] events) {
+    IEnumerator DoUseSkill(Action[] events) {
         bodyParts.SetBodyParts(0,("dragon",true));
-        // DoAction(Action.Skill, (paramSkill, 1));
-        // yield return new WaitForSeconds(4.6f);
-        DoAction(Action.Skill, (paramSkill, 2));
+        Interact(Interaction.Skill, (paramSkill, 0));
         yield return new WaitForSeconds(0.5f);
         events[0]();
         yield return new WaitForSeconds(0.2f);

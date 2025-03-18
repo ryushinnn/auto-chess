@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ public class Mecanim_Caitlyn : Mecanim {
     Coroutine attackCoroutine;
     Coroutine useSkillCoroutine;
 
-    public override void Attack(System.Action atkEvent) {
+    public override void Attack(Action atkEvent) {
         if (attackCoroutine != null) {
             StopCoroutine(attackCoroutine);
         }
@@ -19,13 +20,13 @@ public class Mecanim_Caitlyn : Mecanim {
         }
     }
 
-    IEnumerator DoAttack(System.Action atkEvent) {
-        DoAction(Action.Skill, (paramSkill, 0));
-        yield return new WaitForSeconds(0.2f);
+    IEnumerator DoAttack(Action atkEvent) {
+        Interact(Interaction.Attack);
+        yield return new WaitForSeconds(0.2f / attackTimeMultiplier);
         atkEvent.Invoke();
     }
     
-    public override float UseSkill(System.Action[] events) {
+    public override float UseSkill(Action[] events) {
         if (useSkillCoroutine != null) {
             StopCoroutine(useSkillCoroutine);
         }
@@ -41,9 +42,9 @@ public class Mecanim_Caitlyn : Mecanim {
         }
     }
 
-    IEnumerator DoUseSkill(System.Action[] events) {
+    IEnumerator DoUseSkill(Action[] events) {
         bodyParts.SetBodyParts(0,("cup",true));
-        DoAction(Action.Skill, (paramSkill, 1));
+        Interact(Interaction.Skill, (paramSkill, 0));
         yield return new WaitForSeconds(1.4f);
         events[0]();
         yield return new WaitForSeconds(3.1f);

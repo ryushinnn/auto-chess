@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class Mecanim_Akali : Mecanim {
     Coroutine attackCoroutine;
     Coroutine useSkillCoroutine;
 
-    public override void Attack(System.Action atkEvent) {
+    public override void Attack(Action atkEvent) {
         if (attackCoroutine != null) {
             StopCoroutine(attackCoroutine);
         }
@@ -19,13 +20,13 @@ public class Mecanim_Akali : Mecanim {
         }
     }
 
-    IEnumerator DoAttack(System.Action atkEvent) {
-        DoAction(Action.Skill, (paramSkill, 0));
-        yield return new WaitForSeconds(0.18f);
+    IEnumerator DoAttack(Action atkEvent) {
+        Interact(Interaction.Attack);
+        yield return new WaitForSeconds(0.18f / attackTimeMultiplier);
         atkEvent.Invoke();
     }
     
-    public override float UseSkill(System.Action[] events) {
+    public override float UseSkill(Action[] events) {
         if (useSkillCoroutine != null) {
             StopCoroutine(useSkillCoroutine);
         }
@@ -40,8 +41,8 @@ public class Mecanim_Akali : Mecanim {
         }
     }
 
-    IEnumerator DoUseSkill(System.Action[] events) {
-        DoAction(Action.Skill, (paramSkill, 1));
+    IEnumerator DoUseSkill(Action[] events) {
+        Interact(Interaction.Skill, (paramSkill, 0));
         yield return new WaitForSeconds(0.2f);
         events[0]();
     }
