@@ -4,6 +4,7 @@ using DG.Tweening;
 public abstract class SkillProcessor {
     protected readonly Hero hero;
     protected readonly HeroAttributes attributes;
+    protected readonly HeroMark mark;
     protected Action[] events;
     protected bool unstoppable;
     
@@ -12,6 +13,7 @@ public abstract class SkillProcessor {
     protected SkillProcessor(Hero hero) {
         this.hero = hero;
         attributes = this.hero.GetAbility<HeroAttributes>();
+        mark = this.hero.GetAbility<HeroMark>();
     }
     
     public virtual void Process() {

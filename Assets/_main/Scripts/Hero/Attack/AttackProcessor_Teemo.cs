@@ -2,15 +2,15 @@
 using UnityEngine;
 
 /// <summary>
-/// don danh se kem theo 1 cong don hoa nguc trong 5s
-/// moi 1s gay st chuan = 0.1% maxhp cua ke dich, toi da = 1% st phep
+/// don danh se kem theo 1 cong don hoa nguc trong 3s
+/// moi 0.5s gay st chuan = 0.1% maxhp cua ke dich, toi da = 1% st phep
 /// cong don toi da 5 lan
 /// </summary>
 public class AttackProcessor_Teemo : AttackProcessor {
     public const string DOT_KEY = "teemo_hell_flame";
     public const int MAX_STACKS = 5;
-    public const int TOTAL_TIME = 5000; //ms
-    public const int INTERVAL = 1000; //ms
+    public const int TOTAL_TIME = 3000; //ms
+    public const int INTERVAL = 500; //ms
     public const float MAX_HP_DMG = 0.001f;
     public const float DMG_MUL_LIMIT = 0.01f;
     

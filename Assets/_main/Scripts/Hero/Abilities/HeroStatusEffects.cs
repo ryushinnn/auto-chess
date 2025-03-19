@@ -74,8 +74,8 @@ public class HeroStatusEffects : HeroAbility {
         isAirborne = true;
         airborneSequence?.Kill();
         airborneSequence = DOTween.Sequence()
-            .Append(hero.Model.DOLocalMoveY(AIRBORNE_MAX_HEIGHT, goUpTime).SetEase(Ease.OutQuad))
-            .Append(hero.Model.DOLocalMoveY(0, goDownTime).SetEase(Ease.InQuad))
+            .Append(hero.Model.DOLocalMoveY(AIRBORNE_MAX_HEIGHT, goUpTime).SetEase(Ease.OutExpo))
+            .Append(hero.Model.DOLocalMoveY(0, goDownTime).SetEase(Ease.InExpo))
             .AppendCallback(()=>isAirborne = false);
         
         hero.GetAbility<HeroAttack>().Interrupt();

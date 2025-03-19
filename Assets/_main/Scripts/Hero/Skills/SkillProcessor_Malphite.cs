@@ -9,6 +9,7 @@ using System.Collections.Generic;
 public class SkillProcessor_Malphite : SkillProcessor {
     List<string> lastModifierIds = new();
     
+    const string EFFECT_KEY = "malphite_unstoppable";
     const float DEFENSE_MUL = 2;
     const float ATK_SPEED_REDUCE_MUL = -0.5f;
     const float EFFECT_DURATION = 5;
@@ -40,6 +41,8 @@ public class SkillProcessor_Malphite : SkillProcessor {
         var tenacityModifier = AttributeModifier.Create(AttributeModifierKey.Tenacity, HeroTrait.MAX_TENACITY, ModifierType.FixedValue, EFFECT_DURATION);
         attributes.AddAttributeModifier(tenacityModifier);
         lastModifierIds.Add(tenacityModifier.id);
+        
+        mark.AddMark(Mark.Create(EFFECT_KEY, hero, 1, EFFECT_DURATION));
     }
 
     void Slam() {

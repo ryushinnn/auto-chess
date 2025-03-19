@@ -36,12 +36,12 @@ public class HeroMark : HeroAbility {
                 if (marks[j].permanent) continue;
                 marks[j].duration -= Time.deltaTime;
                 if (marks[j].duration <= 0 && marks[j].autoRemove) {
-                    marks.RemoveAt(j);
                     markHolders.ForEach(x => {
                         if (x.Id == marks[j].id) {
                             x.gameObject.SetActive(false);
                         }
                     });
+                    marks.RemoveAt(j);
                 }
             }
 

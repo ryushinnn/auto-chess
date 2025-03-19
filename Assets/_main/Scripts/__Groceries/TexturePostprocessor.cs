@@ -2,7 +2,7 @@
 using UnityEditor;
 
 public class TexturePostprocessor : AssetPostprocessor {
-    const string TARGET_FOLDER = "Assets/_main/Texture/2D";
+    const string TARGET_FOLDER = "Assets/_main/Textures/2D";
 
     void OnPreprocessTexture() {
         if (assetPath.StartsWith(TARGET_FOLDER)) {

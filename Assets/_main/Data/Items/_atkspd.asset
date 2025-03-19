@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c92797996edde4d45b1f38b683a49f47, type: 3}
-  m_Name: _aspd
+  m_Name: _atkspd
   m_EditorClassIdentifier: 
-  name: dao gam
+  name: mui ten set
   icon: {fileID: 21300000, guid: 2f645061b9dcfa84886a3b003c6dfa35, type: 3}
   ingredients: []
   modifiers:
-  - key: aspd
+  - key: atkspd
     id: <will be auto generated>
     value: 0.1
     type: 1

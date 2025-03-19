@@ -506,12 +506,12 @@ public enum ModifierType {
 }
 
 public static class AttributeModifierKey {
-    public const string MaxHp = "hp";
+    public const string MaxHp = "maxhp";
     public const string PhysicalDamage = "pdmg";
     public const string MagicalDamage = "mdmg";
     public const string Armor = "armor";
     public const string Resistance = "resistance";
-    public const string AttackSpeed = "aspd";
+    public const string AttackSpeed = "atkspd";
     public const string CriticalChance = "crit";
     public const string CriticalDamage = "cdmg";
     public const string EnergyRegenEfficient = "energy";
