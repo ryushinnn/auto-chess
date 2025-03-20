@@ -122,11 +122,6 @@ public abstract class Mecanim : MonoBehaviour {
     protected virtual void ModifyBodyParts() {
         
     }
-
-    [Button]
-    void dev_Attack() {
-        Interact(Interaction.Attack);
-    }
     
     [Button]
     void dev_DiveIn() {
@@ -136,5 +131,15 @@ public abstract class Mecanim : MonoBehaviour {
     [Button]
     void dev_DiveOut() {
         Interact(Interaction.Dive, (paramDiveIn, false));
+    }
+    
+    [Button]
+    void dev_Attack() {
+        Attack(()=>{});
+    }
+
+    [Button]
+    void dev_Skill() {
+        UseSkill(new Action[] { () => { } });
     }
 }

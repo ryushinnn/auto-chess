@@ -3,30 +3,25 @@ using System.Threading.Tasks;
 using RExt.Extension;
 
 /// <summary>
-/// uong tra hoi mau trong 2s, moi 0.25s hoi mau = 3% maxhp + 15% st vat ly
-/// sau do tang 25% giap va khang phep trong 3s
+/// an banh hoi mau trong 1.5s, moi 0.25s hoi mau = 3% maxhp + 15% st vat ly
+/// sau do tang 25% toc do danh trong 3s
 /// </summary>
 public class SkillProcessor_Caitlyn : SkillProcessor {
     const float HP_MUL_TO_HEAL = 0.03f;
     const float DMG_MUL_TO_HEAL = 0.15f;
-    const int TOTAL_TIME = 2000; //ms
+    const int TOTAL_TIME = 1500; //ms
     const int INTERVAL = 250; //ms
-    const float DEFENSE_MUL = 0.25f;
-    const float DEFENSE_DURATION = 3f;
-    const string HOT_KEY = "caitlyn_tea";
+    const float ATK_SPD_MUL = 0.25f;
+    const float ATK_SPD_DURATION = 3f;
+    const string HOT_KEY = "caitlyn_cake";
+    const string ATK_SPD_KEY = "caitlyn_cake_atkspd";
     
     public SkillProcessor_Caitlyn(Hero hero) : base(hero) {
-        events = new Action[] { DrinkTea };
+        events = new Action[] { DrinkTea, Focus };
         unstoppable = true;
     }
 
-    async void DrinkTea() {
-        Heal();
-        await Task.Delay(TOTAL_TIME);
-        GainDefense();
-    }
-
-    void Heal() {
+    void DrinkTea() {
         if (!attributes.IsAlive) return;
         
         attributes.AddHealOverTime(
@@ -40,23 +35,17 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
             ));
     }
 
-    void GainDefense() {
+    void Focus() {
         if (!attributes.IsAlive) return;
         
         attributes.AddAttributeModifier(
             AttributeModifier.Create(
-                AttributeModifierKey.Armor,
-                attributes.Armor * DEFENSE_MUL,
+                AttributeModifierKey.AttackSpeed,
+                ATK_SPD_MUL,
                 ModifierType.Percentage,
-                DEFENSE_DURATION
+                ATK_SPD_DURATION
             ));
         
-        attributes.AddAttributeModifier(
-            AttributeModifier.Create(
-                AttributeModifierKey.Resistance,
-                attributes.Resistance * DEFENSE_MUL,
-                ModifierType.Percentage,
-                DEFENSE_DURATION
-            ));
+        mark.AddMark(Mark.Create(ATK_SPD_KEY, hero, 1, ATK_SPD_DURATION));
     }
 }

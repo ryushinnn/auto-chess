@@ -31,23 +31,26 @@ public class Mecanim_Caitlyn : Mecanim {
             StopCoroutine(useSkillCoroutine);
         }
         useSkillCoroutine = StartCoroutine(DoUseSkill(events));
-        return 5.633f;
+        return 6.5f;
     }
     
     public override void InterruptSkill() {
         DoNone();
         if (useSkillCoroutine != null) {
             StopCoroutine(useSkillCoroutine);
-            bodyParts.SetBodyParts(0, ("cup",false));
+            bodyParts.SetBodyParts(0, ("cake",false));
         }
     }
 
     IEnumerator DoUseSkill(Action[] events) {
-        bodyParts.SetBodyParts(0,("cup",true));
         Interact(Interaction.Skill, (paramSkill, 0));
-        yield return new WaitForSeconds(1.4f);
+        yield return new WaitForSeconds(1f);
+        bodyParts.SetBodyParts(0,("cake",true));
+        yield return new WaitForSeconds(1.2f);
         events[0]();
-        yield return new WaitForSeconds(3.1f);
-        bodyParts.SetBodyParts(0,("cup",false));
+        yield return new WaitForSeconds(1.9f);
+        bodyParts.SetBodyParts(0,("cake",false));
+        yield return new WaitForSeconds(1.5f);
+        events[1]();
     }
 }

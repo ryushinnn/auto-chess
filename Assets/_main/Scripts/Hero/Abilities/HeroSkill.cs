@@ -7,6 +7,7 @@ public class HeroSkill : HeroAbility {
     HeroAttributes attributes;
     HeroRotation rotation;
     HeroStatusEffects effects;
+    HeroAttack attack;
     
     SkillProcessor processor;
     bool isUsingSkill;
@@ -46,6 +47,7 @@ public class HeroSkill : HeroAbility {
         attributes = hero.GetAbility<HeroAttributes>();
         rotation = hero.GetAbility<HeroRotation>();
         effects = hero.GetAbility<HeroStatusEffects>();
+        attack = hero.GetAbility<HeroAttack>();
     }
 
     public bool UseSkill() {
@@ -60,6 +62,7 @@ public class HeroSkill : HeroAbility {
         resetUsingSkillTween?.Kill();
         resetUsingSkillTween = DOVirtual.DelayedCall(duration, () => {
             isUsingSkill = false;
+            attack.RefreshAttackCooldown();
         });
         return true;
     }

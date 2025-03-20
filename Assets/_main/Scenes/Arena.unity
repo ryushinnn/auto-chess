@@ -1100,8 +1100,10 @@ MonoBehaviour:
   completeItems:
   - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   markIcons:
-  - key: caitlyn_tea
-    value: {fileID: 21300000, guid: 92401a37c687d974ead787e947956b60, type: 3}
+  - key: caitlyn_cake
+    value: {fileID: 21300000, guid: 8cd07347b8b1db745bf1a5b59f5d0144, type: 3}
+  - key: caitlyn_cake_atkspd
+    value: {fileID: 21300000, guid: 63369c84e44453843bf96b25f958ecdd, type: 3}
   - key: teemo_hell_flame
     value: {fileID: 21300000, guid: 292c77a806916f24f9218961a06ed371, type: 3}
   - key: malphite_unstoppable
@@ -1221,7 +1223,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   enemyTeam:
   - active: 1
-    id: Malphite
+    id: Caitlyn
     star: 0
     mapNode: {x: 7, y: 4}
     items:
