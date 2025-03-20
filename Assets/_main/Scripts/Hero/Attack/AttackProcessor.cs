@@ -19,45 +19,45 @@ public class AttackProcessor {
     }
 
     public virtual void Execute() {
-        CalculateDamage(out var dmg, out var type, out var pen, out var crit);
-        hero.Mecanim.Attack(() => {
-            if (hero.Target == null) return;
-            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(Damage.Create(dmg,type,pen,crit));
-            var heal = outputDamage * attributes.LifeSteal;
-            if (heal > 0) {
-                attributes.Heal(heal);
+        CalculateDamage(out var damage);
+        hero.Mecanim.Attack(new Action[]{
+            () => {
+                if (hero.Target == null) return;
+                var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(damage);
+                var heal = outputDamage * attributes.LifeSteal;
+                if (heal > 0) {
+                    attributes.Heal(heal);
+                }
+                attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
             }
-            attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
         });
     }
     
-    protected virtual void CalculateDamage(out float damage, out DamageType type, out float penetration, out bool crit) {
+    protected virtual void CalculateDamage(out Damage damage) {
+        damage = new Damage();
+        damage.value = attributes.PhysicalDamage + attributes.MagicalDamage;
         if (attributes.PhysicalDamage > attributes.MagicalDamage) {
-            damage = attributes.PhysicalDamage;
-            type = DamageType.Physical;
-            penetration = attributes.PhysicalPenetration;
+            damage.type = DamageType.Physical;
+            damage.penetration = attributes.PhysicalPenetration;
         }
         else if (attributes.PhysicalDamage < attributes.MagicalDamage) {
-            damage = attributes.MagicalDamage;
-            type = DamageType.Magical;
-            penetration = attributes.MagicalPenetration;
+            damage.type = DamageType.Magical;
+            damage.penetration = attributes.MagicalPenetration;
         }
         else {
             if (attributes.PhysicalPenetration > attributes.MagicalPenetration) {
-                damage = attributes.PhysicalDamage;
-                type = DamageType.Physical;
-                penetration = attributes.PhysicalPenetration;
+                damage.type = DamageType.Physical;
+                damage.penetration = attributes.PhysicalPenetration;
             }
             else {
-                damage = attributes.MagicalDamage;
-                type = DamageType.Magical;
-                penetration = attributes.MagicalPenetration;
+                damage.type = DamageType.Magical;
+                damage.penetration = attributes.MagicalPenetration;
             }
         }
 
-        crit = Random.value < attributes.CriticalChance;
-        if (crit) {
-            damage *= attributes.CriticalDamage;
+        damage.crit = Random.value < attributes.CriticalChance;
+        if (damage.crit) {
+            damage.value *= attributes.CriticalDamage;
         }
     }
 }

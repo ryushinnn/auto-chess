@@ -1211,7 +1211,7 @@ MonoBehaviour:
     type: 3}
   myTeam:
   - active: 1
-    id: Ashe
+    id: Aatrox_Dark
     star: 0
     mapNode: {x: 0, y: 3}
     items:

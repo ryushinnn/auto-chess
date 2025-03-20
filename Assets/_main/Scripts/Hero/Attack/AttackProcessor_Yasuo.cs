@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using System;
+
+/// <summary>
 /// moi don danh thu 3 se gay them 50% st chuan
 /// </summary>
 public class AttackProcessor_Yasuo : AttackProcessor {
@@ -10,28 +12,31 @@ public class AttackProcessor_Yasuo : AttackProcessor {
     public AttackProcessor_Yasuo(Hero hero) : base(hero) { }
 
     public override void Execute() {
-        CalculateDamage(out var dmg, out var type, out var pen, out var crit);
-        hero.Mecanim.Attack(() => {
-            if (hero.Target == null) return;
+        CalculateDamage(out var damage);
+        hero.Mecanim.Attack(new Action[]{
+            () => {
+                if (hero.Target == null) return;
 
-            float outputDamage;
-            if (count == COUNT_LIMIT) {
-                outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] {
-                    Damage.Create(dmg, type, pen, crit),
-                    Damage.Create(dmg * DMG_MUL, DamageType.True, 0, crit),
-                });
-                count = 0;
-            }
-            else {
-                outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(Damage.Create(dmg, type, pen, crit));
-                count++;
-            }
+                float outputDamage;
+                if (count == COUNT_LIMIT) {
+                    outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] {
+                        damage,
+                        Damage.Create(damage.value * DMG_MUL, DamageType.True, 0, damage.crit),
+                    });
+                    count = 0;
+                }
+                else {
+                    outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(damage);
+                    count++;
+                }
 
-            var heal = outputDamage * attributes.LifeSteal;
-            if (heal > 0) {
-                hero.GetAbility<HeroAttributes>().Heal(heal);
+                var heal = outputDamage * attributes.LifeSteal;
+                if (heal > 0) {
+                    hero.GetAbility<HeroAttributes>().Heal(heal);
+                }
+
+                hero.GetAbility<HeroAttributes>().RegenEnergy(hero.Trait.energyRegenPerAttack);
             }
-            hero.GetAbility<HeroAttributes>().RegenEnergy(hero.Trait.energyRegenPerAttack);
         });
     }
 }

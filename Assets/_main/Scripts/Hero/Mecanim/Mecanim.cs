@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using RExt.Utils;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -30,14 +32,18 @@ public abstract class Mecanim : MonoBehaviour {
     protected readonly int paramAttackOut = Animator.StringToHash("attack_out");
     protected readonly int paramAttackMultiplier = Animator.StringToHash("attack_multiplier");
 
-    [SerializeField] float defaultAttackTime;
-    [SerializeField, ReadOnly] protected State currentState;
-    [SerializeField, ReadOnly] protected State lastState;
-    [SerializeField, ReadOnly] protected Interaction lastInteraction;
+    [SerializeField] protected float defaultAttackFullTime;
+    [SerializeField] protected float[] defaultAttackTime;
+    [SerializeField] protected float[] skillFullTimes;
+    [SerializeField, ReadOnly] protected State currentState = State.None;
+    [SerializeField, ReadOnly] protected State lastState = State.None;
+    [SerializeField, ReadOnly] protected Interaction lastInteraction = Interaction.None;
     
     protected Animator animator;
     protected BodyParts bodyParts;
     protected float attackTimeMultiplier;
+    protected Coroutine attackCoroutine;
+    protected Coroutine useSkillCoroutine;
 
     protected virtual void Awake() {
         animator = GetComponent<Animator>();
@@ -46,40 +52,65 @@ public abstract class Mecanim : MonoBehaviour {
         SetUp();
     }
 
-    [Button]
+    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     public virtual void Idle() {
         ChangeState(State.Idle);
     }
 
-    [Button]
+    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     public virtual void Run() {
         ChangeState(State.Run);
     }
 
-    [Button]
+    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     public virtual void Death() {
         ChangeState(State.Death);
     }
 
-    public virtual void DoNone() {
+    public virtual void DoNothing() {
         Interact(Interaction.None);
     }
 
-    public virtual void Attack(Action atkEvent) {
-        Interact(Interaction.Attack);
+    public virtual void Attack(Action[] events) {
+        if (attackCoroutine != null) {
+            StopCoroutine(attackCoroutine);
+        }
+        attackCoroutine = StartCoroutine(DoAttack(events));
     }
     
-    public virtual void InterruptAttack() { }
-
-    public virtual float UseSkill(Action[] events) {
-        return 0;
+    protected virtual IEnumerator DoAttack(Action[] events) {
+        Interact(Interaction.Attack);
+        yield return BetterWaitForSeconds.Wait(defaultAttackTime[0] / attackTimeMultiplier);
+        events[0].Invoke();
     }
 
-    public virtual void InterruptSkill() { }
+    public virtual void InterruptAttack() {
+        DoNothing();
+        if (attackCoroutine != null) {
+            StopCoroutine(attackCoroutine);
+        }
+    }
+
+    public virtual float UseSkill(Action[] events) {
+        if (useSkillCoroutine != null) {
+            StopCoroutine(useSkillCoroutine);
+        }
+        useSkillCoroutine = StartCoroutine(DoUseSkill(events));
+        return skillFullTimes[0];
+    }
+
+    protected abstract IEnumerator DoUseSkill(Action[] events);
+
+    public virtual void InterruptSkill() {
+        DoNothing();
+        if (useSkillCoroutine != null) {
+            StopCoroutine(useSkillCoroutine);
+        }
+    }
 
     public void ModifyAttackTime(float atkSpd) {
         var time = 1 / atkSpd;
-        attackTimeMultiplier = Mathf.Max(1, defaultAttackTime / time);
+        attackTimeMultiplier = Mathf.Max(1, defaultAttackFullTime / time);
         animator.SetFloat(paramAttackMultiplier, attackTimeMultiplier);
     }
 
@@ -123,22 +154,22 @@ public abstract class Mecanim : MonoBehaviour {
         
     }
     
-    [Button]
+    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     void dev_DiveIn() {
         Interact(Interaction.Dive, (paramDiveIn, true));
     }
     
-    [Button]
+    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     void dev_DiveOut() {
         Interact(Interaction.Dive, (paramDiveIn, false));
     }
     
-    [Button]
+    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     void dev_Attack() {
-        Attack(()=>{});
+        Attack(new Action[]{()=>{}});
     }
 
-    [Button]
+    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     void dev_Skill() {
         UseSkill(new Action[] { () => { } });
     }

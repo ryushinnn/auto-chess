@@ -1229,7 +1229,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aeda7faf8e54d0badba6ee4af073c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultAttackTime: 1.167
+  defaultAttackFullTime: 1.167
+  defaultAttackTime:
+  - 0.35
+  skillFullTime: 2.8
+  skillFullTimes:
+  - 2.8
   currentState: 0
   lastState: 0
   lastInteraction: 0

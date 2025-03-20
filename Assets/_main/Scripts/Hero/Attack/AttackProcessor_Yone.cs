@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,28 +23,30 @@ public class AttackProcessor_Yone : AttackProcessor {
     }
 
     public override void Execute() {
-        CalculateDamage(out var dmg, out var type, out var pen, out var crit);
-        hero.Mecanim.Attack(() => {
-            if (hero.Target == null) return;
-            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(Damage.Create(dmg,type,pen,crit));
-            var heal = outputDamage * attributes.LifeSteal;
-            if ((YoneSword)customInt["sword"] == YoneSword.Devil) {
-                heal += outputDamage * ((attributes.Hp / attributes.MaxHp) * (DEVIL_VAMP_MAX - DEVIL_VAMP_MIN) + DEVIL_VAMP_MIN);
-            }
+        CalculateDamage(out var damage);
+        hero.Mecanim.Attack(new Action[]{
+            () => {
+                if (hero.Target == null) return;
+                var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(damage);
+                var heal = outputDamage * attributes.LifeSteal;
+                if ((YoneSword)customInt["sword"] == YoneSword.Devil) {
+                    heal += outputDamage * ((attributes.Hp / attributes.MaxHp) * (DEVIL_VAMP_MAX - DEVIL_VAMP_MIN) + DEVIL_VAMP_MIN);
+                }
 
-            if (heal > 0) {
-                attributes.Heal(heal);
-            }
+                if (heal > 0) {
+                    attributes.Heal(heal);
+                }
 
-            if ((YoneSword)customInt["sword"] == YoneSword.Divine) {
-                reduceDmgModifierIds.ForEach(x=>hero.Target.GetAbility<HeroAttributes>().RemoveAttributeModifier(x));
-                reduceDmgModifierIds.Clear();
-                var modifier0 = AttributeModifier.Create(AttributeModifierKey.PhysicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
-                var modifier1 = AttributeModifier.Create(AttributeModifierKey.MagicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
-                hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(modifier0);
-                hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(modifier1);
-                reduceDmgModifierIds.Add(modifier0.id);
-                reduceDmgModifierIds.Add(modifier1.id);
+                if ((YoneSword)customInt["sword"] == YoneSword.Divine) {
+                    reduceDmgModifierIds.ForEach(x => hero.Target.GetAbility<HeroAttributes>().RemoveAttributeModifier(x));
+                    reduceDmgModifierIds.Clear();
+                    var modifier0 = AttributeModifier.Create(AttributeModifierKey.PhysicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
+                    var modifier1 = AttributeModifier.Create(AttributeModifierKey.MagicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
+                    hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(modifier0);
+                    hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(modifier1);
+                    reduceDmgModifierIds.Add(modifier0.id);
+                    reduceDmgModifierIds.Add(modifier1.id);
+                }
             }
         });
         customInt["sword"] = (customInt["sword"] + 1) % 2;

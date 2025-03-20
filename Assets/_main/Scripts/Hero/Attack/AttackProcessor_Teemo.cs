@@ -1,4 +1,5 @@
-﻿using RExt.Extension;
+﻿using System;
+using RExt.Extension;
 using UnityEngine;
 
 /// <summary>
@@ -17,47 +18,50 @@ public class AttackProcessor_Teemo : AttackProcessor {
     public AttackProcessor_Teemo(Hero hero) : base(hero) { }
 
     public override void Execute() {
-        CalculateDamage(out var dmg, out var type, out var pen, out var crit);
-        hero.Mecanim.Attack(() => {
-            if (hero.Target == null) return;
-            
-            var currentStacks = hero.Target.GetAbility<HeroMark>().GetMark(DOT_KEY, hero)?.stacks ?? 0;
-            var nextStacks = Mathf.Min(currentStacks + 1, MAX_STACKS);
-            
-            var igniteDmg = Damage.Create(
-                nextStacks * Mathf.Min(attributes.MagicalDamage * DMG_MUL_LIMIT, hero.Target.GetAbility<HeroAttributes>().MaxHp * MAX_HP_DMG),
-                DamageType.True,
-                0
-            );
+        CalculateDamage(out var mainDmg);
+        hero.Mecanim.Attack(new Action[]{
+            () => {
+                if (hero.Target == null) return;
 
-            var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-                new[] {
-                    Damage.Create(dmg, type, pen, crit),
-                    igniteDmg,
-                }) - igniteDmg.value;
-            // why subtract ignite dmg???
-            // add it to TakeDamage just for nicer visual (2 HpText arranges vertically),
-            // it doesn't actually count as this attack's dmg
-            
-            var heal = outputDamage * attributes.LifeSteal;
-            if (heal > 0) {
-                attributes.Heal(heal);
-            }
-            attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
-            
-            hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
-                DamageOverTime.Create(
+                var currentStacks = hero.Target.GetAbility<HeroMark>().GetMark(DOT_KEY, hero)?.stacks ?? 0;
+                var nextStacks = Mathf.Min(currentStacks + 1, MAX_STACKS);
+
+                var igniteDmg = Damage.Create(
+                    nextStacks * Mathf.Min(attributes.MagicalDamage * DMG_MUL_LIMIT, hero.Target.GetAbility<HeroAttributes>().MaxHp * MAX_HP_DMG),
+                    DamageType.True,
+                    0
+                );
+
+                var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
+                    new[] {
+                        mainDmg,
+                        igniteDmg,
+                    }) - igniteDmg.value;
+                // why subtract ignite dmg???
+                // add it to TakeDamage just for nicer visual (2 HpText arranges vertically),
+                // it doesn't actually count as this attack's dmg
+
+                var heal = outputDamage * attributes.LifeSteal;
+                if (heal > 0) {
+                    attributes.Heal(heal);
+                }
+
+                attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
+
+                hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
+                    DamageOverTime.Create(
                         DOT_KEY,
                         hero,
-                        igniteDmg, 
+                        igniteDmg,
                         (TOTAL_TIME / INTERVAL) - 1,
                         INTERVAL.ToSeconds(),
                         nextStacks,
                         false,
                         true
                     ));
-            // why subtract 1 from stack???
-            // 1 stack is already applied in TakeDamage
+                // why subtract 1 from stack???
+                // 1 stack is already applied in TakeDamage
+            }
         });
     }
 }

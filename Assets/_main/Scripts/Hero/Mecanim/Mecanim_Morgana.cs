@@ -1,49 +1,12 @@
 ﻿using System;
 using System.Collections;
+using RExt.Utils;
 using UnityEngine;
 
 public class Mecanim_Morgana : Mecanim {
-    Coroutine attackCoroutine;
-    Coroutine useSkillCoroutine;
-
-    public override void Attack(Action atkEvent) {
-        if (attackCoroutine != null) {
-            StopCoroutine(attackCoroutine);
-        }
-        attackCoroutine = StartCoroutine(DoAttack(atkEvent));
-    }
-
-    public override void InterruptAttack() {
-        DoNone();
-        if (attackCoroutine != null) {
-            StopCoroutine(attackCoroutine);
-        }
-    }
-
-    IEnumerator DoAttack(Action atkEvent) {
-        Interact(Interaction.Attack);
-        yield return new WaitForSeconds(0.14f / attackTimeMultiplier);
-        atkEvent.Invoke();
-    }
-    
-    public override float UseSkill(Action[] events) {
-        if (useSkillCoroutine != null) {
-            StopCoroutine(useSkillCoroutine);
-        }
-        useSkillCoroutine = StartCoroutine(DoUseSkill(events));
-        return 1f;
-    }
-    
-    public override void InterruptSkill() {
-        DoNone();
-        if (useSkillCoroutine != null) {
-            StopCoroutine(useSkillCoroutine);
-        }
-    }
-
-    IEnumerator DoUseSkill(Action[] events) {
+    protected override IEnumerator DoUseSkill(Action[] events) {
         Interact(Interaction.Skill, (paramSkill, 0));
-        yield return new WaitForSeconds(0.41f);
+        yield return BetterWaitForSeconds.Wait(0.41f);
         events[0]();
     }
 }

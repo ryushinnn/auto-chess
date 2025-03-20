@@ -16,7 +16,7 @@ public class HeroSkill : HeroAbility {
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
         processor = hero.Trait.id switch {
-            "Aatrox" => new SkillProcessor_Aatrox(hero),
+            "Aatrox_Dark" => new SkillProcessor_Aatrox_Dark(hero),
             "Yasuo" => new SkillProcessor_Yasuo(hero),
             "Zed" => new SkillProcessor_Zed(hero),
             "Yone" => new SkillProcessor_Yone(hero),
