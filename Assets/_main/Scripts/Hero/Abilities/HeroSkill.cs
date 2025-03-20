@@ -17,6 +17,7 @@ public class HeroSkill : HeroAbility {
         base.Initialize(hero);
         processor = hero.Trait.id switch {
             "Aatrox_Dark" => new SkillProcessor_Aatrox_Dark(hero),
+            "Aatrox_Light" => new SkillProcessor_Aatrox_Light(hero),
             "Yasuo" => new SkillProcessor_Yasuo(hero),
             "Zed" => new SkillProcessor_Zed(hero),
             "Yone" => new SkillProcessor_Yone(hero),

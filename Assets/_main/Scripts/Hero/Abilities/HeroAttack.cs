@@ -22,6 +22,7 @@ public class HeroAttack : HeroAbility {
         base.Initialize(hero);
         processor = hero.Trait.id switch {
             "Aatrox_Dark" => new AttackProcessor_Aatrox_Dark(hero),
+            "Aatrox_Light" => new AttackProcessor_Aatrox_Light(hero),
             "Yasuo" => new AttackProcessor_Yasuo(hero),
             "Yone" => new AttackProcessor_Yone(hero),
             "MissFortune" => new AttackProcessor_MissFortune(hero),

@@ -20,8 +20,8 @@ MonoBehaviour:
   maxHp: 25400
   physicalDamage: 200
   magicalDamage: 0
-  armor: 32
-  resistance: 24
+  armor: 99
+  resistance: 99
   attackSpeed: 0.45
   movementSpeed: 2
   criticalChance: 0
