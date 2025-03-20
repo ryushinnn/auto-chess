@@ -13,6 +13,8 @@ public enum HeroState {
 }
 
 public class Hero : MonoBehaviour, IMapNodeObject {
+    [SerializeField] public bool debug;
+    
     [SerializeField] Transform model;
     [SerializeField] Transform abilitiesContainer;
 
@@ -177,6 +179,11 @@ public class Hero : MonoBehaviour, IMapNodeObject {
             node.Remove(this);
             node = null;
         }
+    }
+
+    public void dev_Debug(object o) {
+        if (!debug) return;
+        Debug.Log(o);
     }
 
     [Button]

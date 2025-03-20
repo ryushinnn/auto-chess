@@ -1108,6 +1108,8 @@ MonoBehaviour:
     value: {fileID: 21300000, guid: 292c77a806916f24f9218961a06ed371, type: 3}
   - key: malphite_unstoppable
     value: {fileID: 21300000, guid: 00591f64954dac443996bc42fcd70b1c, type: 3}
+  - key: yasuo_wind_claws
+    value: {fileID: 21300000, guid: 76384063e4261f14586d23518b4b3db9, type: 3}
 --- !u!4 &1019160392
 Transform:
   m_ObjectHideFlags: 0
@@ -1209,7 +1211,7 @@ MonoBehaviour:
     type: 3}
   myTeam:
   - active: 1
-    id: Teemo
+    id: Ashe
     star: 0
     mapNode: {x: 0, y: 3}
     items:
@@ -1223,7 +1225,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   enemyTeam:
   - active: 1
-    id: Caitlyn
+    id: Yasuo
     star: 0
     mapNode: {x: 7, y: 4}
     items:

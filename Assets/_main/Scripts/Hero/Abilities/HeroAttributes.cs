@@ -117,9 +117,10 @@ public class HeroAttributes : HeroAbility {
             DamageType.Magical => Mathf.Min(resistance * (1-damage.penetration), HeroTrait.MAX_DMG_REDUCTION * damage.value),
             DamageType.True => 0
         };
-        
-        damage.value = Mathf.Max(damage.value - dmgReduction, 1);
-        hp -= damage.value;
+
+        var finalDmg = Damage.Create(damage);
+        finalDmg.value = Mathf.Max(finalDmg.value - dmgReduction, 1);
+        hp -= finalDmg.value;
         healthBar.UpdateAmount(hp / maxHp);
         if (hp > 0) {
             if (regenEnergy) {
@@ -131,9 +132,9 @@ public class HeroAttributes : HeroAbility {
         }
 
         if (showText) {
-            HpTextSpawner.Instance.SpawnHpTextAsDamage(hpTextParent,damage);
+            HpTextSpawner.Instance.SpawnHpTextAsDamage(hpTextParent,finalDmg);
         }
-        return damage;
+        return finalDmg;
     }
 
     public void Heal(float amount) {
@@ -439,6 +440,15 @@ public class Damage {
             crit = crit
         };
     }
+
+    public static Damage Create(Damage damage) {
+        return new Damage {
+            value = damage.value,
+            type = damage.type,
+            penetration = damage.penetration,
+            crit = damage.crit
+        };
+    }
 }
 
 [Serializable]
@@ -542,7 +552,15 @@ public class DamageOverTime {
             times = times,
             interval = interval,
             stacks = stacks,
-            mark = createMark ? Mark.Create(key, owner, stacks, interval * times, false) : null, 
+            mark = createMark 
+                ? Mark.Create(
+                    key, 
+                    owner, 
+                    stacks, 
+                    interval * (applyDmgInstantly ? times-1 : times), 
+                    false
+                ) 
+                : null, 
             timer = applyDmgInstantly ? 0 : interval,
         };
     }
@@ -571,7 +589,7 @@ public class HealOverTime {
             amount = amount,
             times = times,
             interval = interval,
-            mark = createMark ? Mark.Create(key,owner,1, interval * times, false) : null,
+            mark = createMark ? Mark.Create(key,owner,1, interval * (times-1), false) : null,
             timer = 0,
         };
     }

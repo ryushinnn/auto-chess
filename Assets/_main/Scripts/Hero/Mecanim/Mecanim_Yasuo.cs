@@ -31,23 +31,23 @@ public class Mecanim_Yasuo : Mecanim {
             StopCoroutine(useSkillCoroutine);
         }
         useSkillCoroutine = StartCoroutine(DoUseSkill(events));
-        return 2f;
+        return 6.3f;
     }
 
     public override void InterruptSkill() {
         DoNone();
         if (useSkillCoroutine != null) {
             StopCoroutine(useSkillCoroutine);
-            bodyParts.SetBodyParts(0, ("dragon",false));
         }
     }
 
     IEnumerator DoUseSkill(Action[] events) {
-        bodyParts.SetBodyParts(0,("dragon",true));
         Interact(Interaction.Skill, (paramSkill, 0));
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.7f);
         events[0]();
-        yield return new WaitForSeconds(0.2f);
-        bodyParts.SetBodyParts(0, ("dragon",false));
+        yield return new WaitForSeconds(1f);
+        events[1]();
+        yield return new WaitForSeconds(1.8f);
+        events[2]();
     }
 }
