@@ -149,7 +149,7 @@ ScriptedImporter:
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 804e1ce4c496647cfa3f1a1134187c71, type: 3}
   _removeEmptyRootObjects: 1
-  _scaleFactor: 1
+  _scaleFactor: 0.01
   _deduplicateResources: 0
   _maximumLod: 300
   _readWriteEnabled: 1
@@ -174,7 +174,7 @@ ScriptedImporter:
   _generateMipMaps: 1
   _useSceneNameIdentifier: 1
   _textureCompression: -50
-  _gltfAsset: '<b>Generator: </b>glTF-Transform v4.0.8
+  _gltfAsset: '<b>Generator: </b>glTF-Transform v4.1.3
 
     <b>Version: </b>2.0
 

@@ -16,7 +16,7 @@ MonoBehaviour:
   realm: 3
   role: 0
   price: 5
-  mecanim: {fileID: 7947672812564726953, guid: f5f4ee1a0bc2be64c9e3036fa2d897ef, type: 3}
+  mecanim: {fileID: 5429741766995380546, guid: f5f4ee1a0bc2be64c9e3036fa2d897ef, type: 3}
   maxHp: 25400
   physicalDamage: 200
   magicalDamage: 0

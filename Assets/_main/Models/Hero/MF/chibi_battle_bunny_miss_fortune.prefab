@@ -537,7 +537,7 @@ PrefabInstance:
     - target: {fileID: -553860988396757955, guid: b23b6ede60223b9449726259fa57d399,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -553860988396757955, guid: b23b6ede60223b9449726259fa57d399,
         type: 3}
@@ -1232,7 +1232,6 @@ MonoBehaviour:
   defaultAttackFullTime: 1.167
   defaultAttackTime:
   - 0.35
-  skillFullTime: 2.8
   skillFullTimes:
   - 2.8
   currentState: 0
