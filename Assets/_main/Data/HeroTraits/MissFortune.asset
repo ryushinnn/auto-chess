@@ -17,6 +17,7 @@ MonoBehaviour:
   role: 12
   price: 3
   mecanim: {fileID: 6243125059235353389, guid: 9031a1ae6b88eb146aabda9d9a26083f, type: 3}
+  thumbnail: {fileID: 21300000, guid: 92e727dc78c2c7b46a4de01dc62acb8c, type: 3}
   maxHp: 19800
   physicalDamage: 125
   magicalDamage: 0

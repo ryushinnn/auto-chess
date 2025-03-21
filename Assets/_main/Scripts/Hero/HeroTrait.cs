@@ -9,12 +9,15 @@ public class HeroTrait : ScriptableObject {
     public Realm realm;
     public Role role;
     public int price;
+    
+    [TitleGroup("Asset")]
     public Mecanim mecanim;
+    [PreviewField] public Sprite thumbnail;
     
     [TitleGroup("Basic")]
     public float maxHp;
-    public float physicalDamage;
-    public float magicalDamage;
+    [EnableIf("@this.magicalDamage == 0")] public float physicalDamage;
+    [EnableIf("@this.physicalDamage == 0")] public float magicalDamage;
     public float armor;
     public float resistance;
     public float attackSpeed;
