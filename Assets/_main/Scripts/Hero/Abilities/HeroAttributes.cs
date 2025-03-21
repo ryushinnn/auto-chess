@@ -54,6 +54,7 @@ public class HeroAttributes : HeroAbility {
     [SerializeField, ReadOnly] float lifeSteal;
     [SerializeField, ReadOnly] float tenacity;
 
+    [SerializeField, ReadOnly, TableList] List<AttributeModifierSet> modifierSets = new();
     [SerializeField, ReadOnly, TableList] List<AttributeModifierGroup> modifierGroups = new();
     [SerializeField, ReadOnly] List<DamageOverTime> damageOverTimes = new();
     [SerializeField, ReadOnly] List<HealOverTime> healOverTimes = new();
@@ -190,11 +191,25 @@ public class HeroAttributes : HeroAbility {
         RecalculateAttributes(modifier.key);
     }
     
-    public void RemoveAttributeModifier(string id) {
+    public void AddAttributeModifier(AttributeModifierSet modifierSet) {
+        var existSet = modifierSets.Find(x => x.SameAs(modifierSet));
+        if (existSet != null) {
+            foreach (var modifier in existSet.modifiers) {
+                RemoveAttributeModifier(modifier);
+            }
+            modifierSets.Remove(existSet);
+        }
+        
+        modifierSets.Add(modifierSet);
+        foreach (var modifier in modifierSet.modifiers) {
+            AddAttributeModifier(modifier);
+        }
+    }
+
+    public void RemoveAttributeModifier(AttributeModifier modifier) {
         for (int i = modifierGroups.Count - 1; i >= 0; i--) {
             var key = modifierGroups[i].key;
-            var modifier = modifierGroups[i].modifiers.Find(x => x.id == id);
-            if (modifier != null) {
+            if (modifierGroups[i].modifiers.Contains(modifier)) {
                 modifierGroups[i].modifiers.Remove(modifier);
                 if (modifierGroups[i].modifiers.Count == 0) {
                     modifierGroups.RemoveAt(i);
@@ -202,6 +217,59 @@ public class HeroAttributes : HeroAbility {
                 RecalculateAttributes(key);
                 return;
             }
+        }
+    }
+    
+    public void RemoveAttributeModifier(string effectKey) {
+        for (int i = modifierSets.Count - 1; i >= 0; i--) {
+            if (modifierSets[i].effectKey == effectKey) {
+                foreach (var m in modifierSets[i].modifiers) {
+                    RemoveAttributeModifier(m);
+                }
+                modifierSets.RemoveAt(i);
+                return;
+            }
+        }
+    }
+    
+    void ProcessAttributeModifiers() {
+        var changedKeys = new HashSet<string>();
+
+        for (int i = modifierSets.Count - 1; i >= 0; i--) {
+            modifierSets[i].duration -= Time.deltaTime;
+            if (modifierSets[i].duration <= 0) {
+                foreach (var m in modifierSets[i].modifiers) {
+                    changedKeys.Add(m.key);
+                    var group = modifierGroups.Find(x=>x.key == m.key);
+                    group.modifiers.Remove(m);
+                    if (group.modifiers.Count == 0) {
+                        modifierGroups.Remove(group);
+                    }
+                }
+                modifierSets.RemoveAt(i);
+            }
+        }
+        
+        for (int i = modifierGroups.Count - 1; i >= 0; i--) {
+            var key = modifierGroups[i].key;
+            var modifiers = modifierGroups[i].modifiers;
+            for (int j = modifiers.Count - 1; j >= 0; j--) {
+                if (modifiers[j].permanent || modifiers[j].ControlledBySet()) continue;
+                
+                modifiers[j].duration -= Time.deltaTime;
+                if (modifiers[j].duration <= 0) {
+                    modifiers.RemoveAt(j);
+                    changedKeys.Add(key);
+                }
+            }
+
+            if (modifiers.Count == 0) {
+                modifierGroups.RemoveAt(i);
+            }
+        }
+
+        foreach (var key in changedKeys) {
+            RecalculateAttributes(key);
         }
     }
 
@@ -220,45 +288,6 @@ public class HeroAttributes : HeroAbility {
         }
     }
     
-    public void AddHealOverTime(HealOverTime hot) {
-        for (int i = healOverTimes.Count - 1; i >= 0; i--) {
-            if (healOverTimes[i].SameAs(hot)) {
-                if (healOverTimes[i].mark != null) {
-                    mark.RemoveMark(healOverTimes[i].mark.id);
-                }
-                healOverTimes.RemoveAt(i);
-            }
-        }
-        healOverTimes.Add(hot);
-        if (hot.mark != null) {
-            mark.AddMark(hot.mark);
-        }
-    }
-
-    void ProcessAttributeModifiers() {
-        var hasChange = false;
-        for (int i = modifierGroups.Count - 1; i >= 0; i--) {
-            var key = modifierGroups[i].key;
-            var modifiers = modifierGroups[i].modifiers;
-            for (int j = modifiers.Count - 1; j >= 0; j--) {
-                if (modifiers[j].permanent) continue;
-                modifiers[j].duration -= Time.deltaTime;
-                if (modifiers[j].duration <= 0) {
-                    modifiers.RemoveAt(j);
-                    hasChange = true;
-                }
-            }
-
-            if (modifiers.Count == 0) {
-                modifierGroups.RemoveAt(i);
-            }
-
-            if (hasChange) {
-                RecalculateAttributes(key);
-            }
-        }
-    }
-
     void ProcessDamageOverTimes() {
         for (int i = damageOverTimes.Count - 1; i >= 0; i--) {
             var dot = damageOverTimes[i];
@@ -277,6 +306,21 @@ public class HeroAttributes : HeroAbility {
             else {
                 dot.timer -= Time.deltaTime;
             }
+        }
+    }
+    
+    public void AddHealOverTime(HealOverTime hot) {
+        for (int i = healOverTimes.Count - 1; i >= 0; i--) {
+            if (healOverTimes[i].SameAs(hot)) {
+                if (healOverTimes[i].mark != null) {
+                    mark.RemoveMark(healOverTimes[i].mark.id);
+                }
+                healOverTimes.RemoveAt(i);
+            }
+        }
+        healOverTimes.Add(hot);
+        if (hot.mark != null) {
+            mark.AddMark(hot.mark);
         }
     }
     
@@ -304,20 +348,20 @@ public class HeroAttributes : HeroAbility {
     void RecalculateAttributes(string key) {
         var modifiers = modifierGroups.Find(x => x.key == key)?.modifiers;
         modifiers?.Sort((a, b) => {
-            var typeComparison = a.type == ModifierType.FixedValue ?
-                (b.type == ModifierType.FixedValue ? 0 : -1) :
-                (b.type == ModifierType.FixedValue ? 1 : 0);
+            var typeComparison = a.type == AttributeModifier.Type.FixedValue ?
+                (b.type == AttributeModifier.Type.FixedValue ? 0 : -1) :
+                (b.type == AttributeModifier.Type.FixedValue ? 1 : 0);
             
             if (typeComparison != 0) return typeComparison;
             return b.value.CompareTo(a.value);
         });
         
         switch (key) {
-            case AttributeModifierKey.MaxHp:
+            case AttributeModifier.Key.MaxHp:
                 var lastMaxHp = maxHp;
                 maxHp = hero.Trait.maxHp;
                 modifiers?.ForEach(x => {
-                    maxHp += (x.type == ModifierType.FixedValue ? x.value : maxHp * x.value);
+                    maxHp += (x.type == AttributeModifier.Type.FixedValue ? x.value : maxHp * x.value);
                 });
                 if (maxHp > lastMaxHp) {
                     hp += maxHp - lastMaxHp;
@@ -328,90 +372,90 @@ public class HeroAttributes : HeroAbility {
                 healthBar.UpdateAmount(hp / maxHp);
                 break;
             
-            case AttributeModifierKey.PhysicalDamage:
+            case AttributeModifier.Key.PhysicalDamage:
                 physicalDamage = hero.Trait.physicalDamage;
                 modifiers?.ForEach(x => {
-                    physicalDamage = Mathf.Max(physicalDamage + (x.type == ModifierType.FixedValue ? x.value : physicalDamage * x.value), HeroTrait.MIN_DAMAGE);
+                    physicalDamage = Mathf.Max(physicalDamage + (x.type == AttributeModifier.Type.FixedValue ? x.value : physicalDamage * x.value), HeroTrait.MIN_DAMAGE);
                 });
                 break;
             
-            case AttributeModifierKey.MagicalDamage:
+            case AttributeModifier.Key.MagicalDamage:
                 magicalDamage = hero.Trait.magicalDamage;
                 modifiers?.ForEach(x => {
-                    magicalDamage = Mathf.Max(magicalDamage + (x.type == ModifierType.FixedValue ? x.value : magicalDamage * x.value), HeroTrait.MIN_DAMAGE);
+                    magicalDamage = Mathf.Max(magicalDamage + (x.type == AttributeModifier.Type.FixedValue ? x.value : magicalDamage * x.value), HeroTrait.MIN_DAMAGE);
                 });
                 break;
             
-            case AttributeModifierKey.Armor:
+            case AttributeModifier.Key.Armor:
                 armor = hero.Trait.armor;
                 modifiers?.ForEach(x => {
-                    armor = Mathf.Max(armor + (x.type == ModifierType.FixedValue ? x.value : armor * x.value), HeroTrait.MIN_ARMOR_AND_RESISTANCE);
+                    armor = Mathf.Max(armor + (x.type == AttributeModifier.Type.FixedValue ? x.value : armor * x.value), HeroTrait.MIN_ARMOR_AND_RESISTANCE);
                 });
                 break;
             
-            case AttributeModifierKey.Resistance:
+            case AttributeModifier.Key.Resistance:
                 resistance = hero.Trait.resistance;
                 modifiers?.ForEach(x => {
-                    resistance = Mathf.Max(resistance + (x.type == ModifierType.FixedValue ? x.value : resistance * x.value), HeroTrait.MIN_ARMOR_AND_RESISTANCE);
+                    resistance = Mathf.Max(resistance + (x.type == AttributeModifier.Type.FixedValue ? x.value : resistance * x.value), HeroTrait.MIN_ARMOR_AND_RESISTANCE);
                 });
                 break;
             
-            case AttributeModifierKey.AttackSpeed:
+            case AttributeModifier.Key.AttackSpeed:
                 attackSpeed = hero.Trait.attackSpeed;
                 modifiers?.ForEach(x => {
-                    attackSpeed = Mathf.Max(attackSpeed + (x.type == ModifierType.FixedValue ? x.value : attackSpeed * x.value), HeroTrait.MIN_ATTACK_SPEED);
+                    attackSpeed = Mathf.Max(attackSpeed + (x.type == AttributeModifier.Type.FixedValue ? x.value : attackSpeed * x.value), HeroTrait.MIN_ATTACK_SPEED);
                 });
                 attack.RefreshAttackCooldown();
                 hero.Mecanim.ModifyAttackTime(attackSpeed);
                 break;
             
-            case AttributeModifierKey.CriticalChance:
+            case AttributeModifier.Key.CriticalChance:
                 criticalChance = hero.Trait.criticalChance;
                 modifiers?.ForEach(x => {
-                    criticalChance += (x.type == ModifierType.FixedValue ? x.value : criticalChance * x.value);
+                    criticalChance += (x.type == AttributeModifier.Type.FixedValue ? x.value : criticalChance * x.value);
                 });
                 criticalChance = Mathf.Min(criticalChance, HeroTrait.MAX_CRITICAL_CHANCE);
                 break;
             
-            case AttributeModifierKey.CriticalDamage:
+            case AttributeModifier.Key.CriticalDamage:
                 criticalDamage = hero.Trait.criticalDamage;
                 modifiers?.ForEach(x => {
-                    criticalDamage += (x.type == ModifierType.FixedValue ? x.value : criticalDamage * x.value);
+                    criticalDamage += (x.type == AttributeModifier.Type.FixedValue ? x.value : criticalDamage * x.value);
                 });
                 break;
             
-            case AttributeModifierKey.EnergyRegenEfficient:
+            case AttributeModifier.Key.EnergyRegenEfficient:
                 energyRegenEfficient = hero.Trait.energyRegenEfficient;
                 modifiers?.ForEach(x => {
-                    energyRegenEfficient += (x.type == ModifierType.FixedValue ? x.value : energyRegenEfficient * x.value);
+                    energyRegenEfficient += (x.type == AttributeModifier.Type.FixedValue ? x.value : energyRegenEfficient * x.value);
                 });
                 break;
             
-            case AttributeModifierKey.PhysicalPenetration:
+            case AttributeModifier.Key.PhysicalPenetration:
                 physicalPenetration = hero.Trait.physicalPenetration;
                 modifiers?.ForEach(x => {
-                    physicalPenetration = Mathf.Min(physicalPenetration + (x.type == ModifierType.FixedValue ? x.value : physicalPenetration * x.value), HeroTrait.MAX_PENETRATION);
+                    physicalPenetration = Mathf.Min(physicalPenetration + (x.type == AttributeModifier.Type.FixedValue ? x.value : physicalPenetration * x.value), HeroTrait.MAX_PENETRATION);
                 });
                 break;
             
-            case AttributeModifierKey.MagicalPenetration:
+            case AttributeModifier.Key.MagicalPenetration:
                 magicalPenetration = hero.Trait.magicalPenetration;
                 modifiers?.ForEach(x => {
-                    magicalPenetration = Mathf.Min(magicalPenetration + (x.type == ModifierType.FixedValue ? x.value : magicalPenetration * x.value), HeroTrait.MAX_PENETRATION);
+                    magicalPenetration = Mathf.Min(magicalPenetration + (x.type == AttributeModifier.Type.FixedValue ? x.value : magicalPenetration * x.value), HeroTrait.MAX_PENETRATION);
                 });
                 break;
             
-            case AttributeModifierKey.LifeSteal:
+            case AttributeModifier.Key.LifeSteal:
                 lifeSteal = hero.Trait.lifeSteal;
                 modifiers?.ForEach(x => {
-                    lifeSteal = Mathf.Min(lifeSteal + (x.type == ModifierType.FixedValue ? x.value : lifeSteal * x.value), HeroTrait.MAX_LIFE_STEAL);
+                    lifeSteal = Mathf.Min(lifeSteal + (x.type == AttributeModifier.Type.FixedValue ? x.value : lifeSteal * x.value), HeroTrait.MAX_LIFE_STEAL);
                 });
                 break;
             
-            case AttributeModifierKey.Tenacity:
+            case AttributeModifier.Key.Tenacity:
                 tenacity = hero.Trait.tenacity;
                 modifiers?.ForEach(x => {
-                    tenacity = Mathf.Min(tenacity + (x.type == ModifierType.FixedValue ? x.value : tenacity * x.value), HeroTrait.MAX_TENACITY);
+                    tenacity = Mathf.Min(tenacity + (x.type == AttributeModifier.Type.FixedValue ? x.value : tenacity * x.value), HeroTrait.MAX_TENACITY);
                 });
                 break;
         }
@@ -426,30 +470,28 @@ public class HeroAttributes : HeroAbility {
         canvas.enabled = false;
         hero.name = "(DEAD) " + hero.name;
     }
-}
 
-public class Damage {
-    public float value;
-    public DamageType type;
-    public float penetration;
-    public bool crit;
-
-    public static Damage Create(float value, DamageType type, float penetration, bool crit = false) {
-        return new Damage {
-            value = value,
-            type = type,
-            penetration = penetration,
-            crit = crit
-        };
+    [Button]
+    void dev_addAttSet() {
+        AddAttributeModifier(AttributeModifierSet.Create(
+            hero,
+            "test_effect",
+            10,
+            new [] {
+                (AttributeModifier.Key.Armor, 0.3f, AttributeModifier.Type.Percentage),
+                (AttributeModifier.Key.Resistance, 0.3f, AttributeModifier.Type.Percentage),
+            }));
     }
 
-    public static Damage Create(Damage damage) {
-        return new Damage {
-            value = damage.value,
-            type = damage.type,
-            penetration = damage.penetration,
-            crit = damage.crit
-        };
+    [Button]
+    void dev_addAtt() {
+        AddAttributeModifier(AttributeModifier.Create(
+            hero,
+            AttributeModifier.Key.Armor,
+            10,
+            AttributeModifier.Type.FixedValue,
+            10
+        ));
     }
 }
 
@@ -461,150 +503,5 @@ public class AttributeModifierGroup {
     public AttributeModifierGroup(string key) {
         this.key = key;
         modifiers = new List<AttributeModifier>();
-    }
-}
-
-[Serializable]
-public class AttributeModifier {
-    const string ID_PLACE_HOLDER = "<will be auto generated>";
-    
-    [StringDropdown(typeof(AttributeModifierKey))]
-    public string key;
-    [ReadOnly] public string id = ID_PLACE_HOLDER;
-    [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] public Hero owner;
-    [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] public string uniqueKey;
-    public float value;
-    public ModifierType type;
-    [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] public float duration;
-    [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] public int stacks;
-    [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] public bool permanent;
-
-    public static AttributeModifier Create(Hero owner, string key, float value, ModifierType type, float duration, int stacks = 1) {
-        return new AttributeModifier {
-            id = Guid.NewGuid().ToString(),
-            key = key,
-            owner = owner,
-            uniqueKey = "",
-            value = value,
-            type = type,
-            duration = duration,
-            stacks = stacks,
-            permanent = false
-        };
-    }
-    
-    public static AttributeModifier Create(Hero owner, string uniqueKey, string key, float value, ModifierType type, float duration, int stacks = 1) {
-        return new AttributeModifier {
-            id = Guid.NewGuid().ToString(),
-            key = key,
-            owner = owner,
-            uniqueKey = uniqueKey,
-            value = value,
-            type = type,
-            duration = duration,
-            stacks = stacks,
-            permanent = false
-        };
-    }
-    
-    public static AttributeModifier Create(AttributeModifier modifier) {
-        return new AttributeModifier {
-            id = Guid.NewGuid().ToString(),
-            key = modifier.key,
-            owner = modifier.owner,
-            value = modifier.value,
-            type = modifier.type,
-            duration = modifier.duration,
-            permanent = modifier.permanent
-        };
-    }
-}
-
-public enum ModifierType {
-    FixedValue,
-    Percentage
-}
-
-public static class AttributeModifierKey {
-    public const string MaxHp = "maxhp";
-    public const string PhysicalDamage = "pdmg";
-    public const string MagicalDamage = "mdmg";
-    public const string Armor = "armor";
-    public const string Resistance = "resistance";
-    public const string AttackSpeed = "atkspd";
-    public const string CriticalChance = "crit";
-    public const string CriticalDamage = "cdmg";
-    public const string EnergyRegenEfficient = "energy";
-    public const string PhysicalPenetration = "ppen";
-    public const string MagicalPenetration = "mpen";
-    public const string LifeSteal = "lifesteal";
-    public const string Tenacity = "tenacity";
-}
-
-[Serializable]
-public class DamageOverTime {
-    public string key;
-    public string id;
-    public Hero owner;
-    public Damage damage;
-    public int times;
-    public float interval;
-    public int stacks;
-    public Mark mark;
-    public float timer;
-    
-    public static DamageOverTime Create(string key, Hero owner, Damage damage, int times, float interval, int stacks = 1, bool applyDmgInstantly = true, bool createMark = false) {
-        return new DamageOverTime {
-            id = Guid.NewGuid().ToString(),
-            key = key,
-            owner = owner,
-            damage = damage,
-            times = times,
-            interval = interval,
-            stacks = stacks,
-            mark = createMark 
-                ? Mark.Create(
-                    key, 
-                    owner, 
-                    stacks, 
-                    interval * (applyDmgInstantly ? times-1 : times), 
-                    false
-                ) 
-                : null, 
-            timer = applyDmgInstantly ? 0 : interval,
-        };
-    }
-
-    public bool SameAs(DamageOverTime other) {
-        return key == other.key && owner == other.owner;
-    }
-}
-
-[Serializable]
-public class HealOverTime {
-    public string key;
-    public string id;
-    public Hero owner;
-    public float amount;
-    public int times;
-    public float interval;
-    public Mark mark;
-    public float timer;
-    
-    public static HealOverTime Create(string key, Hero owner, float amount, int times, float interval, bool createMark = false) {
-        return new HealOverTime {
-            id = Guid.NewGuid().ToString(),
-            key = key,
-            owner = owner,
-            amount = amount,
-            times = times,
-            interval = interval,
-            mark = createMark ? Mark.Create(key,owner,1, interval * (times-1), false) : null,
-            timer = 0,
-        };
-    }
-    
-    public bool SameAs(HealOverTime other) {
-        return key == other.key && owner == other.owner;
     }
 }

@@ -9,7 +9,7 @@ using UnityEngine;
 /// thanh kiem cuoi cung duoc su dung cung quyet dinh skill la gi
 /// </summary>
 public class AttackProcessor_Yone : AttackProcessor {
-    List<string> reduceDmgModifierIds = new();
+    List<AttributeModifier> reduceDmgModifiers = new();
     
     const string EFFECT_KEY = "yone_weakening";
     const float DIVINE_WEAKENING_PER_STACK = -0.05f;
@@ -43,14 +43,14 @@ public class AttackProcessor_Yone : AttackProcessor {
                     var currentStack = hero.Target.GetAbility<HeroMark>().GetMark(EFFECT_KEY, hero)?.stacks ?? 0;
                     var nextStacks = Mathf.Min(currentStack + 1, DIVINE_WEAKENING_MAX_STACK);
                     
-                    reduceDmgModifierIds.ForEach(x => hero.Target.GetAbility<HeroAttributes>().RemoveAttributeModifier(x));
-                    reduceDmgModifierIds.Clear();
-                    var modifier0 = AttributeModifier.Create(hero, AttributeModifierKey.PhysicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
-                    var modifier1 = AttributeModifier.Create(hero, AttributeModifierKey.MagicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
+                    reduceDmgModifiers.ForEach(x => hero.Target.GetAbility<HeroAttributes>().RemoveAttributeModifier(x));
+                    reduceDmgModifiers.Clear();
+                    var modifier0 = AttributeModifier.Create(hero, AttributeModifier.Key.PhysicalDamage, DIVINE_WEAKENING_PER_STACK, AttributeModifier.Type.Percentage, DIVINE_WEAKENING_DURATION);
+                    var modifier1 = AttributeModifier.Create(hero, AttributeModifier.Key.MagicalDamage, DIVINE_WEAKENING_PER_STACK, AttributeModifier.Type.Percentage, DIVINE_WEAKENING_DURATION);
                     hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(modifier0);
                     hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(modifier1);
-                    reduceDmgModifierIds.Add(modifier0.id);
-                    reduceDmgModifierIds.Add(modifier1.id);
+                    reduceDmgModifiers.Add(modifier0);
+                    reduceDmgModifiers.Add(modifier1);
                 }
             }
         });

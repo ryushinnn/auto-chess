@@ -19,18 +19,18 @@ public class SkillProcessor_Tristana : SkillProcessor {
         attributes.AddAttributeModifier(
             AttributeModifier.Create(
                 hero,
-                AttributeModifierKey.AttackSpeed,
+                AttributeModifier.Key.AttackSpeed,
                 ATK_SPD_MUL,
-                ModifierType.Percentage,
+                AttributeModifier.Type.Percentage,
                 DURATION
             ));
         
         attributes.AddAttributeModifier(
             AttributeModifier.Create(
                 hero,
-                AttributeModifierKey.CriticalChance,
+                AttributeModifier.Key.CriticalChance,
                 CRIT_CHANCE_MUL,
-                ModifierType.Percentage,
+                AttributeModifier.Type.Percentage,
                 DURATION
             ));
     }

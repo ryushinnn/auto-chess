@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// nhay len roi giam xuong gay st = 100% st vay ly va hat tung ke dich 2s
 /// </summary>
 public class SkillProcessor_Malphite : SkillProcessor {
-    List<string> lastModifierIds = new();
+    List<AttributeModifier> lastModifiers = new();
     
     const string EFFECT_KEY = "malphite_unstoppable";
     const float DEFENSE_MUL = 2;
@@ -21,26 +21,26 @@ public class SkillProcessor_Malphite : SkillProcessor {
     }
 
     void Strengthen() {
-        foreach (var id in lastModifierIds) {
-            attributes.RemoveAttributeModifier(id);
+        foreach (var m in lastModifiers) {
+            attributes.RemoveAttributeModifier(m);
         }
-        lastModifierIds.Clear();
+        lastModifiers.Clear();
 
-        var armorModifier = AttributeModifier.Create(hero, AttributeModifierKey.Armor, DEFENSE_MUL, ModifierType.Percentage, EFFECT_DURATION);
+        var armorModifier = AttributeModifier.Create(hero, AttributeModifier.Key.Armor, DEFENSE_MUL, AttributeModifier.Type.Percentage, EFFECT_DURATION);
         attributes.AddAttributeModifier(armorModifier);
-        lastModifierIds.Add(armorModifier.id);
+        lastModifiers.Add(armorModifier);
 
-        var resistanceModifier = AttributeModifier.Create(hero, AttributeModifierKey.Resistance, DEFENSE_MUL, ModifierType.Percentage, EFFECT_DURATION);
+        var resistanceModifier = AttributeModifier.Create(hero, AttributeModifier.Key.Resistance, DEFENSE_MUL, AttributeModifier.Type.Percentage, EFFECT_DURATION);
         attributes.AddAttributeModifier(resistanceModifier);
-        lastModifierIds.Add(resistanceModifier.id);
+        lastModifiers.Add(resistanceModifier);
 
-        var atkSpeedModifier = AttributeModifier.Create(hero, AttributeModifierKey.AttackSpeed, ATK_SPEED_REDUCE_MUL, ModifierType.Percentage, EFFECT_DURATION);
+        var atkSpeedModifier = AttributeModifier.Create(hero, AttributeModifier.Key.AttackSpeed, ATK_SPEED_REDUCE_MUL, AttributeModifier.Type.Percentage, EFFECT_DURATION);
         attributes.AddAttributeModifier(atkSpeedModifier);
-        lastModifierIds.Add(atkSpeedModifier.id);
+        lastModifiers.Add(atkSpeedModifier);
         
-        var tenacityModifier = AttributeModifier.Create(hero, AttributeModifierKey.Tenacity, HeroTrait.MAX_TENACITY, ModifierType.FixedValue, EFFECT_DURATION);
+        var tenacityModifier = AttributeModifier.Create(hero, AttributeModifier.Key.Tenacity, HeroTrait.MAX_TENACITY, AttributeModifier.Type.FixedValue, EFFECT_DURATION);
         attributes.AddAttributeModifier(tenacityModifier);
-        lastModifierIds.Add(tenacityModifier.id);
+        lastModifiers.Add(tenacityModifier);
         
         mark.AddMark(Mark.Create(EFFECT_KEY, hero, 1, EFFECT_DURATION));
     }

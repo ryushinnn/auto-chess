@@ -1225,7 +1225,7 @@ MonoBehaviour:
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   enemyTeam:
-  - active: 1
+  - active: 0
     id: Aatrox_Dark
     star: 0
     mapNode: {x: 7, y: 4}

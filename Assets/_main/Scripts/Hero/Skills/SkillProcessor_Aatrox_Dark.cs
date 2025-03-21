@@ -42,9 +42,9 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
             hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(
                 AttributeModifier.Create(
                     hero,
-                    AttributeModifierKey.Armor,
+                    AttributeModifier.Key.Armor,
                     ARMOR_REDUCE_MUL,
-                    ModifierType.Percentage,
+                    AttributeModifier.Type.Percentage,
                     ARMOR_REDUCE_DURATION
                 ));
             

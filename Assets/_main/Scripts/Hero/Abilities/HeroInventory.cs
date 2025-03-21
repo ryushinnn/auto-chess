@@ -47,7 +47,7 @@ public class HeroInventory : HeroAbility {
             modifier.stacks = 1;
             modifier.permanent = true;
             attributes.AddAttributeModifier(modifier);
-            slot.modifierIds.Add(modifier.id);
+            slot.modifiers.Add(modifier);
         }
         itemSlots.Add(slot);
         itemSlots.Sort((a, b) => {
@@ -75,8 +75,8 @@ public class HeroInventory : HeroAbility {
     [Button]
     void Dev_RemoveAll() {
         foreach (var s in itemSlots) {
-            foreach (var id in s.modifierIds) {
-                attributes.RemoveAttributeModifier(id);
+            foreach (var m in s.modifiers) {
+                attributes.RemoveAttributeModifier(m);
             }
         }
         itemSlots.Clear();
@@ -86,7 +86,7 @@ public class HeroInventory : HeroAbility {
 [Serializable]
 public class ItemSlot {
     public Item item;
-    public List<string> modifierIds = new();
+    public List<AttributeModifier> modifiers = new();
     
     public ItemSlot(Item item) {
         this.item = item;
