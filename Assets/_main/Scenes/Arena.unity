@@ -1215,9 +1215,7 @@ MonoBehaviour:
     id: Aatrox_Light
     star: 0
     mapNode: {x: 0, y: 3}
-    items:
-    - {fileID: 11400000, guid: 8d105db34d57d72429a7dafadd916efe, type: 2}
-    - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
+    items: []
   - active: 0
     id: Yasuo
     star: 0
@@ -1229,9 +1227,7 @@ MonoBehaviour:
     id: Aatrox_Dark
     star: 0
     mapNode: {x: 7, y: 4}
-    items:
-    - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
-    - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
+    items: []
   - active: 0
     id: Aatrox
     star: 0

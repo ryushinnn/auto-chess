@@ -19,8 +19,8 @@ MonoBehaviour:
   mecanim: {fileID: 5429741766995380546, guid: f5f4ee1a0bc2be64c9e3036fa2d897ef, type: 3}
   thumbnail: {fileID: 21300000, guid: c9d39b43c7968b0469713898527634c8, type: 3}
   maxHp: 25400
-  physicalDamage: 200
-  magicalDamage: 0
+  physicalDamage: 0
+  magicalDamage: 200
   armor: 99
   resistance: 99
   attackSpeed: 0.45
@@ -37,4 +37,4 @@ MonoBehaviour:
   attackRange: 1
   minDps: 90
   avgDps: 90
-  damageType: 0
+  damageType: 1

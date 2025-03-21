@@ -37,15 +37,16 @@ public class HeroTrait : ScriptableObject {
     public float energyRegenPerHit;
     public int attackRange;
     
-    [TitleGroup("Configs")]
+    [TitleGroup("Contants & Limits")]
     public const float MAX_ENERGY = 100;
-    public const float MAX_DMG_REDUCTION = 0.9f;
-    public const float MAX_CRITICAL_CHANCE = 0.9999f;
+    public const float DAMAGE_REDUCTION_CONSTANT = 100;
+    public const float MAX_CRITICAL_CHANCE = 0.99f;
     public const float MAX_PENETRATION = 0.7f;
     public const float MAX_LIFE_STEAL = 1;
     public const float MAX_TENACITY = 0.5f;
-    public const float HEAL_UPON_ANTI_HEALTH = 0.5f;
+    public const float ANTI_HEAL_EFFICIENCY = 0.5f;
     public const float MIN_ARMOR_AND_RESISTANCE = 1;
+    public const float MIN_DAMAGE_DEALT = 1;
     public const float MIN_DAMAGE = 1;
     public const float MIN_ATTACK_SPEED = 0.1f;
     public const float MIN_MOVEMENT_SPEED = 0.1f;

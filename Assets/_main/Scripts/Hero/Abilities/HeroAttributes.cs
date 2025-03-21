@@ -112,16 +112,28 @@ public class HeroAttributes : HeroAbility {
     }
 
     Damage TakeDamage(Damage damage, bool regenEnergy, bool showText) {
-        var dmgReduction = damage.type switch {
-            DamageType.Physical => Mathf.Min(armor * (1-damage.penetration), HeroTrait.MAX_DMG_REDUCTION * damage.value),
-            DamageType.Magical => Mathf.Min(resistance * (1-damage.penetration), HeroTrait.MAX_DMG_REDUCTION * damage.value),
-            DamageType.True => 0
-        };
-
-        var finalDmg = Damage.Create(damage);
-        finalDmg.value = Mathf.Max(finalDmg.value - dmgReduction, 1);
+        
+        //                              pre-mitigation dmg
+        // post-mitigation dmg =   _______________________________
+        //                                   armor/resistance
+        //                         1 +   _________________________
+        //                               DAMAGE_REDUCTION_CONSTANT
+        
+        var finalDmg = Damage.Create(
+            Mathf.Max(damage.type switch {
+                        DamageType.Physical => damage.value / (1 + Mathf.Max(HeroTrait.MIN_ARMOR_AND_RESISTANCE, armor - damage.penetration) / HeroTrait.DAMAGE_REDUCTION_CONSTANT),
+                        DamageType.Magical => damage.value / (1 + Mathf.Max(HeroTrait.MIN_ARMOR_AND_RESISTANCE, resistance - damage.penetration) / HeroTrait.DAMAGE_REDUCTION_CONSTANT),
+                        DamageType.True => damage.value
+                    },
+                HeroTrait.MIN_DAMAGE_DEALT), 
+            damage.type, 
+            damage.penetration, 
+            damage.crit
+        );
+        
         hp -= finalDmg.value;
         healthBar.UpdateAmount(hp / maxHp);
+        
         if (hp > 0) {
             if (regenEnergy) {
                 RegenEnergy(hero.Trait.energyRegenPerHit);
@@ -141,7 +153,7 @@ public class HeroAttributes : HeroAbility {
         if (!isAlive) return;
         
         if (effects.IsAntiHeal) {
-            amount *= HeroTrait.HEAL_UPON_ANTI_HEALTH;
+            amount *= (1 - HeroTrait.ANTI_HEAL_EFFICIENCY);
         }
 
         hp = Mathf.Min(hp + amount, maxHp);
