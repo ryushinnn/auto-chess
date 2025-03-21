@@ -55,7 +55,7 @@ public class AttackProcessor {
             }
         }
 
-        damage.crit = Random.value < attributes.CriticalChance;
+        damage.crit = attributes.Crit();
         if (damage.crit) {
             damage.value *= attributes.CriticalDamage;
         }

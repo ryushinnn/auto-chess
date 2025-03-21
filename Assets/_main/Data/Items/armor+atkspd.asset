@@ -19,20 +19,26 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8d105db34d57d72429a7dafadd916efe, type: 2}
   modifiers:
   - key: armor
+    owner: {fileID: 0}
     id: <will be auto generated>
     value: 20
     type: 0
-    duration: Infinity
-    permanent: 1
+    duration: 0
+    stacks: 0
+    permanent: 0
   - key: atkspd
+    owner: {fileID: 0}
     id: <will be auto generated>
     value: 0.25
     type: 1
-    duration: Infinity
-    permanent: 1
+    duration: 0
+    stacks: 0
+    permanent: 0
   - key: maxhp
+    owner: {fileID: 0}
     id: <will be auto generated>
     value: 270
     type: 0
-    duration: Infinity
-    permanent: 1
+    duration: 0
+    stacks: 0
+    permanent: 0

@@ -12,12 +12,4 @@ public class Item : ScriptableObject {
     public bool IsCompleteItem() {
         return ingredients != null && ingredients.Length == 2;
     }
-    
-    void OnValidate() {
-        foreach (var m in modifiers) {
-            m.id = "<will be auto generated>";
-            m.permanent = true;
-            m.duration = Mathf.Infinity;
-        }
-    }
 }

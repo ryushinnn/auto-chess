@@ -21,7 +21,7 @@ public class AttackProcessor_Aatrox_Dark : AttackProcessor {
                 
                 var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
                     Damage.Create(
-                        damage.value * Mathf.Lerp(MIN_DMG_MUL, MAX_DMG_MUL, 1 - hero.Target.GetAbility<HeroAttributes>().Hp / hero.Target.GetAbility<HeroAttributes>().MaxHp),
+                        damage.value * Mathf.Lerp(MIN_DMG_MUL, MAX_DMG_MUL, hero.Target.GetAbility<HeroAttributes>().HpLostPercentage),
                         damage.type,
                         damage.penetration
                     ));
@@ -35,7 +35,7 @@ public class AttackProcessor_Aatrox_Dark : AttackProcessor {
                 
                 var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
                     Damage.Create(
-                        damage.value * attributes.CriticalDamage * Mathf.Lerp(MIN_DMG_MUL, MAX_DMG_MUL, 1 - hero.Target.GetAbility<HeroAttributes>().Hp / hero.Target.GetAbility<HeroAttributes>().MaxHp),
+                        damage.value * attributes.CriticalDamage * Mathf.Lerp(MIN_DMG_MUL, MAX_DMG_MUL, hero.Target.GetAbility<HeroAttributes>().HpLostPercentage),
                         damage.type,
                         damage.penetration,
                         true

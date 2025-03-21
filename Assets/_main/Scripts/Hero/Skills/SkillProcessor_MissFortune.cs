@@ -40,7 +40,7 @@ public class SkillProcessor_MissFortune : SkillProcessor {
                 Damage.Create(attributes.PhysicalDamage * MAGICAL_DMG_MUL_1, DamageType.Magical, attributes.MagicalPenetration),
             });
         
-        hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(AttributeModifier.Create(AttributeModifierKey.Armor, REDUCE_DEFENSE_MUL, ModifierType.Percentage, REDUCE_DEFENSE_DURATION));
-        hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(AttributeModifier.Create(AttributeModifierKey.Resistance, REDUCE_DEFENSE_MUL, ModifierType.Percentage, REDUCE_DEFENSE_DURATION));
+        hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(AttributeModifier.Create(hero, AttributeModifierKey.Armor, REDUCE_DEFENSE_MUL, ModifierType.Percentage, REDUCE_DEFENSE_DURATION));
+        hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(AttributeModifier.Create(hero, AttributeModifierKey.Resistance, REDUCE_DEFENSE_MUL, ModifierType.Percentage, REDUCE_DEFENSE_DURATION));
     }
 }

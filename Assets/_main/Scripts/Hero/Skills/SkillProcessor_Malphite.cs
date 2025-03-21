@@ -26,19 +26,19 @@ public class SkillProcessor_Malphite : SkillProcessor {
         }
         lastModifierIds.Clear();
 
-        var armorModifier = AttributeModifier.Create(AttributeModifierKey.Armor, DEFENSE_MUL, ModifierType.Percentage, EFFECT_DURATION);
+        var armorModifier = AttributeModifier.Create(hero, AttributeModifierKey.Armor, DEFENSE_MUL, ModifierType.Percentage, EFFECT_DURATION);
         attributes.AddAttributeModifier(armorModifier);
         lastModifierIds.Add(armorModifier.id);
 
-        var resistanceModifier = AttributeModifier.Create(AttributeModifierKey.Resistance, DEFENSE_MUL, ModifierType.Percentage, EFFECT_DURATION);
+        var resistanceModifier = AttributeModifier.Create(hero, AttributeModifierKey.Resistance, DEFENSE_MUL, ModifierType.Percentage, EFFECT_DURATION);
         attributes.AddAttributeModifier(resistanceModifier);
         lastModifierIds.Add(resistanceModifier.id);
 
-        var atkSpeedModifier = AttributeModifier.Create(AttributeModifierKey.AttackSpeed, ATK_SPEED_REDUCE_MUL, ModifierType.Percentage, EFFECT_DURATION);
+        var atkSpeedModifier = AttributeModifier.Create(hero, AttributeModifierKey.AttackSpeed, ATK_SPEED_REDUCE_MUL, ModifierType.Percentage, EFFECT_DURATION);
         attributes.AddAttributeModifier(atkSpeedModifier);
         lastModifierIds.Add(atkSpeedModifier.id);
         
-        var tenacityModifier = AttributeModifier.Create(AttributeModifierKey.Tenacity, HeroTrait.MAX_TENACITY, ModifierType.FixedValue, EFFECT_DURATION);
+        var tenacityModifier = AttributeModifier.Create(hero, AttributeModifierKey.Tenacity, HeroTrait.MAX_TENACITY, ModifierType.FixedValue, EFFECT_DURATION);
         attributes.AddAttributeModifier(tenacityModifier);
         lastModifierIds.Add(tenacityModifier.id);
         

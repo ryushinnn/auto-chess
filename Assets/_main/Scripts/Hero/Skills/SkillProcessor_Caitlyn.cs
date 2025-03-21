@@ -40,6 +40,7 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
         
         attributes.AddAttributeModifier(
             AttributeModifier.Create(
+                hero,
                 AttributeModifierKey.AttackSpeed,
                 ATK_SPD_MUL,
                 ModifierType.Percentage,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class HeroAttributes : HeroAbility {
     HeroStatusEffects effects;
@@ -14,10 +15,12 @@ public class HeroAttributes : HeroAbility {
     [SerializeField] ProgressBar energyBar;
     [SerializeField] Canvas canvas;
     [SerializeField] Transform hpTextParent;
-
+    
     public bool IsAlive => isAlive;
     public float MaxHp => maxHp;
     public float Hp => hp;
+    public float HpPercentage => Mathf.Clamp01(hp / maxHp);
+    public float HpLostPercentage => 1 - HpPercentage;
     public float Energy => energy;
     public float Armor => armor;
     public float Resistance => resistance;
@@ -51,7 +54,7 @@ public class HeroAttributes : HeroAbility {
     [SerializeField, ReadOnly] float lifeSteal;
     [SerializeField, ReadOnly] float tenacity;
 
-    [SerializeField, ReadOnly] List<AttributeModifierGroup> modifierGroups = new();
+    [SerializeField, ReadOnly, TableList] List<AttributeModifierGroup> modifierGroups = new();
     [SerializeField, ReadOnly] List<DamageOverTime> damageOverTimes = new();
     [SerializeField, ReadOnly] List<HealOverTime> healOverTimes = new();
 
@@ -173,6 +176,10 @@ public class HeroAttributes : HeroAbility {
         energyBar.UpdateAmount(0);
     }
 
+    public bool Crit() {
+        return Random.value < criticalChance;
+    }
+
     public void AddAttributeModifier(AttributeModifier modifier) {
         var group = modifierGroups.Find(x => x.key == modifier.key);
         if (group == null) {
@@ -188,7 +195,6 @@ public class HeroAttributes : HeroAbility {
             var key = modifierGroups[i].key;
             var modifier = modifierGroups[i].modifiers.Find(x => x.id == id);
             if (modifier != null) {
-                modifier.onRemove?.Invoke();
                 modifierGroups[i].modifiers.Remove(modifier);
                 if (modifierGroups[i].modifiers.Count == 0) {
                     modifierGroups.RemoveAt(i);
@@ -238,7 +244,6 @@ public class HeroAttributes : HeroAbility {
                 if (modifiers[j].permanent) continue;
                 modifiers[j].duration -= Time.deltaTime;
                 if (modifiers[j].duration <= 0) {
-                    modifiers[j].onRemove?.Invoke();
                     modifiers.RemoveAt(j);
                     hasChange = true;
                 }
@@ -421,21 +426,6 @@ public class HeroAttributes : HeroAbility {
         canvas.enabled = false;
         hero.name = "(DEAD) " + hero.name;
     }
-
-    [Button]
-    void Dev_FixedValue(float val) {
-        AddAttributeModifier(AttributeModifier.Create(AttributeModifierKey.AttackSpeed,val,ModifierType.FixedValue,5));
-    }
-    
-    [Button]
-    void Dev_Percentage(float val) {
-        AddAttributeModifier(AttributeModifier.Create(AttributeModifierKey.AttackSpeed,val,ModifierType.Percentage,5));
-    }
-
-    [Button]
-    void Dev_Permanent() {
-        AddAttributeModifier(AttributeModifier.Create(AttributeModifierKey.AttackSpeed,0.5f,ModifierType.Percentage));
-    }
 }
 
 public class Damage {
@@ -465,7 +455,7 @@ public class Damage {
 
 [Serializable]
 public class AttributeModifierGroup {
-    public string key;
+    [TableColumnWidth(100, resizable:false)] public string key;
     public List<AttributeModifier> modifiers;
 
     public AttributeModifierGroup(string key) {
@@ -476,36 +466,44 @@ public class AttributeModifierGroup {
 
 [Serializable]
 public class AttributeModifier {
+    const string ID_PLACE_HOLDER = "<will be auto generated>";
+    
     [StringDropdown(typeof(AttributeModifierKey))]
     public string key;
-    public string id;
+    [ReadOnly] public string id = ID_PLACE_HOLDER;
+    [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] public Hero owner;
+    [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] public string uniqueKey;
     public float value;
     public ModifierType type;
-    public float duration;
-    public bool permanent;
-    public Action onRemove;
+    [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] public float duration;
+    [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] public int stacks;
+    [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] public bool permanent;
 
-    public static AttributeModifier Create(string key, float value, ModifierType type, float duration, Action onRemove = null) {
+    public static AttributeModifier Create(Hero owner, string key, float value, ModifierType type, float duration, int stacks = 1) {
         return new AttributeModifier {
             id = Guid.NewGuid().ToString(),
             key = key,
+            owner = owner,
+            uniqueKey = "",
             value = value,
             type = type,
             duration = duration,
-            permanent = false,
-            onRemove = onRemove
+            stacks = stacks,
+            permanent = false
         };
     }
-
-    public static AttributeModifier Create(string key, float value, ModifierType type, Action onRemove = null) {
+    
+    public static AttributeModifier Create(Hero owner, string uniqueKey, string key, float value, ModifierType type, float duration, int stacks = 1) {
         return new AttributeModifier {
             id = Guid.NewGuid().ToString(),
             key = key,
+            owner = owner,
+            uniqueKey = uniqueKey,
             value = value,
             type = type,
-            duration = Mathf.Infinity,
-            permanent = true,
-            onRemove = onRemove
+            duration = duration,
+            stacks = stacks,
+            permanent = false
         };
     }
     
@@ -513,11 +511,11 @@ public class AttributeModifier {
         return new AttributeModifier {
             id = Guid.NewGuid().ToString(),
             key = modifier.key,
+            owner = modifier.owner,
             value = modifier.value,
             type = modifier.type,
             duration = modifier.duration,
-            permanent = modifier.permanent,
-            onRemove = modifier.onRemove
+            permanent = modifier.permanent
         };
     }
 }

@@ -17,6 +17,6 @@ public class SkillProcessor_Morgana : SkillProcessor {
         if (!attributes.IsAlive) return;
         
         attributes.Heal(attributes.MagicalDamage * DMG_TO_HEAL_MUL 
-                        + Mathf.Lerp(attributes.MaxHp * MAX_HP_TO_HEAL_MIN, attributes.MaxHp * MAX_HP_TO_HEAL_MAX, 1 - attributes.Hp / attributes.MaxHp));
+                        + attributes.MaxHp * Mathf.Lerp(MAX_HP_TO_HEAL_MIN, MAX_HP_TO_HEAL_MAX, attributes.HpLostPercentage));
     }
 }

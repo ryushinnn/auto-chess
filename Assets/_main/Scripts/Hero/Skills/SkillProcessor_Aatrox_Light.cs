@@ -36,7 +36,7 @@ public class SkillProcessor_Aatrox_Light : SkillProcessor {
                 attributes.MagicalPenetration
             ));
         
-        var vamp = attributes.Hp / attributes.MaxHp < HP_THRESHOLD ? VAMP_0 * VAMP_MUL_WHEN_LOW_HP : VAMP_0;
+        var vamp = attributes.HpPercentage < HP_THRESHOLD ? VAMP_0 * VAMP_MUL_WHEN_LOW_HP : VAMP_0;
         attributes.Heal(outputDmg * vamp);
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_0);
     }
@@ -51,7 +51,7 @@ public class SkillProcessor_Aatrox_Light : SkillProcessor {
                 attributes.MagicalPenetration
             ));
         
-        var vamp = attributes.Hp / attributes.MaxHp < HP_THRESHOLD ? VAMP_1 * VAMP_MUL_WHEN_LOW_HP : VAMP_1;
+        var vamp = attributes.HpPercentage < HP_THRESHOLD ? VAMP_1 * VAMP_MUL_WHEN_LOW_HP : VAMP_1;
         attributes.Heal(outputDmg * vamp);
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_1);
     }
@@ -66,7 +66,7 @@ public class SkillProcessor_Aatrox_Light : SkillProcessor {
                 attributes.MagicalPenetration
             ));
         
-        var vamp = attributes.Hp / attributes.MaxHp < HP_THRESHOLD ? VAMP_2 * VAMP_MUL_WHEN_LOW_HP : VAMP_2;
+        var vamp = attributes.HpPercentage < HP_THRESHOLD ? VAMP_2 * VAMP_MUL_WHEN_LOW_HP : VAMP_2;
         attributes.Heal(outputDmg * vamp);
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_2);
     }

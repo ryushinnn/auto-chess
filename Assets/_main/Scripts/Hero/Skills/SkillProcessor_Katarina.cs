@@ -33,11 +33,15 @@ public class SkillProcessor_Katarina : SkillProcessor {
 
     void Cut() {
         if (hero.Target == null) return;
-        
-        var crit = Random.value < attributes.CriticalChance;
+
+        var dmg = attributes.PhysicalDamage * DMG_MUL;
+        var crit = attributes.Crit();
+        if (crit) {
+            dmg *= attributes.CriticalDamage;
+        }
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
             Damage.Create(
-                attributes.PhysicalDamage * DMG_MUL,
+                dmg,
                 DamageType.Magical,
                 PENETRATION,
                 crit

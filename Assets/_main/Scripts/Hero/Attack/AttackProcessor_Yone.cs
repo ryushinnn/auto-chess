@@ -11,6 +11,7 @@ using UnityEngine;
 public class AttackProcessor_Yone : AttackProcessor {
     List<string> reduceDmgModifierIds = new();
     
+    const string EFFECT_KEY = "yone_weakening";
     const float DIVINE_WEAKENING_PER_STACK = -0.05f;
     const int DIVINE_WEAKENING_MAX_STACK = 3;
     const int DIVINE_WEAKENING_DURATION = 2;
@@ -27,10 +28,11 @@ public class AttackProcessor_Yone : AttackProcessor {
         hero.Mecanim.Attack(new Action[]{
             () => {
                 if (hero.Target == null) return;
+                
                 var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(damage);
                 var heal = outputDamage * attributes.LifeSteal;
                 if ((YoneSword)customInt["sword"] == YoneSword.Devil) {
-                    heal += outputDamage * ((attributes.Hp / attributes.MaxHp) * (DEVIL_VAMP_MAX - DEVIL_VAMP_MIN) + DEVIL_VAMP_MIN);
+                    heal += outputDamage * Mathf.Lerp(DEVIL_VAMP_MIN, DEVIL_VAMP_MAX, attributes.HpLostPercentage);
                 }
 
                 if (heal > 0) {
@@ -38,10 +40,13 @@ public class AttackProcessor_Yone : AttackProcessor {
                 }
 
                 if ((YoneSword)customInt["sword"] == YoneSword.Divine) {
+                    var currentStack = hero.Target.GetAbility<HeroMark>().GetMark(EFFECT_KEY, hero)?.stacks ?? 0;
+                    var nextStacks = Mathf.Min(currentStack + 1, DIVINE_WEAKENING_MAX_STACK);
+                    
                     reduceDmgModifierIds.ForEach(x => hero.Target.GetAbility<HeroAttributes>().RemoveAttributeModifier(x));
                     reduceDmgModifierIds.Clear();
-                    var modifier0 = AttributeModifier.Create(AttributeModifierKey.PhysicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
-                    var modifier1 = AttributeModifier.Create(AttributeModifierKey.MagicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
+                    var modifier0 = AttributeModifier.Create(hero, AttributeModifierKey.PhysicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
+                    var modifier1 = AttributeModifier.Create(hero, AttributeModifierKey.MagicalDamage, DIVINE_WEAKENING_PER_STACK, ModifierType.Percentage, DIVINE_WEAKENING_DURATION);
                     hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(modifier0);
                     hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(modifier1);
                     reduceDmgModifierIds.Add(modifier0.id);

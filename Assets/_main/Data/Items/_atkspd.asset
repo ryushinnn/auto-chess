@@ -17,8 +17,10 @@ MonoBehaviour:
   ingredients: []
   modifiers:
   - key: atkspd
+    owner: {fileID: 0}
     id: <will be auto generated>
     value: 0.1
     type: 1
-    duration: Infinity
-    permanent: 1
+    duration: 0
+    stacks: 0
+    permanent: 0

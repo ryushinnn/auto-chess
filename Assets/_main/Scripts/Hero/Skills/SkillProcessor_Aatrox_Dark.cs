@@ -38,9 +38,10 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
                 attributes.PhysicalPenetration
             ));
         
-        if (hero.Target.GetAbility<HeroAttributes>().Hp / hero.Target.GetAbility<HeroAttributes>().MaxHp < HP_THRESHOLD) {
+        if (hero.Target.GetAbility<HeroAttributes>().HpPercentage < HP_THRESHOLD) {
             hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(
                 AttributeModifier.Create(
+                    hero,
                     AttributeModifierKey.Armor,
                     ARMOR_REDUCE_MUL,
                     ModifierType.Percentage,
@@ -63,7 +64,7 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
     void MediumSlash() {
         if (hero.Target == null) return;
         
-        if (hero.Target.GetAbility<HeroAttributes>().Hp / hero.Target.GetAbility<HeroAttributes>().MaxHp >= HP_THRESHOLD) {
+        if (hero.Target.GetAbility<HeroAttributes>().HpPercentage >= HP_THRESHOLD) {
             hero.Target.GetAbility<HeroAttributes>().TakeDamage(
                 Damage.Create(
                     attributes.PhysicalDamage * DMG_MUL_1,
@@ -94,7 +95,7 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
         if (hero.Target == null) return;
         
         var dmg = attributes.PhysicalDamage * DMG_MUL_2;
-        var crit = Random.value < attributes.CriticalChance;
+        var crit = attributes.Crit();
         if (crit) {
             dmg *= attributes.CriticalDamage;
         }
@@ -102,7 +103,10 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
             Damage.Create(
                 dmg,
                 DamageType.Physical,
-                attributes.PhysicalPenetration
+                attributes.PhysicalPenetration,
+                crit
             ));
+        
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_2);
     }
 }

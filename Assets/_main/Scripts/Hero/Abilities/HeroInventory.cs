@@ -42,6 +42,10 @@ public class HeroInventory : HeroAbility {
 
         foreach (var m in slot.item.modifiers) {
             var modifier = AttributeModifier.Create(m);
+            modifier.owner = hero;
+            modifier.duration = Mathf.Infinity;
+            modifier.stacks = 1;
+            modifier.permanent = true;
             attributes.AddAttributeModifier(modifier);
             slot.modifierIds.Add(modifier.id);
         }

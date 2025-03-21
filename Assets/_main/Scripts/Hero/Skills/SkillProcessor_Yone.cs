@@ -38,14 +38,16 @@ public class SkillProcessor_Yone : SkillProcessor {
         if (hero.Target == null) return;
         
         var dmg = attributes.PhysicalDamage * DEVIL_DMG_MUL_0;
-        if (Random.value < attributes.CriticalChance) {
+        var crit = attributes.Crit();
+        if (crit) {
             dmg *= attributes.CriticalDamage;
         }
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
             Damage.Create(
                 dmg,
                 DamageType.Physical, 
-                attributes.PhysicalPenetration
+                attributes.PhysicalPenetration,
+                crit
             ));
     }
 
@@ -53,14 +55,16 @@ public class SkillProcessor_Yone : SkillProcessor {
         if (hero.Target == null) return;
         
         var dmg = attributes.PhysicalDamage * DEVIL_DMG_MUL_1;
-        if (Random.value < attributes.CriticalChance) {
+        var crit = attributes.Crit();
+        if (crit) {
             dmg *= attributes.CriticalDamage;
         }
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(
             Damage.Create(
                 dmg,
                 DamageType.Physical, 
-                attributes.PhysicalPenetration
+                attributes.PhysicalPenetration,
+                crit
             ));
     }
 }

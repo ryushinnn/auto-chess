@@ -37,7 +37,7 @@ public class SkillProcessor_Ashe : SkillProcessor {
         if (hero.Target == null) return;
         
         var dmg = attributes.PhysicalDamage * DMG_MUL;
-        var crit = Random.value < attributes.CriticalChance;
+        var crit = attributes.Crit();
         if (crit) {
             dmg *= attributes.CriticalDamage;
         }

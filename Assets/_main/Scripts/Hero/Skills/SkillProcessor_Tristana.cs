@@ -18,6 +18,7 @@ public class SkillProcessor_Tristana : SkillProcessor {
         
         attributes.AddAttributeModifier(
             AttributeModifier.Create(
+                hero,
                 AttributeModifierKey.AttackSpeed,
                 ATK_SPD_MUL,
                 ModifierType.Percentage,
@@ -26,6 +27,7 @@ public class SkillProcessor_Tristana : SkillProcessor {
         
         attributes.AddAttributeModifier(
             AttributeModifier.Create(
+                hero,
                 AttributeModifierKey.CriticalChance,
                 CRIT_CHANCE_MUL,
                 ModifierType.Percentage,

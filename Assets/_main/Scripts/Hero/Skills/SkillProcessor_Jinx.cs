@@ -34,11 +34,15 @@ public class SkillProcessor_Jinx : SkillProcessor {
         if (hero.Target == null) return;
 
         var type = Random.Range(0, 3);
-        var crit = Random.value < attributes.CriticalChance;
+        var dmg = attributes.PhysicalDamage * DMG_MUL_PER_ROCKET;
+        var crit = attributes.Crit();
+        if (crit) {
+            dmg *= attributes.CriticalDamage;
+        }
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(type switch {
-            0 => Damage.Create(attributes.PhysicalDamage * DMG_MUL_PER_ROCKET, DamageType.Physical, PENETRATION, crit),
-            1 => Damage.Create(attributes.PhysicalDamage * DMG_MUL_PER_ROCKET, DamageType.Magical, PENETRATION, crit),
-            _ => Damage.Create(attributes.PhysicalDamage * DMG_MUL_PER_ROCKET, DamageType.True, 0,crit),
+            0 => Damage.Create(dmg * DMG_MUL_PER_ROCKET, DamageType.Physical, PENETRATION, crit),
+            1 => Damage.Create(dmg * DMG_MUL_PER_ROCKET, DamageType.Magical, PENETRATION, crit),
+            _ => Damage.Create(dmg * DMG_MUL_PER_ROCKET, DamageType.True, 0,crit),
         }
         , !affectedTargets.Contains(hero.Target));
         
