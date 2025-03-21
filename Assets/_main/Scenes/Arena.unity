@@ -1111,6 +1111,14 @@ MonoBehaviour:
     value: {fileID: 21300000, guid: 00591f64954dac443996bc42fcd70b1c, type: 3}
   - key: yasuo_wind_claws
     value: {fileID: 21300000, guid: 76384063e4261f14586d23518b4b3db9, type: 3}
+  - key: yone_weakening
+    value: {fileID: 21300000, guid: 4ca60a31c31ce664f8b9b55aa725ba53, type: 3}
+  - key: missfortune_shield_breaker
+    value: {fileID: 21300000, guid: 6e0b5b49d0b9d614685d600e37a89f27, type: 3}
+  - key: aatrox_curse
+    value: {fileID: 21300000, guid: a362ba6bf7adb9247bc84db0531db29a, type: 3}
+  - key: tristana_furious
+    value: {fileID: 21300000, guid: c32ad0ad524f8844fa25ee8f112be3bf, type: 3}
 --- !u!4 &1019160392
 Transform:
   m_ObjectHideFlags: 0
@@ -1212,28 +1220,28 @@ MonoBehaviour:
     type: 3}
   myTeam:
   - active: 1
-    id: Aatrox_Light
+    id: Aatrox_Dark
     star: 0
     mapNode: {x: 0, y: 3}
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
     - {fileID: 11400000, guid: b538eec87a753f34a992d366a3cd4321, type: 2}
   - active: 0
-    id: Yasuo
+    id: Yone
     star: 0
     mapNode: {x: 0, y: 4}
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   enemyTeam:
-  - active: 0
-    id: Aatrox_Dark
+  - active: 1
+    id: MissFortune
     star: 0
     mapNode: {x: 7, y: 4}
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
     - {fileID: 11400000, guid: 8d105db34d57d72429a7dafadd916efe, type: 2}
   - active: 0
-    id: Aatrox
+    id: Tristana
     star: 0
     mapNode: {x: 7, y: 3}
     items: []

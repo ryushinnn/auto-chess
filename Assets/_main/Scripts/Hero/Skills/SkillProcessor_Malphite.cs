@@ -7,8 +7,6 @@ using System.Collections.Generic;
 /// nhay len roi giam xuong gay st = 100% st vay ly va hat tung ke dich 2s
 /// </summary>
 public class SkillProcessor_Malphite : SkillProcessor {
-    List<AttributeModifier> lastModifiers = new();
-    
     const string EFFECT_KEY = "malphite_unstoppable";
     const float DEFENSE_MUL = 2;
     const float ATK_SPEED_REDUCE_MUL = -0.5f;
@@ -21,28 +19,20 @@ public class SkillProcessor_Malphite : SkillProcessor {
     }
 
     void Strengthen() {
-        foreach (var m in lastModifiers) {
-            attributes.RemoveAttributeModifier(m);
-        }
-        lastModifiers.Clear();
-
-        var armorModifier = AttributeModifier.Create(hero, AttributeModifier.Key.Armor, DEFENSE_MUL, AttributeModifier.Type.Percentage, EFFECT_DURATION);
-        attributes.AddAttributeModifier(armorModifier);
-        lastModifiers.Add(armorModifier);
-
-        var resistanceModifier = AttributeModifier.Create(hero, AttributeModifier.Key.Resistance, DEFENSE_MUL, AttributeModifier.Type.Percentage, EFFECT_DURATION);
-        attributes.AddAttributeModifier(resistanceModifier);
-        lastModifiers.Add(resistanceModifier);
-
-        var atkSpeedModifier = AttributeModifier.Create(hero, AttributeModifier.Key.AttackSpeed, ATK_SPEED_REDUCE_MUL, AttributeModifier.Type.Percentage, EFFECT_DURATION);
-        attributes.AddAttributeModifier(atkSpeedModifier);
-        lastModifiers.Add(atkSpeedModifier);
+        if (!attributes.IsAlive) return;
         
-        var tenacityModifier = AttributeModifier.Create(hero, AttributeModifier.Key.Tenacity, HeroTrait.MAX_TENACITY, AttributeModifier.Type.FixedValue, EFFECT_DURATION);
-        attributes.AddAttributeModifier(tenacityModifier);
-        lastModifiers.Add(tenacityModifier);
-        
-        mark.AddMark(Mark.Create(EFFECT_KEY, hero, 1, EFFECT_DURATION));
+        attributes.AddAttributeModifier(
+            AttributeModifierSet.Create(
+                hero,
+                EFFECT_KEY,
+                EFFECT_DURATION,
+                new [] {
+                    (AttributeModifier.Key.Armor, DEFENSE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifier.Key.Resistance, DEFENSE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifier.Key.AttackSpeed, ATK_SPEED_REDUCE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifier.Key.Tenacity, HeroTrait.MAX_TENACITY, AttributeModifier.Type.FixedValue),
+                }
+            ));
     }
 
     void Slam() {

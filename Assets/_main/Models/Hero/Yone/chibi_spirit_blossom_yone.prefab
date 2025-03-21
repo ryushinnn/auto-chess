@@ -946,7 +946,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultAttackFullTime: 1.367
   defaultAttackTime:
-  - 0.26
+  - 0.66
   skillFullTimes:
   - 4
   - 4.25

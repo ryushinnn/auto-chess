@@ -10,6 +10,7 @@ public class HeroAttributes : HeroAbility {
     HeroMovement movement;
     HeroAttack attack;
     HeroMark mark;
+    HeroSkill skill;
     
     [SerializeField] ProgressBar healthBar;
     [SerializeField] ProgressBar energyBar;
@@ -96,6 +97,7 @@ public class HeroAttributes : HeroAbility {
         movement = hero.GetAbility<HeroMovement>();
         attack = hero.GetAbility<HeroAttack>();
         mark = hero.GetAbility<HeroMark>();
+        skill = hero.GetAbility<HeroSkill>();
     }
 
     public float TakeDamage(Damage damage, bool regenEnergy = true) {
@@ -155,6 +157,10 @@ public class HeroAttributes : HeroAbility {
 
     public void Heal(float amount) {
         if (!isAlive) return;
+
+        if (0 < amount && amount < 1) {
+            amount = 1;
+        }
         
         if (effects.IsAntiHeal) {
             amount *= (1 - HeroTrait.ANTI_HEAL_EFFICIENCY);
@@ -167,6 +173,8 @@ public class HeroAttributes : HeroAbility {
     }
 
     public void RegenEnergy(float amount) {
+        if (!isAlive || skill.IsUsingSkill) return;
+        
         amount *= energyRegenEfficient;
         energy = Mathf.Min(energy + amount, HeroTrait.MAX_ENERGY);
         energyBar.UpdateAmount(energy / HeroTrait.MAX_ENERGY);
@@ -197,12 +205,19 @@ public class HeroAttributes : HeroAbility {
             foreach (var modifier in existSet.modifiers) {
                 RemoveAttributeModifier(modifier);
             }
+            if (existSet.mark != null) {
+                mark.RemoveMark(existSet.mark);
+            }
             modifierSets.Remove(existSet);
         }
         
         modifierSets.Add(modifierSet);
         foreach (var modifier in modifierSet.modifiers) {
             AddAttributeModifier(modifier);
+        }
+
+        if (modifierSet.mark != null) {
+            mark.AddMark(modifierSet.mark);
         }
     }
 
@@ -226,6 +241,9 @@ public class HeroAttributes : HeroAbility {
                 foreach (var m in modifierSets[i].modifiers) {
                     RemoveAttributeModifier(m);
                 }
+                if (modifierSets[i].mark != null) {
+                    mark.RemoveMark(modifierSets[i].mark);
+                }
                 modifierSets.RemoveAt(i);
                 return;
             }
@@ -245,6 +263,9 @@ public class HeroAttributes : HeroAbility {
                     if (group.modifiers.Count == 0) {
                         modifierGroups.Remove(group);
                     }
+                }
+                if (modifierSets[i].mark != null) {
+                    mark.RemoveMark(modifierSets[i].mark);
                 }
                 modifierSets.RemoveAt(i);
             }
@@ -277,7 +298,7 @@ public class HeroAttributes : HeroAbility {
         for (int i = damageOverTimes.Count - 1; i >= 0; i--) {
             if (damageOverTimes[i].SameAs(dot)) {
                 if (damageOverTimes[i].mark != null) {
-                    mark.RemoveMark(damageOverTimes[i].mark.id);
+                    mark.RemoveMark(damageOverTimes[i].mark);
                 }
                 damageOverTimes.RemoveAt(i);
             }
@@ -296,7 +317,7 @@ public class HeroAttributes : HeroAbility {
                 if (--dot.times <= 0) {
                     damageOverTimes.Remove(dot);
                     if (dot.mark != null) {
-                        mark.RemoveMark(dot.mark.id);
+                        mark.RemoveMark(dot.mark);
                     }
                 }
                 else {
@@ -313,7 +334,7 @@ public class HeroAttributes : HeroAbility {
         for (int i = healOverTimes.Count - 1; i >= 0; i--) {
             if (healOverTimes[i].SameAs(hot)) {
                 if (healOverTimes[i].mark != null) {
-                    mark.RemoveMark(healOverTimes[i].mark.id);
+                    mark.RemoveMark(healOverTimes[i].mark);
                 }
                 healOverTimes.RemoveAt(i);
             }
@@ -332,7 +353,7 @@ public class HeroAttributes : HeroAbility {
                 if (--hot.times <= 0) {
                     healOverTimes.Remove(hot);
                     if (hot.mark != null) {
-                        mark.RemoveMark(hot.mark.id);
+                        mark.RemoveMark(hot.mark);
                     }
                 }
                 else {

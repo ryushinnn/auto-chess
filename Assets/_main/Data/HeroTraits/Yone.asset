@@ -23,7 +23,7 @@ MonoBehaviour:
   magicalDamage: 0
   armor: 28
   resistance: 25
-  attackSpeed: 0.35
+  attackSpeed: 0.55
   movementSpeed: 1.8
   criticalChance: 0.1
   criticalDamage: 2
@@ -35,6 +35,6 @@ MonoBehaviour:
   energyRegenPerAttack: 10
   energyRegenPerHit: 8
   attackRange: 1
-  minDps: 58.8
-  avgDps: 64.68
+  minDps: 92.4
+  avgDps: 101.64
   damageType: 0

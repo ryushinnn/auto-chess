@@ -30,8 +30,7 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
                 hero,
                 attributes.MaxHp * HP_MUL_TO_HEAL + attributes.PhysicalDamage * DMG_MUL_TO_HEAL,
                 TOTAL_TIME / INTERVAL,
-                INTERVAL.ToSeconds(),
-                true
+                INTERVAL.ToSeconds()
             ));
     }
 
@@ -39,14 +38,13 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
         if (!attributes.IsAlive) return;
         
         attributes.AddAttributeModifier(
-            AttributeModifier.Create(
+            AttributeModifierSet.Create(
                 hero,
-                AttributeModifier.Key.AttackSpeed,
-                ATK_SPD_MUL,
-                AttributeModifier.Type.Percentage,
-                ATK_SPD_DURATION
+                ATK_SPD_KEY,
+                ATK_SPD_DURATION,
+                new[] {
+                    (AttributeModifier.Key.AttackSpeed, ATK_SPD_MUL, AttributeModifier.Type.Percentage)
+                }
             ));
-        
-        mark.AddMark(Mark.Create(ATK_SPD_KEY, hero, 1, ATK_SPD_DURATION));
     }
 }

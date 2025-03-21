@@ -40,25 +40,17 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
         
         if (hero.Target.GetAbility<HeroAttributes>().HpPercentage < HP_THRESHOLD) {
             hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(
-                AttributeModifier.Create(
+                AttributeModifierSet.Create(
                     hero,
-                    AttributeModifier.Key.Armor,
-                    ARMOR_REDUCE_MUL,
-                    AttributeModifier.Type.Percentage,
-                    ARMOR_REDUCE_DURATION
-                ));
-            
-            hero.Target.GetAbility<HeroMark>().AddMark(
-                Mark.Create(
                     EFFECT_KEY,
-                    hero,
-                    1,
-                    ARMOR_REDUCE_DURATION
+                    ARMOR_REDUCE_DURATION,
+                    new[] {
+                        (AttributeModifier.Key.Armor, ARMOR_REDUCE_MUL, AttributeModifier.Type.Percentage)
+                    }
                 ));
         }
         
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_0);
-        
     }
 
     void MediumSlash() {

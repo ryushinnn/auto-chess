@@ -95,14 +95,15 @@ public class AttributeModifier {
 
 [Serializable]
 public class AttributeModifierSet {
-    [TableColumnWidth(100, resizable:false)] public string effectKey;
+    [TableColumnWidth(150, resizable:false)] public string effectKey;
     [VerticalGroup("Effect")] public string id;
     [VerticalGroup("Effect")] public Hero owner;
     [VerticalGroup("Effect")] public AttributeModifier[] modifiers;
     [VerticalGroup("Effect")] public int stacks;
     [VerticalGroup("Effect")] public float duration;
+    [HideInInspector] public Mark mark;
 
-    public static AttributeModifierSet Create(Hero owner, string effectKey, float duration, (string key, float value, AttributeModifier.Type type)[] modifiers, int stacks = 1) {
+    public static AttributeModifierSet Create(Hero owner, string effectKey, float duration, (string key, float value, AttributeModifier.Type type)[] modifiers, int stacks = 1, bool createMark = true) {
         var set = new AttributeModifierSet {
             effectKey = effectKey,
             id = Guid.NewGuid().ToString(),
@@ -110,6 +111,15 @@ public class AttributeModifierSet {
             modifiers = new AttributeModifier[modifiers.Length],
             stacks = stacks,
             duration = duration,
+            mark = createMark
+                ? Mark.Create(
+                    effectKey,
+                    owner,
+                    stacks,
+                    duration,
+                    false
+                )
+                : null
         };
 
         for (int i = 0; i < modifiers.Length; i++) {

@@ -7,6 +7,7 @@ public class SkillProcessor_Tristana : SkillProcessor {
     const float ATK_SPD_MUL = 5f;
     const float CRIT_CHANCE_MUL = 0.2f;
     const float DURATION = 4f;
+    const string EFFECT_KEY = "tristana_furious";
     
     public SkillProcessor_Tristana(Hero hero) : base(hero) {
         events = new Action[]{Greeting};
@@ -17,21 +18,14 @@ public class SkillProcessor_Tristana : SkillProcessor {
         if (!attributes.IsAlive) return;
         
         attributes.AddAttributeModifier(
-            AttributeModifier.Create(
+            AttributeModifierSet.Create(
                 hero,
-                AttributeModifier.Key.AttackSpeed,
-                ATK_SPD_MUL,
-                AttributeModifier.Type.Percentage,
-                DURATION
-            ));
-        
-        attributes.AddAttributeModifier(
-            AttributeModifier.Create(
-                hero,
-                AttributeModifier.Key.CriticalChance,
-                CRIT_CHANCE_MUL,
-                AttributeModifier.Type.Percentage,
-                DURATION
+                EFFECT_KEY,
+                DURATION,
+                new[] {
+                    (AttributeModifier.Key.AttackSpeed, ATK_SPD_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifier.Key.CriticalChance, CRIT_CHANCE_MUL, AttributeModifier.Type.Percentage)
+                }
             ));
     }
 }

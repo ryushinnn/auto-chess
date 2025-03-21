@@ -4,7 +4,7 @@
 /// ban lan luot 2 vien dan
 /// moi vien gay st vat ly = 50%/80% st vat ly  + st phep = 50%/80% st vat ly
 /// vien dau tien se hoi mau = 30% st gay ra
-/// vien thu 2 se lam muc tieu giam 30% giap, khang phep trong 2.5s
+/// vien thu 2 se lam muc tieu giam 30% giap, khang phep trong 5s
 /// </summary>
 public class SkillProcessor_MissFortune : SkillProcessor {
     const float PHYSICAL_DMG_MUL_0 = 0.5f;
@@ -13,7 +13,8 @@ public class SkillProcessor_MissFortune : SkillProcessor {
     const float MAGICAL_DMG_MUL_1 = 0.8f;
     const float VAMP_MUL = 0.3f;
     const float REDUCE_DEFENSE_MUL = -0.3f;
-    const float REDUCE_DEFENSE_DURATION = 2.5f;
+    const float REDUCE_DEFENSE_DURATION = 5f;
+    const string EFFECT_KEY = "missfortune_shield_breaker";
 
     public SkillProcessor_MissFortune(Hero hero) : base(hero) {
         events = new Action[]{ShotLeft, ShotRight};
@@ -40,7 +41,15 @@ public class SkillProcessor_MissFortune : SkillProcessor {
                 Damage.Create(attributes.PhysicalDamage * MAGICAL_DMG_MUL_1, DamageType.Magical, attributes.MagicalPenetration),
             });
         
-        hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(AttributeModifier.Create(hero, AttributeModifier.Key.Armor, REDUCE_DEFENSE_MUL, AttributeModifier.Type.Percentage, REDUCE_DEFENSE_DURATION));
-        hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(AttributeModifier.Create(hero, AttributeModifier.Key.Resistance, REDUCE_DEFENSE_MUL, AttributeModifier.Type.Percentage, REDUCE_DEFENSE_DURATION));
+        hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(
+            AttributeModifierSet.Create(
+                hero,
+                EFFECT_KEY,
+                REDUCE_DEFENSE_DURATION,
+                new[] {
+                    (AttributeModifier.Key.Armor, REDUCE_DEFENSE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifier.Key.Resistance, REDUCE_DEFENSE_MUL, AttributeModifier.Type.Percentage),
+                }
+            ));
     }
 }

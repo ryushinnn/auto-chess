@@ -15,7 +15,7 @@ public class DamageOverTime : EffectOverTime {
     public Damage damage;
     public int stacks;
     
-    public static DamageOverTime Create(string key, Hero owner, Damage damage, int times, float interval, int stacks = 1, bool applyDmgInstantly = true, bool createMark = false) {
+    public static DamageOverTime Create(string key, Hero owner, Damage damage, int times, float interval, int stacks = 1, bool applyDmgInstantly = true, bool createMark = true) {
         return new DamageOverTime {
             id = Guid.NewGuid().ToString(),
             key = key,

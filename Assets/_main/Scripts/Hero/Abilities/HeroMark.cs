@@ -71,10 +71,9 @@ public class HeroMark : HeroAbility {
         markHolder.Initialize(mark.id, StaticDataManager.Instance.GetMarkIcon(mark.key).value, mark.duration, mark.stacks);
     }
 
-    public void RemoveMark(string id) {
+    public void RemoveMark(Mark mark) {
         for (int i= markGroups.Count-1; i>=0; i--) {
-            var mark = markGroups[i].marks.Find(m => m.id == id);
-            if (mark != null) {
+            if (markGroups[i].marks.Contains(mark)) {
                 markGroups[i].marks.Remove(mark);
                 markHolders.ForEach(x => {
                     if (x.Id == mark.id) {
