@@ -12,7 +12,8 @@ public class HeroTrait : ScriptableObject {
     
     [TitleGroup("Asset")]
     public Mecanim mecanim;
-    [PreviewField] public Sprite thumbnail;
+    [PreviewField(ObjectFieldAlignment.Left)] public Sprite thumbnail;
+    [PreviewField(ObjectFieldAlignment.Left)] public Sprite skillIcon;
     
     [TitleGroup("Basic")]
     public float maxHp;

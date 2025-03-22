@@ -140,3 +140,24 @@ public class AttributeModifierSet {
         return effectKey == other.effectKey && owner == other.owner;
     }
 }
+
+public static partial class Translator {
+    public static string ToString(this string key) {
+        return key switch {
+            AttributeModifier.Key.MaxHp => "Máu tối đa",
+            AttributeModifier.Key.PhysicalDamage => "Sát thương vật lý",
+            AttributeModifier.Key.MagicalDamage => "Sát thương phép",
+            AttributeModifier.Key.Armor => "Giáp",
+            AttributeModifier.Key.Resistance => "Kháng phép",
+            AttributeModifier.Key.AttackSpeed => "Tốc độ đánh",
+            AttributeModifier.Key.CriticalChance => "Tỉ lệ chí mạng",
+            AttributeModifier.Key.CriticalDamage => "Sát thương chí mạng",
+            AttributeModifier.Key.EnergyRegenEfficient => "Hiệu quả hồi năng lượng",
+            AttributeModifier.Key.PhysicalPenetration => "Xuyên giáp",
+            AttributeModifier.Key.MagicalPenetration => "Xuyên kháng phép",
+            AttributeModifier.Key.LifeSteal => "Hút máu",
+            AttributeModifier.Key.Tenacity => "Kháng hiệu ứng",
+            _ => key,
+        };
+    }
+}

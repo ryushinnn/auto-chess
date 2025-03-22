@@ -35,7 +35,7 @@ public class HeroInventory : HeroAbility {
             slot = new ItemSlot(item);
         }
         else {
-            var completeItem = StaticDataManager.Instance.GetCompleteItem(item, itemSlots[^1].item);
+            var completeItem = GameDB.Instance.AssetDB.GetCompleteItem(item, itemSlots[^1].item);
             itemSlots.RemoveAt(itemSlots.Count - 1);
             slot = new ItemSlot(completeItem);
         }

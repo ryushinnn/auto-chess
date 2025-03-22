@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 662d7eb26c45fa44fbe77e2b3f31883c, type: 3}
+  m_Name: AssetDB
+  m_EditorClassIdentifier: 
+  heroTraits:
+  - {fileID: 11400000, guid: 9cd4d9a7c9d8546439df095c97d96ecc, type: 2}
+  - {fileID: 11400000, guid: a4f5ef867fc69b34a8ed1cc1a859cbc5, type: 2}
+  - {fileID: 11400000, guid: 3497b5ea78b8c9a4b9efb1fddb0d2fc3, type: 2}
+  - {fileID: 11400000, guid: 59b7c4baa14a8e940b9f1338c146bd0a, type: 2}
+  - {fileID: 11400000, guid: b3d0a57c7c0ac194683bf78d377a0599, type: 2}
+  - {fileID: 11400000, guid: 1f826fe26e91e574c85178f9a754812c, type: 2}
+  - {fileID: 11400000, guid: 0b18c86d49bec0d4ea717da5fd41db22, type: 2}
+  - {fileID: 11400000, guid: 8bfce0f3b8d1c9d4daabbbff6fb99d24, type: 2}
+  - {fileID: 11400000, guid: e46d7741ba2233545aa710bf8e16d549, type: 2}
+  - {fileID: 11400000, guid: 0dcbb8d92cee2f34db55a0d7d1976387, type: 2}
+  - {fileID: 11400000, guid: 555518efc1b0379449a4d67fae203ace, type: 2}
+  - {fileID: 11400000, guid: 664afd855757fea4fa7a8bef7f5a8ff7, type: 2}
+  - {fileID: 11400000, guid: 12b73276a8808ce41a4940ae7569a14d, type: 2}
+  - {fileID: 11400000, guid: 0248b22d785c69c4ab91f6f258865538, type: 2}
+  - {fileID: 11400000, guid: aa1c11f0e6ca9d54983e3196ddc976b1, type: 2}
+  - {fileID: 11400000, guid: bea835d0c066f0b4a997166e8ee271c2, type: 2}
+  completeItems:
+  - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
+  markIcons:
+  - key: caitlyn_cake
+    value: {fileID: 21300000, guid: 8cd07347b8b1db745bf1a5b59f5d0144, type: 3}
+  - key: caitlyn_cake_atkspd
+    value: {fileID: 21300000, guid: 63369c84e44453843bf96b25f958ecdd, type: 3}
+  - key: teemo_hell_flame
+    value: {fileID: 21300000, guid: 292c77a806916f24f9218961a06ed371, type: 3}
+  - key: malphite_unstoppable
+    value: {fileID: 21300000, guid: 00591f64954dac443996bc42fcd70b1c, type: 3}
+  - key: yasuo_wind_claws
+    value: {fileID: 21300000, guid: 76384063e4261f14586d23518b4b3db9, type: 3}
+  - key: yone_weakening
+    value: {fileID: 21300000, guid: 4ca60a31c31ce664f8b9b55aa725ba53, type: 3}
+  - key: missfortune_shield_breaker
+    value: {fileID: 21300000, guid: 6e0b5b49d0b9d614685d600e37a89f27, type: 3}
+  - key: aatrox_curse
+    value: {fileID: 21300000, guid: a362ba6bf7adb9247bc84db0531db29a, type: 3}
+  - key: tristana_furious
+    value: {fileID: 21300000, guid: c32ad0ad524f8844fa25ee8f112be3bf, type: 3}

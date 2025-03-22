@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour {
     void Initialize() {
         foreach (var e in myTeam) {
             if (!e.active) continue;
-            var trait = StaticDataManager.Instance.GetHeroTrait(e.id);
+            var trait = GameDB.Instance.AssetDB.GetHeroTrait(e.id);
             if (trait == null) {
                 Debug.LogError($"no hero trait with id {e.id}");
                 return;
@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour {
         
         foreach (var e in enemyTeam) {
             if (!e.active) continue;
-            var trait = StaticDataManager.Instance.GetHeroTrait(e.id);
+            var trait = GameDB.Instance.AssetDB.GetHeroTrait(e.id);
             if (trait == null) {
                 Debug.LogError($"no hero trait with id {e.id}");
                 return;

@@ -18,6 +18,7 @@ MonoBehaviour:
   price: 1
   mecanim: {fileID: 8526778735773543469, guid: e139ecf69fcc2ff4eb0acfa2918157a1, type: 3}
   thumbnail: {fileID: 21300000, guid: 87e3ae507b20c3e41a5f1e25072b8667, type: 3}
+  skillIcon: {fileID: 21300000, guid: dea138e3d54e79748964180f933616ce, type: 3}
   maxHp: 17000
   physicalDamage: 175
   magicalDamage: 0
