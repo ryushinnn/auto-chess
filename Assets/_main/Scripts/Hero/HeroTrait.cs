@@ -1,4 +1,5 @@
 using System;
+using RExt.Extension;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ using UnityEngine;
 public class HeroTrait : ScriptableObject {
     [TitleGroup("Identity")]
     public string id;
+    public new string name;
+    public string subName;
     public Realm realm;
     public Role role;
     public int price;
@@ -62,5 +65,9 @@ public class HeroTrait : ScriptableObject {
         minDps = outputDamage * attackSpeed;
         avgDps = minDps * (1 + criticalChance * (criticalDamage - 1));
         damageType = physicalDamage > magicalDamage ? DamageType.Physical : DamageType.Magical;
+    }
+
+    public string DisplayName() {
+        return name + (subName.IsValid() ? "\n" + subName : "");
     }
 }

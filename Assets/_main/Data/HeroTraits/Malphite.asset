@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Malphite
   m_EditorClassIdentifier: 
   id: Malphite
+  name: "M\u1EA1nh Phi"
   realm: 3
   role: 2
   price: 5

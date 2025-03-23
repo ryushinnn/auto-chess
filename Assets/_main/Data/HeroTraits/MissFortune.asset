@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: MissFortune
   m_EditorClassIdentifier: 
   id: MissFortune
+  name: "M\u1EF9 Ph\u01B0\u01A1ng"
+  subName: 
   realm: 1
   role: 12
   price: 3

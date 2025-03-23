@@ -68,7 +68,7 @@ public class HeroMark : HeroAbility {
         }
         
         markHolder.gameObject.SetActive(true);
-        markHolder.Initialize(mark.id, GameDB.Instance.AssetDB.GetMarkIcon(mark.key).value, mark.duration, mark.stacks);
+        markHolder.Initialize(mark.id, AssetDB.Instance.GetMarkIcon(mark.key).value, mark.duration, mark.stacks);
     }
 
     public void RemoveMark(Mark mark) {

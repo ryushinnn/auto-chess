@@ -16,7 +16,7 @@ public enum Role {
 }
 
 public static partial class Translator {
-    public static string ToString(this Realm realm) {
+    public static string ToName(this Realm realm) {
         return realm switch {
             Realm.Divine => "Thánh thần",
             Realm.Mortal => "Phàm nhân",
@@ -26,7 +26,7 @@ public static partial class Translator {
         };
     }
 
-    public static string ToString(this Role role) {
+    public static string ToName(this Role role) {
         return role switch {
             Role.Duelist => "Kiếm sĩ",
             Role.Sorcerer => "Pháp sư",

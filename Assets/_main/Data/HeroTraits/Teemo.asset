@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Teemo
   m_EditorClassIdentifier: 
   id: Teemo
+  name: "T\u1EC1 M\u1ED7"
   realm: 2
   role: 2
   price: 3

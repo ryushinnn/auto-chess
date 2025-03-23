@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Caitlyn
   m_EditorClassIdentifier: 
   id: Caitlyn
+  name: "C\xE1t Linh"
   realm: 1
   role: 2
   price: 1

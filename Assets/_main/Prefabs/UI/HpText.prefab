@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 2052307354336993247}
   - component: {fileID: 8066917628736323692}
   m_Layer: 6
-  m_Name: text
+  m_Name: value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -164,7 +164,7 @@ MonoBehaviour:
   m_text: 999
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ac7ab33c1f9af404d80ff763ae854c94, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 1e9a3dff878a5ed4b9efbb393e064068, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: c5668b0f9235c084b983a167700650b9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

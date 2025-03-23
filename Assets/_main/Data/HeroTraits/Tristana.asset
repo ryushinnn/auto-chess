@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Tristana
   m_EditorClassIdentifier: 
   id: Tristana
+  name: "Tr\xED T\xE2m"
+  subName: 
   realm: 1
   role: 6
   price: 3

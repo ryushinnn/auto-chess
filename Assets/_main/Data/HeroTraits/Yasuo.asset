@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Yasuo
   m_EditorClassIdentifier: 
   id: Yasuo
+  name: "D\u1EA1 T\u1ED1"
   realm: 0
   role: 0
   price: 3

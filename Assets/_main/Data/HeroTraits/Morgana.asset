@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Morgana
   m_EditorClassIdentifier: 
   id: Morgana
+  name: "M\u1EA1c Ng\xE2n"
   realm: 2
   role: 2
   price: 1

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Ashe
   m_EditorClassIdentifier: 
   id: Ashe
+  name: "\xC1nh Xu\xE2n"
+  subName: 
   realm: 2
   role: 2
   price: 3

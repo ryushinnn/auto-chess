@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Jinx
   m_EditorClassIdentifier: 
   id: Jinx
+  name: Trinh
   realm: 1
   role: 6
   price: 1

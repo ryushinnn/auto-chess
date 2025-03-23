@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
+using RExt.Patterns.Singleton;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : Singleton<GameManager> {
+    [SerializeField] int level;
     [SerializeField] Hero heroPrefab;
     [SerializeField] TeamMember[] myTeam;
     [SerializeField] TeamMember[] enemyTeam;
+
+    public int Level => level;
+    
 
     List<Hero> heroes = new();
 
@@ -16,7 +21,7 @@ public class GameManager : MonoBehaviour {
     void Initialize() {
         foreach (var e in myTeam) {
             if (!e.active) continue;
-            var trait = GameDB.Instance.AssetDB.GetHeroTrait(e.id);
+            var trait = HeroTraitDB.Instance.Find(e.id);
             if (trait == null) {
                 Debug.LogError($"no hero trait with id {e.id}");
                 return;
@@ -34,7 +39,7 @@ public class GameManager : MonoBehaviour {
         
         foreach (var e in enemyTeam) {
             if (!e.active) continue;
-            var trait = GameDB.Instance.AssetDB.GetHeroTrait(e.id);
+            var trait = HeroTraitDB.Instance.Find(e.id);
             if (trait == null) {
                 Debug.LogError($"no hero trait with id {e.id}");
                 return;

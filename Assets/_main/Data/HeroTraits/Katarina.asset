@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Katarina
   m_EditorClassIdentifier: 
   id: Katarina
+  name: "Ki\u1EC1u Na"
   realm: 2
   role: 9
   price: 1

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Yone
   m_EditorClassIdentifier: 
   id: Yone
+  name: "Du Thi\xEAn"
+  subName: 
   realm: 3
   role: 0
   price: 5

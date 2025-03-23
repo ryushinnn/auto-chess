@@ -12,25 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662d7eb26c45fa44fbe77e2b3f31883c, type: 3}
   m_Name: AssetDB
   m_EditorClassIdentifier: 
-  heroTraits:
-  - {fileID: 11400000, guid: 9cd4d9a7c9d8546439df095c97d96ecc, type: 2}
-  - {fileID: 11400000, guid: a4f5ef867fc69b34a8ed1cc1a859cbc5, type: 2}
-  - {fileID: 11400000, guid: 3497b5ea78b8c9a4b9efb1fddb0d2fc3, type: 2}
-  - {fileID: 11400000, guid: 59b7c4baa14a8e940b9f1338c146bd0a, type: 2}
-  - {fileID: 11400000, guid: b3d0a57c7c0ac194683bf78d377a0599, type: 2}
-  - {fileID: 11400000, guid: 1f826fe26e91e574c85178f9a754812c, type: 2}
-  - {fileID: 11400000, guid: 0b18c86d49bec0d4ea717da5fd41db22, type: 2}
-  - {fileID: 11400000, guid: 8bfce0f3b8d1c9d4daabbbff6fb99d24, type: 2}
-  - {fileID: 11400000, guid: e46d7741ba2233545aa710bf8e16d549, type: 2}
-  - {fileID: 11400000, guid: 0dcbb8d92cee2f34db55a0d7d1976387, type: 2}
-  - {fileID: 11400000, guid: 555518efc1b0379449a4d67fae203ace, type: 2}
-  - {fileID: 11400000, guid: 664afd855757fea4fa7a8bef7f5a8ff7, type: 2}
-  - {fileID: 11400000, guid: 12b73276a8808ce41a4940ae7569a14d, type: 2}
-  - {fileID: 11400000, guid: 0248b22d785c69c4ab91f6f258865538, type: 2}
-  - {fileID: 11400000, guid: aa1c11f0e6ca9d54983e3196ddc976b1, type: 2}
-  - {fileID: 11400000, guid: bea835d0c066f0b4a997166e8ee271c2, type: 2}
-  completeItems:
-  - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   markIcons:
   - key: caitlyn_cake
     value: {fileID: 21300000, guid: 8cd07347b8b1db745bf1a5b59f5d0144, type: 3}
@@ -50,3 +31,21 @@ MonoBehaviour:
     value: {fileID: 21300000, guid: a362ba6bf7adb9247bc84db0531db29a, type: 3}
   - key: tristana_furious
     value: {fileID: 21300000, guid: c32ad0ad524f8844fa25ee8f112be3bf, type: 3}
+  roleIcons:
+  - role: 1
+    value: {fileID: 21300000, guid: ee0d85a512d0e1c43ad73d74ee05c09b, type: 3}
+  - role: 2
+    value: {fileID: 21300000, guid: 871f825cbb1305d4fa70d057228c6f01, type: 3}
+  - role: 4
+    value: {fileID: 21300000, guid: 87f3727231980894dafa1cddf172634d, type: 3}
+  - role: 8
+    value: {fileID: 21300000, guid: 6064ff8ff35e4ac4e99574d23137bf37, type: 3}
+  realmIcons:
+  - realm: 0
+    value: {fileID: 21300000, guid: e2a5eb06798f03f44a73afe06f37a90e, type: 3}
+  - realm: 1
+    value: {fileID: 21300000, guid: 1714af17bd50e8d42ba3135a9cf328d4, type: 3}
+  - realm: 2
+    value: {fileID: 21300000, guid: 9d0fbe9841820434194499706a7490cc, type: 3}
+  - realm: 3
+    value: {fileID: 21300000, guid: cb2575101cf7512409d69d269b093acf, type: 3}

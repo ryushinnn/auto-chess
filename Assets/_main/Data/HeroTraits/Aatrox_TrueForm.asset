@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Aatrox_TrueForm
   m_EditorClassIdentifier: 
   id: Aatrox_Light
+  name: "\u1EA4t Tr\xE1c"
+  subName: "(Nh\u1EADt Nguy\u1EC7t L\u01B0\u1EE1ng C\u1EF1c)"
   realm: 3
   role: 0
   price: 5
