@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using RExt.Core;
-using RExt.Utils.ObjectPool;
+using RExt.Patterns.Singleton;
+using RExt.Patterns.ObjectPool;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

@@ -1,5 +1,5 @@
 using System;
-using RExt.Core;
+using RExt.Patterns.Singleton;
 using UnityEngine;
 
 public class Deck : Singleton<Deck> {

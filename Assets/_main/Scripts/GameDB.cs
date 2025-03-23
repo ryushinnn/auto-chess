@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using RExt.Core;
+using RExt.Patterns.Singleton;
 using RExt.Extension;
 using Sirenix.OdinInspector;
 using UnityEngine;

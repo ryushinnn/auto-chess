@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Pathfinding;
-using RExt.Core;
+using RExt.Patterns.Singleton;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
