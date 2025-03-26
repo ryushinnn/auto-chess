@@ -378,7 +378,7 @@ public class HeroAttributes : HeroAbility {
         });
         
         switch (key) {
-            case AttributeModifier.Key.MaxHp:
+            case AttributeModifierKey.MaxHp:
                 var lastMaxHp = maxHp;
                 maxHp = hero.Trait.maxHp;
                 modifiers?.ForEach(x => {
@@ -393,35 +393,35 @@ public class HeroAttributes : HeroAbility {
                 healthBar.UpdateAmount(hp / maxHp);
                 break;
             
-            case AttributeModifier.Key.PhysicalDamage:
+            case AttributeModifierKey.PhysicalDamage:
                 physicalDamage = hero.Trait.physicalDamage;
                 modifiers?.ForEach(x => {
                     physicalDamage = Mathf.Max(physicalDamage + (x.type == AttributeModifier.Type.FixedValue ? x.value : physicalDamage * x.value), HeroTrait.MIN_DAMAGE);
                 });
                 break;
             
-            case AttributeModifier.Key.MagicalDamage:
+            case AttributeModifierKey.MagicalDamage:
                 magicalDamage = hero.Trait.magicalDamage;
                 modifiers?.ForEach(x => {
                     magicalDamage = Mathf.Max(magicalDamage + (x.type == AttributeModifier.Type.FixedValue ? x.value : magicalDamage * x.value), HeroTrait.MIN_DAMAGE);
                 });
                 break;
             
-            case AttributeModifier.Key.Armor:
+            case AttributeModifierKey.Armor:
                 armor = hero.Trait.armor;
                 modifiers?.ForEach(x => {
                     armor = Mathf.Max(armor + (x.type == AttributeModifier.Type.FixedValue ? x.value : armor * x.value), HeroTrait.MIN_ARMOR_AND_RESISTANCE);
                 });
                 break;
             
-            case AttributeModifier.Key.Resistance:
+            case AttributeModifierKey.Resistance:
                 resistance = hero.Trait.resistance;
                 modifiers?.ForEach(x => {
                     resistance = Mathf.Max(resistance + (x.type == AttributeModifier.Type.FixedValue ? x.value : resistance * x.value), HeroTrait.MIN_ARMOR_AND_RESISTANCE);
                 });
                 break;
             
-            case AttributeModifier.Key.AttackSpeed:
+            case AttributeModifierKey.AttackSpeed:
                 attackSpeed = hero.Trait.attackSpeed;
                 modifiers?.ForEach(x => {
                     attackSpeed = Mathf.Max(attackSpeed + (x.type == AttributeModifier.Type.FixedValue ? x.value : attackSpeed * x.value), HeroTrait.MIN_ATTACK_SPEED);
@@ -430,7 +430,7 @@ public class HeroAttributes : HeroAbility {
                 hero.Mecanim.ModifyAttackTime(attackSpeed);
                 break;
             
-            case AttributeModifier.Key.CriticalChance:
+            case AttributeModifierKey.CriticalChance:
                 criticalChance = hero.Trait.criticalChance;
                 modifiers?.ForEach(x => {
                     criticalChance += (x.type == AttributeModifier.Type.FixedValue ? x.value : criticalChance * x.value);
@@ -438,42 +438,42 @@ public class HeroAttributes : HeroAbility {
                 criticalChance = Mathf.Min(criticalChance, HeroTrait.MAX_CRITICAL_CHANCE);
                 break;
             
-            case AttributeModifier.Key.CriticalDamage:
+            case AttributeModifierKey.CriticalDamage:
                 criticalDamage = hero.Trait.criticalDamage;
                 modifiers?.ForEach(x => {
                     criticalDamage += (x.type == AttributeModifier.Type.FixedValue ? x.value : criticalDamage * x.value);
                 });
                 break;
             
-            case AttributeModifier.Key.EnergyRegenEfficient:
+            case AttributeModifierKey.EnergyRegenEfficient:
                 energyRegenEfficient = hero.Trait.energyRegenEfficient;
                 modifiers?.ForEach(x => {
                     energyRegenEfficient += (x.type == AttributeModifier.Type.FixedValue ? x.value : energyRegenEfficient * x.value);
                 });
                 break;
             
-            case AttributeModifier.Key.PhysicalPenetration:
+            case AttributeModifierKey.PhysicalPenetration:
                 physicalPenetration = hero.Trait.physicalPenetration;
                 modifiers?.ForEach(x => {
                     physicalPenetration = Mathf.Min(physicalPenetration + (x.type == AttributeModifier.Type.FixedValue ? x.value : physicalPenetration * x.value), HeroTrait.MAX_PENETRATION);
                 });
                 break;
             
-            case AttributeModifier.Key.MagicalPenetration:
+            case AttributeModifierKey.MagicalPenetration:
                 magicalPenetration = hero.Trait.magicalPenetration;
                 modifiers?.ForEach(x => {
                     magicalPenetration = Mathf.Min(magicalPenetration + (x.type == AttributeModifier.Type.FixedValue ? x.value : magicalPenetration * x.value), HeroTrait.MAX_PENETRATION);
                 });
                 break;
             
-            case AttributeModifier.Key.LifeSteal:
+            case AttributeModifierKey.LifeSteal:
                 lifeSteal = hero.Trait.lifeSteal;
                 modifiers?.ForEach(x => {
                     lifeSteal = Mathf.Min(lifeSteal + (x.type == AttributeModifier.Type.FixedValue ? x.value : lifeSteal * x.value), HeroTrait.MAX_LIFE_STEAL);
                 });
                 break;
             
-            case AttributeModifier.Key.Tenacity:
+            case AttributeModifierKey.Tenacity:
                 tenacity = hero.Trait.tenacity;
                 modifiers?.ForEach(x => {
                     tenacity = Mathf.Min(tenacity + (x.type == AttributeModifier.Type.FixedValue ? x.value : tenacity * x.value), HeroTrait.MAX_TENACITY);
@@ -499,8 +499,8 @@ public class HeroAttributes : HeroAbility {
             "test_effect",
             10,
             new [] {
-                (AttributeModifier.Key.Armor, 0.3f, AttributeModifier.Type.Percentage),
-                (AttributeModifier.Key.Resistance, 0.3f, AttributeModifier.Type.Percentage),
+                (AttributeModifierKey.Armor, 0.3f, AttributeModifier.Type.Percentage),
+                (AttributeModifierKey.Resistance, 0.3f, AttributeModifier.Type.Percentage),
             }));
     }
 
@@ -508,7 +508,7 @@ public class HeroAttributes : HeroAbility {
     void dev_addAtt() {
         AddAttributeModifier(AttributeModifier.Create(
             hero,
-            AttributeModifier.Key.Armor,
+            AttributeModifierKey.Armor,
             10,
             AttributeModifier.Type.FixedValue,
             10

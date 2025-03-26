@@ -47,8 +47,8 @@ public class SkillProcessor_MissFortune : SkillProcessor {
                 EFFECT_KEY,
                 REDUCE_DEFENSE_DURATION,
                 new[] {
-                    (AttributeModifier.Key.Armor, REDUCE_DEFENSE_MUL, AttributeModifier.Type.Percentage),
-                    (AttributeModifier.Key.Resistance, REDUCE_DEFENSE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.Armor, REDUCE_DEFENSE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.Resistance, REDUCE_DEFENSE_MUL, AttributeModifier.Type.Percentage),
                 }
             ));
     }

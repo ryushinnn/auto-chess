@@ -27,10 +27,10 @@ public class SkillProcessor_Malphite : SkillProcessor {
                 EFFECT_KEY,
                 EFFECT_DURATION,
                 new [] {
-                    (AttributeModifier.Key.Armor, DEFENSE_MUL, AttributeModifier.Type.Percentage),
-                    (AttributeModifier.Key.Resistance, DEFENSE_MUL, AttributeModifier.Type.Percentage),
-                    (AttributeModifier.Key.AttackSpeed, ATK_SPEED_REDUCE_MUL, AttributeModifier.Type.Percentage),
-                    (AttributeModifier.Key.Tenacity, HeroTrait.MAX_TENACITY, AttributeModifier.Type.FixedValue),
+                    (AttributeModifierKey.Armor, DEFENSE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.Resistance, DEFENSE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.AttackSpeed, ATK_SPEED_REDUCE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.Tenacity, HeroTrait.MAX_TENACITY, AttributeModifier.Type.FixedValue),
                 }
             ));
     }

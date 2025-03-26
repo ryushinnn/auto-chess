@@ -4,6 +4,22 @@ using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public static class AttributeModifierKey {
+    public const string MaxHp = "maxhp";
+    public const string PhysicalDamage = "pdmg";
+    public const string MagicalDamage = "mdmg";
+    public const string Armor = "armor";
+    public const string Resistance = "resistance";
+    public const string AttackSpeed = "atkspd";
+    public const string CriticalChance = "crit";
+    public const string CriticalDamage = "cdmg";
+    public const string EnergyRegenEfficient = "energy";
+    public const string PhysicalPenetration = "ppen";
+    public const string MagicalPenetration = "mpen";
+    public const string LifeSteal = "lifesteal";
+    public const string Tenacity = "tenacity";
+}
+
 [Serializable]
 public class AttributeModifier {
     public enum Type {
@@ -11,25 +27,9 @@ public class AttributeModifier {
         Percentage
     }
     
-    public class Key {
-        public const string MaxHp = "maxhp";
-        public const string PhysicalDamage = "pdmg";
-        public const string MagicalDamage = "mdmg";
-        public const string Armor = "armor";
-        public const string Resistance = "resistance";
-        public const string AttackSpeed = "atkspd";
-        public const string CriticalChance = "crit";
-        public const string CriticalDamage = "cdmg";
-        public const string EnergyRegenEfficient = "energy";
-        public const string PhysicalPenetration = "ppen";
-        public const string MagicalPenetration = "mpen";
-        public const string LifeSteal = "lifesteal";
-        public const string Tenacity = "tenacity";
-    }
-    
     const string ID_PLACE_HOLDER = "<will be auto generated>";
     
-    [StringDropdown(typeof(Key))] 
+    [StringDropdown(typeof(AttributeModifierKey))] 
     public string key;
     [HideIf("@this.id == AttributeModifier.ID_PLACE_HOLDER")] 
     public string id = ID_PLACE_HOLDER;
@@ -144,19 +144,19 @@ public class AttributeModifierSet {
 public static partial class Translator {
     public static string ToString(this string key) {
         return key switch {
-            AttributeModifier.Key.MaxHp => "Máu tối đa",
-            AttributeModifier.Key.PhysicalDamage => "Sát thương vật lý",
-            AttributeModifier.Key.MagicalDamage => "Sát thương phép",
-            AttributeModifier.Key.Armor => "Giáp",
-            AttributeModifier.Key.Resistance => "Kháng phép",
-            AttributeModifier.Key.AttackSpeed => "Tốc độ đánh",
-            AttributeModifier.Key.CriticalChance => "Tỉ lệ chí mạng",
-            AttributeModifier.Key.CriticalDamage => "Sát thương chí mạng",
-            AttributeModifier.Key.EnergyRegenEfficient => "Hiệu quả hồi năng lượng",
-            AttributeModifier.Key.PhysicalPenetration => "Xuyên giáp",
-            AttributeModifier.Key.MagicalPenetration => "Xuyên kháng phép",
-            AttributeModifier.Key.LifeSteal => "Hút máu",
-            AttributeModifier.Key.Tenacity => "Kháng hiệu ứng",
+            AttributeModifierKey.MaxHp =>                "Nguyên khí",
+            AttributeModifierKey.PhysicalDamage =>       "Căn cốt",
+            AttributeModifierKey.MagicalDamage =>        "Nội lực",
+            AttributeModifierKey.Armor =>                "Hộ thể",
+            AttributeModifierKey.Resistance =>           "Trấn hồn",
+            AttributeModifierKey.AttackSpeed =>          "Thân pháp",
+            AttributeModifierKey.CriticalChance =>       "Bạo kích",
+            AttributeModifierKey.CriticalDamage =>       "Bộc phá",
+            AttributeModifierKey.EnergyRegenEfficient => "Dưỡng linh",
+            AttributeModifierKey.PhysicalPenetration =>  "Phá thể",
+            AttributeModifierKey.MagicalPenetration =>   "Trảm hồn",
+            AttributeModifierKey.LifeSteal =>            "Hấp huyết",
+            AttributeModifierKey.Tenacity =>             "Tịnh tâm",
             _ => key,
         };
     }

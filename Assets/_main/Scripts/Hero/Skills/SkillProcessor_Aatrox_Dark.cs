@@ -45,7 +45,7 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
                     EFFECT_KEY,
                     ARMOR_REDUCE_DURATION,
                     new[] {
-                        (AttributeModifier.Key.Armor, ARMOR_REDUCE_MUL, AttributeModifier.Type.Percentage)
+                        (AttributeModifierKey.Armor, ARMOR_REDUCE_MUL, AttributeModifier.Type.Percentage)
                     }
                 ));
         }

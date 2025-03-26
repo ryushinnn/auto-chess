@@ -43,7 +43,7 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
                 ATK_SPD_KEY,
                 ATK_SPD_DURATION,
                 new[] {
-                    (AttributeModifier.Key.AttackSpeed, ATK_SPD_MUL, AttributeModifier.Type.Percentage)
+                    (AttributeModifierKey.AttackSpeed, ATK_SPD_MUL, AttributeModifier.Type.Percentage)
                 }
             ));
     }

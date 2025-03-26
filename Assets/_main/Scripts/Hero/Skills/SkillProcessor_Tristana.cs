@@ -23,8 +23,8 @@ public class SkillProcessor_Tristana : SkillProcessor {
                 EFFECT_KEY,
                 DURATION,
                 new[] {
-                    (AttributeModifier.Key.AttackSpeed, ATK_SPD_MUL, AttributeModifier.Type.Percentage),
-                    (AttributeModifier.Key.CriticalChance, CRIT_CHANCE_MUL, AttributeModifier.Type.Percentage)
+                    (AttributeModifierKey.AttackSpeed, ATK_SPD_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.CriticalChance, CRIT_CHANCE_MUL, AttributeModifier.Type.Percentage)
                 }
             ));
     }

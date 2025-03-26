@@ -48,8 +48,8 @@ public class AttackProcessor_Yone : AttackProcessor {
                             EFFECT_KEY,
                             DIVINE_WEAKENING_DURATION,
                             new[] {
-                                (AttributeModifier.Key.PhysicalDamage, DIVINE_WEAKENING_PER_STACK, AttributeModifier.Type.Percentage),
-                                (AttributeModifier.Key.MagicalDamage, DIVINE_WEAKENING_PER_STACK, AttributeModifier.Type.Percentage),
+                                (AttributeModifierKey.PhysicalDamage, DIVINE_WEAKENING_PER_STACK, AttributeModifier.Type.Percentage),
+                                (AttributeModifierKey.MagicalDamage, DIVINE_WEAKENING_PER_STACK, AttributeModifier.Type.Percentage),
                             },
                             nextStacks
                         ));
