@@ -15,8 +15,9 @@ MonoBehaviour:
   id: Irelia
   name: "\xDD Li\xEAn"
   subName: 
-  realm: 0
-  role: 3
+  summoned: 0
+  realm: 2
+  role: 1
   price: 1
   mecanim: {fileID: 5323738974827984503, guid: dd2b981927a36ed418fd2c60b4164056, type: 3}
   thumbnail: {fileID: 21300000, guid: 7bf87b5a41d589e468b9b83d3fcd9c35, type: 3}

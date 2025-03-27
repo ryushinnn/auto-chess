@@ -15,9 +15,10 @@ MonoBehaviour:
   id: MissFortune
   name: "M\u1EF9 Ph\u01B0\u01A1ng"
   subName: 
+  summoned: 0
   realm: 1
-  role: 12
-  price: 3
+  role: 4
+  price: 1
   mecanim: {fileID: 6243125059235353389, guid: 9031a1ae6b88eb146aabda9d9a26083f, type: 3}
   thumbnail: {fileID: 21300000, guid: 92e727dc78c2c7b46a4de01dc62acb8c, type: 3}
   skillIcon: {fileID: 21300000, guid: 89371ec5556c8af4095f4dbe0f720c9b, type: 3}

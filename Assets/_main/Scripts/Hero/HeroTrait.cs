@@ -9,19 +9,20 @@ public class HeroTrait : ScriptableObject {
     public string id;
     public new string name;
     public string subName;
-    public Realm realm;
-    public Role role;
-    public int price;
+    public bool summoned;
+    [HideIf("summoned")] public Realm realm;
+    [HideIf("summoned")] public Role role;
+    [HideIf("summoned")] public int price;
     
     [TitleGroup("Asset")]
     public Mecanim mecanim;
-    [PreviewField(ObjectFieldAlignment.Left)] public Sprite thumbnail;
+    [PreviewField(ObjectFieldAlignment.Left), HideIf("summoned")] public Sprite thumbnail;
     [PreviewField(ObjectFieldAlignment.Left)] public Sprite skillIcon;
     
     [TitleGroup("Basic")]
     public float maxHp;
-    [EnableIf("@this.magicalDamage == 0")] public float physicalDamage;
-    [EnableIf("@this.physicalDamage == 0")] public float magicalDamage;
+    public float physicalDamage;
+    public float magicalDamage;
     public float armor;
     public float resistance;
     public float attackSpeed;
@@ -65,6 +66,12 @@ public class HeroTrait : ScriptableObject {
         minDps = outputDamage * attackSpeed;
         avgDps = minDps * (1 + criticalChance * (criticalDamage - 1));
         damageType = physicalDamage > magicalDamage ? DamageType.Physical : DamageType.Magical;
+
+        if (summoned) {
+            realm = Realm.None;
+            role = Role.None;
+            price = -1;
+        }
     }
 
     public string DisplayName() {

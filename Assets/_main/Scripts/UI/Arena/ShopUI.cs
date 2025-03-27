@@ -21,7 +21,7 @@ public class ShopUI : BaseUI {
         foreach (var hero in heroes) {
             var levelConfig = GameConfigs.LEVEL_CONFIGS[GameManager.Instance.Level - 1];
             var price = GetRandomPrices(levelConfig.rates);
-            var matchedHeroes = HeroTraitDB.Instance.FindAll(e => e.price == price);
+            var matchedHeroes = HeroTraitDB.Instance.FindAll(e => e.price == price && !e.summoned);
             var randomHero = matchedHeroes[Random.Range(0, matchedHeroes.Count)];
             hero.Initialize(randomHero);
         }

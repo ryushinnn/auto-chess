@@ -15,8 +15,9 @@ MonoBehaviour:
   id: Zed
   name: "Quy\u1EBFt"
   subName: 
-  realm: 3
-  role: 3
+  summoned: 0
+  realm: 4
+  role: 8
   price: 5
   mecanim: {fileID: 5526161963982385637, guid: 9ce5cf6b7c1d3b848be1116c77fbe31e, type: 3}
   thumbnail: {fileID: 21300000, guid: 88a744f857c62db4698ee81645792935, type: 3}
