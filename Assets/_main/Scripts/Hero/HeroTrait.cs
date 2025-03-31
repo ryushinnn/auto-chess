@@ -59,14 +59,16 @@ public class HeroTrait : ScriptableObject {
     [TitleGroup("Calculated Result")]
     [SerializeField, ReadOnly] float minDps;
     [SerializeField, ReadOnly] float avgDps;
-    [SerializeField, ReadOnly] DamageType damageType;
+    [SerializeField, ReadOnly, LabelText("Physical Reduction (%)")] float physicalReduction;
+    [SerializeField, ReadOnly, LabelText("Magical Reduction (%)")] float magicalReduction;
 
     void OnValidate() {
         var outputDamage = physicalDamage + magicalDamage;
         minDps = outputDamage * attackSpeed;
         avgDps = minDps * (1 + criticalChance * (criticalDamage - 1));
-        damageType = physicalDamage > magicalDamage ? DamageType.Physical : DamageType.Magical;
-
+        physicalReduction = 100 * (1 - DAMAGE_REDUCTION_CONSTANT / (DAMAGE_REDUCTION_CONSTANT + armor));
+        magicalReduction = 100 * (1 - DAMAGE_REDUCTION_CONSTANT / (DAMAGE_REDUCTION_CONSTANT + resistance));
+        
         if (summoned) {
             realm = Realm.None;
             role = Role.None;
