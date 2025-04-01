@@ -5,13 +5,17 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager> {
+    public Shop Shop => shop;
+    public LineUp LineUp => lineUp;
+    
     [SerializeField] int level;
     [SerializeField] Hero heroPrefab;
     [SerializeField] TeamMember[] myTeam;
     [SerializeField] TeamMember[] enemyTeam;
+    [SerializeField] Shop shop;
+    [SerializeField] LineUp lineUp;
 
     public int Level => level;
-    
 
     List<Hero> heroes = new();
 
@@ -90,7 +94,3 @@ public class TeamMember {
     public Item[] items;
 }
 
-public enum TeamSide {
-    Ally,
-    Enemy
-}

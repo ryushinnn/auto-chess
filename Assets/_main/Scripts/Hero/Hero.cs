@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Pathfinding;
+using RExt.Extension;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum HeroState {
     Preparation,
@@ -12,14 +14,23 @@ public enum HeroState {
     InBattle
 }
 
+public enum HeroRank {
+    B,
+    A,
+    S
+}
+
 public class Hero : MonoBehaviour, IMapNodeObject {
     [SerializeField] public bool debug;
     
     [SerializeField] Transform model;
     [SerializeField] Transform abilitiesContainer;
+    [SerializeField] Image rankIcon;
 
+    public string ID => id;
     public HeroTrait Trait => trait;
     public TeamSide Side => side;
+    public HeroRank Rank => rank;
     public Seeker Seeker => seeker;
     public Transform Model => model;
     public Mecanim Mecanim => mecanim;
@@ -31,8 +42,10 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     HeroBT bt;
     HeroPicker picker;
 
+    [SerializeField, ReadOnly] string id;
     [SerializeField, ReadOnly] HeroTrait trait;
     [SerializeField, ReadOnly] TeamSide side;
+    [SerializeField, ReadOnly] HeroRank rank;
     [SerializeField, ReadOnly] HeroState state;
     Mecanim mecanim;
     List<HeroAbility> abilities = new();
@@ -59,14 +72,25 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     }
 
     public void Initialize(HeroTrait trait, TeamSide side) {
+        id = Guid.NewGuid().ToString();
         this.trait = trait;
         this.side = side;
+        rank = HeroRank.B;
+        name = $"({rank}){trait.id} ID:{id}";
+        rankIcon.sprite = AssetDB.Instance.GetRankIcon(rank);
         FindAbilities();
         FindComponents();
         SetUpModel();
         abilities.ForEach(x=>x.Initialize(this));
         bt.Initialize();
         Switch(HeroState.Preparation);
+    }
+
+    public void Upgrade() {
+        rank = rank.Next();
+        name = $"({rank}){trait.id} ID:{id}";
+        rankIcon.sprite = AssetDB.Instance.GetRankIcon(rank);
+        Debug.Log($"{trait.id} upgraded to {rank}");
     }
 
     public void Switch(HeroState state) {

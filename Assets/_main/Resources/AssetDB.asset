@@ -55,3 +55,10 @@ MonoBehaviour:
     value: {fileID: 21300000, guid: cb2575101cf7512409d69d269b093acf, type: 3}
   - realm: 4
     value: {fileID: 21300000, guid: 96d5150e6d68b504da048d652cb3b849, type: 3}
+  rankIcons:
+  - rank: 2
+    value: {fileID: 21300000, guid: 54a3d889ff41a6e4aa23f2d162b1497d, type: 3}
+  - rank: 1
+    value: {fileID: 21300000, guid: a9e1fa7020ffbec41b653940e0cbeb7a, type: 3}
+  - rank: 0
+    value: {fileID: 21300000, guid: 54d826ed12da25543a9893c364bd6b2b, type: 3}
