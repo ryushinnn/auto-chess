@@ -6,18 +6,29 @@ public class LineUp : MonoBehaviour {
     [SerializeField] Hero heroPrefab;
     [SerializeField, ReadOnly] List<Hero> heroes;
 
-    public void Add(HeroTrait trait) {
-        if (MergeHeroes(trait, HeroRank.B, 2)) {
-            if (MergeHeroes(trait, HeroRank.A, 3)) {
-                return;
+    public bool Add(HeroTrait trait) {
+        // merge into rank A hero
+        if (MergeHeroes(trait, HeroRank.B, GameConfigs.NUMBER_OF_HEROES_TO_LEVEL_UP - 1)) {
+            // merge into rank S hero
+            if (MergeHeroes(trait, HeroRank.A, GameConfigs.NUMBER_OF_HEROES_TO_LEVEL_UP)) {
+                return true;
             }
 
-            return;
+            return true;
         }
-        
-        var hero = Instantiate(heroPrefab);
-        hero.Initialize(trait, TeamSide.Ally);
-        heroes.Add(hero);
+
+        var availableDeckNode = Deck.Instance.GetLowestAvailableNode();
+        if (availableDeckNode != null) {
+            // create new hero
+            var hero = Instantiate(heroPrefab);
+            hero.Initialize(trait, TeamSide.Ally);
+            hero.SetNode(availableDeckNode);
+            hero.ResetPosition(true);
+            heroes.Add(hero);
+            return true;
+        }
+
+        return false;
     }
 
     public void Remove(string id) {
@@ -27,6 +38,7 @@ public class LineUp : MonoBehaviour {
     }
 
     public void Remove(Hero hero) {
+        hero.DeleteNode();
         heroes.Remove(hero);
         Destroy(hero.gameObject);
     }

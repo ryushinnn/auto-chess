@@ -125,6 +125,11 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         this.node.Add(this);
     }
 
+    public void DeleteNode() {
+        node.Remove(this);
+        node = null;
+    }
+
     public void SwapNode(Hero hero) {
         var currentNode = node;
         var newNode = (Node)hero.DNode ?? hero.MNode;
@@ -200,8 +205,7 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         if (state == HeroState.InBattle
             && !GetAbility<HeroAttributes>().IsAlive && node != null) {
             
-            node.Remove(this);
-            node = null;
+            DeleteNode();
         }
     }
 

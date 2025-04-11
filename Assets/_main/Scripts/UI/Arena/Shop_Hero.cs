@@ -65,9 +65,11 @@ public class Shop_Hero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     void Purchase() {
         if (sold) return;
-        
-        GameManager.Instance.Shop.Purchase(trait);
-        MarkAsSold();
+
+        GameManager.Instance.Shop.Purchase(trait, out var success);
+        if (success) {
+            MarkAsSold();
+        }
     }
     
     void MarkAsSold() {

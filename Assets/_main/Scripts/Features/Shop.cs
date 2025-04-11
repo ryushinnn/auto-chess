@@ -23,8 +23,8 @@ public class Shop : MonoBehaviour {
         onRefresh?.Invoke(heroes);
     }
 
-    public void Purchase(HeroTrait hero) {
-        GameManager.Instance.LineUp.Add(hero);
+    public void Purchase(HeroTrait hero, out bool success) {
+        success = GameManager.Instance.LineUp.Add(hero);
     }
 
     public void SwitchLock(bool? value = null) {

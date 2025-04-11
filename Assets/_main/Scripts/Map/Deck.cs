@@ -42,6 +42,16 @@ public class Deck : Singleton<Deck> {
         return node;
     }
 
+    public DeckNode GetLowestAvailableNode() {
+        for (int i = 0; i < SIZE; i++) {
+            if (nodes[i].HasNone()) {
+                return nodes[i];
+            }
+        }
+
+        return null;
+    }
+
     void SpawnNodes() {
         nodes = new DeckNode[SIZE];
         for (int i = 0; i < SIZE; i++) {
