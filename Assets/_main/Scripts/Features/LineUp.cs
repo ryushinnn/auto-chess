@@ -1,10 +1,36 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using RExt.Extension;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class LineUp : MonoBehaviour {
     [SerializeField] Hero heroPrefab;
     [SerializeField, ReadOnly] List<Hero> heroes;
+
+    Dictionary<Role, int> roleStages = new();
+    Dictionary<Realm, int> realmStages = new();
+    HashSet<HeroTrait> uniqueTraits = new();
+    
+    void Awake() {
+        Initialize();
+    }
+
+    void Start() {
+        ArenaUIManager.Instance.LineUp.Initialize(roleStages, realmStages);
+    }
+
+    void Initialize() {
+        var allRoles = ((Role[])Enum.GetValues(typeof(Role))).Where(x => x != 0).ToArray();
+        var allRealms = ((Realm[])Enum.GetValues(typeof(Realm))).Where(x => x != 0).ToArray();
+        foreach (var role in allRoles) {
+            roleStages.Add(role, 0);
+        }
+        foreach (var realm in allRealms) {
+            realmStages.Add(realm, 0);
+        }
+    }
 
     public bool Add(HeroTrait trait) {
         // merge into rank A hero
@@ -25,6 +51,16 @@ public class LineUp : MonoBehaviour {
             hero.SetNode(availableDeckNode);
             hero.ResetPosition(true);
             heroes.Add(hero);
+
+            if (uniqueTraits.Add(hero.Trait)) {
+                var roles = hero.Trait.role.GetAllFlags().Where(x => x != 0).ToArray();
+                foreach (var role in roles) {
+                    roleStages[role]++;
+                }
+                realmStages[hero.Trait.realm]++;
+                ArenaUIManager.Instance.LineUp.Initialize(roleStages, realmStages);
+            }
+            
             return true;
         }
 
@@ -52,6 +88,16 @@ public class LineUp : MonoBehaviour {
         }
         duplicates[0].Upgrade();
         return true;
+    }
+
+    [Button]
+    void dev_checkAllStages() {
+        foreach (var it in roleStages) {
+            Debug.Log($"{it.Key}:{it.Value}");
+        }
+        foreach (var it in realmStages) {
+            Debug.Log($"{it.Key}:{it.Value}");
+        }
     }
 }
 

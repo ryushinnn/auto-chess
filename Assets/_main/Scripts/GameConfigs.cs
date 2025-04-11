@@ -62,11 +62,70 @@ public static class GameConfigs {
 
     public static readonly int[] HERO_PRICES = new[] { 1, 3, 5 };
     public const int REFRESH_COST = 2;
-}
+
+    public static readonly RoleConfig[] ROLE_CONFIGS = {
+        new() {
+            role = Role.Duelist,
+            stages = new[] { 1, 2, 3, 4 }
+        },
+        new() {
+            role = Role.Sorcerer,
+            stages = new[] { 1, 2, 3, 4 }
+        },
+        new() {
+            role = Role.Marksman,
+            stages = new[] { 1, 2, 3, 4 }
+        },
+        new() {
+            role = Role.Assassin,
+            stages = new[] { 1, 2, 3, 4 }
+        },
+        new() {
+            role = Role.Bruiser,
+            stages = new[] { 1, 2, 3, 4 }
+        },
+        new() {
+            role = Role.Cultist,
+            stages = new[] { 1, 2, 3, 4 }
+        },
+    };
+    
+    public static readonly RealmConfig[] REALM_CONFIGS = {
+        new() {
+            realm = Realm.Mortal,
+            stages = new[] { 1, 2, 3}
+        },
+        new() {
+            realm = Realm.Divine,
+            stages = new[] { 1, 2, 3}
+        },
+        new() {
+            realm = Realm.Nether,
+            stages = new[] { 1, 2, 3}
+        },
+        new() {
+            realm = Realm.Mecha,
+            stages = new[] { 1, 2, 3}
+        },
+        new() {
+            realm = Realm.Chaos,
+            stages = new[] { 1, 2, 3}
+        }
+    };}
 
 public class LevelConfig {
     public int level;
     public int xpToNextLevel;
     public int heroSlot;
     public int[] rates;
+}
+
+public class RoleConfig {
+    public Role role;
+    public int[] stages;
+}
+
+public class RealmConfig {
+    public Realm realm;
+    public int[] stages;
 }
