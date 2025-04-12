@@ -87,6 +87,7 @@ public class HeroPicker : MonoBehaviour {
             hero.ResetPosition();
             node = null;
             MapVisual.Instance.Highlight(false);
+            GameManager.Instance.LineUp.RecalculateHeroesOnMap();
         }
         else {
             var otherHero = node.Get<Hero>();

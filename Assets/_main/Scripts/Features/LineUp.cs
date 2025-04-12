@@ -12,12 +12,17 @@ public class LineUp : MonoBehaviour {
     Dictionary<Role, int> roleNumbers = new();
     Dictionary<Realm, int> realmNumbers = new();
     HashSet<HeroTrait> uniqueTraits = new();
+
+    int heroesOnMap;
+    int maxHeroesOnMap;
     
     void Awake() {
         Initialize();
     }
 
     void Start() {
+        heroesOnMap = 0;
+        SetHeroesLimit(1);
         ArenaUIManager.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
     }
 
@@ -30,6 +35,11 @@ public class LineUp : MonoBehaviour {
         foreach (var realm in allRealms) {
             realmNumbers.Add(realm, 0);
         }
+    }
+
+    public void SetHeroesLimit(int value) {
+        maxHeroesOnMap = value;
+        ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap, maxHeroesOnMap);
     }
 
     public bool Add(HeroTrait trait) {
@@ -51,6 +61,7 @@ public class LineUp : MonoBehaviour {
             hero.SetNode(availableDeckNode);
             hero.ResetPosition(true);
             heroes.Add(hero);
+            RecalculateHeroesOnMap();
 
             if (uniqueTraits.Add(hero.Trait)) {
                 var roles = hero.Trait.role.GetAllFlags().Where(x => x != 0).ToArray();
@@ -78,6 +89,11 @@ public class LineUp : MonoBehaviour {
         heroes.Remove(hero);
         Destroy(hero.gameObject);
     }
+    
+    public void RecalculateHeroesOnMap() {
+        heroesOnMap = heroes.Count(x => x.MNode != null);
+        ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap, maxHeroesOnMap);
+    }
 
     bool MergeHeroes(HeroTrait trait, HeroRank rank, int required) {
         var duplicates = heroes.FindAll(x => x.Trait == trait && x.Rank == rank);
@@ -87,6 +103,7 @@ public class LineUp : MonoBehaviour {
             Remove(duplicates[i]);
         }
         duplicates[0].Upgrade();
+        RecalculateHeroesOnMap();
         return true;
     }
 

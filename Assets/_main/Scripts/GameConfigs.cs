@@ -7,55 +7,55 @@ public static class GameConfigs {
         new() {
             level = 1,
             xpToNextLevel = 2,
-            heroSlot = 1,
+            maxHeroesOnMap = 1,
             rates = new[] {90, 10, 0}
         },
         new() {
             level = 2,
             xpToNextLevel = 4,
-            heroSlot = 1,
+            maxHeroesOnMap = 1,
             rates = new[] {70, 29, 1}
         },
         new() {
             level = 3,
             xpToNextLevel = 8,
-            heroSlot = 1,
+            maxHeroesOnMap = 1,
             rates = new[] {50, 47, 3}
         },
         new() {
             level = 4,
             xpToNextLevel = 16,
-            heroSlot = 1,
+            maxHeroesOnMap = 1,
             rates = new[] {30, 65, 5}
         },
         new() {
             level = 5,
             xpToNextLevel = 32,
-            heroSlot = 1,
+            maxHeroesOnMap = 1,
             rates = new[] {20, 70, 10}
         },
         new() {
             level = 6,
             xpToNextLevel = 64,
-            heroSlot = 1,
+            maxHeroesOnMap = 1,
             rates = new[] {10, 70, 20}
         },
         new() {
             level = 7,
             xpToNextLevel = 128,
-            heroSlot = 1,
+            maxHeroesOnMap = 1,
             rates = new[] {1, 64, 35}
         },
         new() {
             level = 8,
             xpToNextLevel = 256,
-            heroSlot = 1,
+            maxHeroesOnMap = 1,
             rates = new[] {0, 40, 60}
         },
         new() {
             level = 9,
-            xpToNextLevel = 0,
-            heroSlot = 1,
+            xpToNextLevel = -1,
+            maxHeroesOnMap = 1,
             rates = new[] {0, 1, 99}
         }
     };
@@ -116,7 +116,7 @@ public static class GameConfigs {
 public class LevelConfig {
     public int level;
     public int xpToNextLevel;
-    public int heroSlot;
+    public int maxHeroesOnMap;
     public int[] rates;
 }
 

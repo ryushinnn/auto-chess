@@ -8,18 +8,47 @@ public class GameManager : Singleton<GameManager> {
     public Shop Shop => shop;
     public LineUp LineUp => lineUp;
     
-    [SerializeField] int level;
     [SerializeField] Hero heroPrefab;
     [SerializeField] TeamMember[] myTeam;
     [SerializeField] TeamMember[] enemyTeam;
     [SerializeField] Shop shop;
     [SerializeField] LineUp lineUp;
+    [SerializeField, ReadOnly] int level;
+    [SerializeField, ReadOnly] int xp;
 
+    LevelConfig currentLevelConfig;
+    
     public int Level => level;
 
     List<Hero> heroes = new();
 
     int dev_count = 0;
+
+    void Start() {
+        level = 1;
+        xp = 0;
+        currentLevelConfig = GameConfigs.LEVEL_CONFIGS[0];
+        ArenaUIManager.Instance.Arena.UpdateLevelText(1);
+        ArenaUIManager.Instance.Arena.UpdateXpText(0, currentLevelConfig.xpToNextLevel);
+    }
+
+    [Button]
+    public void GainXP(int amount) {
+        xp += amount;
+        ArenaUIManager.Instance.Arena.UpdateXpText(xp, currentLevelConfig.xpToNextLevel);
+        while (xp >= currentLevelConfig.xpToNextLevel && level < GameConfigs.LEVEL_CONFIGS.Length) {
+            LevelUp();
+        }
+    }
+    
+    void LevelUp() {
+        level++;
+        xp -= currentLevelConfig.xpToNextLevel;
+        currentLevelConfig = GameConfigs.LEVEL_CONFIGS[level - 1];
+        ArenaUIManager.Instance.Arena.UpdateLevelText(level);
+        ArenaUIManager.Instance.Arena.UpdateXpText(xp, currentLevelConfig.xpToNextLevel);
+        lineUp.SetHeroesLimit(currentLevelConfig.maxHeroesOnMap);
+    }
     
     [Button]
     void Initialize() {

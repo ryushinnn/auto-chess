@@ -941,8 +941,6 @@ MonoBehaviour:
   heroPrefab: {fileID: 276282976127478005, guid: 9b00a5bcaa357bd4e812117e914f0359,
     type: 3}
   heroes: []
-  destinyPrefab: {fileID: 0}
-  destinyContainer: {fileID: 0}
 --- !u!1 &880606345
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,7 +1181,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPersistent: 0
-  level: 4
   heroPrefab: {fileID: 276282976127478005, guid: 9b00a5bcaa357bd4e812117e914f0359,
     type: 3}
   myTeam:
@@ -1215,6 +1212,7 @@ MonoBehaviour:
     items: []
   shop: {fileID: 2122394115}
   lineUp: {fileID: 797194647}
+  level: 0
 --- !u!4 &1473852640
 Transform:
   m_ObjectHideFlags: 0

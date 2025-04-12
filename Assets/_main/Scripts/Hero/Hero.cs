@@ -47,11 +47,13 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     [SerializeField, ReadOnly] TeamSide side;
     [SerializeField, ReadOnly] HeroRank rank;
     [SerializeField, ReadOnly] HeroState state;
+    [SerializeField, ReadOnly] bool isOnMap;
+    [SerializeField, ReadOnly] Hero target;
+    
     Mecanim mecanim;
     List<HeroAbility> abilities = new();
     Dictionary<Type, HeroAbility> cachedAbilities = new();
     Node node;
-    [SerializeField, ReadOnly] Hero target;
     Tween snapTween;
 
     public Vector2 dev_mapNode;
@@ -123,6 +125,8 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         this.node?.Remove(this);
         this.node = node;
         this.node.Add(this);
+        
+        isOnMap = node is MapNode;
     }
 
     public void DeleteNode() {

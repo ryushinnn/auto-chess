@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RExt.Extension;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ public class LineUpUI : BaseUI {
     [SerializeField] Transform destinyContainer;
     [SerializeField] Button leftButton;
     [SerializeField] Button rightButton;
+    [SerializeField] TMP_Text pageText;
     
     List<LineUp_Destiny> destinies;
     int currentPage;
@@ -100,5 +102,6 @@ public class LineUpUI : BaseUI {
             d.gameObject.SetActive(index / ITEM_PER_PAGE == currentPage);
             index++;
         }
+        pageText.text = $"{currentPage+1}/{maxPage+1}";
     }
 }
