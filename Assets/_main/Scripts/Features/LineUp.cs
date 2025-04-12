@@ -9,8 +9,8 @@ public class LineUp : MonoBehaviour {
     [SerializeField] Hero heroPrefab;
     [SerializeField, ReadOnly] List<Hero> heroes;
 
-    Dictionary<Role, int> roleStages = new();
-    Dictionary<Realm, int> realmStages = new();
+    Dictionary<Role, int> roleNumbers = new();
+    Dictionary<Realm, int> realmNumbers = new();
     HashSet<HeroTrait> uniqueTraits = new();
     
     void Awake() {
@@ -18,17 +18,17 @@ public class LineUp : MonoBehaviour {
     }
 
     void Start() {
-        ArenaUIManager.Instance.LineUp.Initialize(roleStages, realmStages);
+        ArenaUIManager.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
     }
 
     void Initialize() {
         var allRoles = ((Role[])Enum.GetValues(typeof(Role))).Where(x => x != 0).ToArray();
         var allRealms = ((Realm[])Enum.GetValues(typeof(Realm))).Where(x => x != 0).ToArray();
         foreach (var role in allRoles) {
-            roleStages.Add(role, 0);
+            roleNumbers.Add(role, 0);
         }
         foreach (var realm in allRealms) {
-            realmStages.Add(realm, 0);
+            realmNumbers.Add(realm, 0);
         }
     }
 
@@ -55,10 +55,10 @@ public class LineUp : MonoBehaviour {
             if (uniqueTraits.Add(hero.Trait)) {
                 var roles = hero.Trait.role.GetAllFlags().Where(x => x != 0).ToArray();
                 foreach (var role in roles) {
-                    roleStages[role]++;
+                    roleNumbers[role]++;
                 }
-                realmStages[hero.Trait.realm]++;
-                ArenaUIManager.Instance.LineUp.Initialize(roleStages, realmStages);
+                realmNumbers[hero.Trait.realm]++;
+                ArenaUIManager.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
             }
             
             return true;
@@ -91,11 +91,11 @@ public class LineUp : MonoBehaviour {
     }
 
     [Button]
-    void dev_checkAllStages() {
-        foreach (var it in roleStages) {
+    void dev_checkAllNumber() {
+        foreach (var it in roleNumbers) {
             Debug.Log($"{it.Key}:{it.Value}");
         }
-        foreach (var it in realmStages) {
+        foreach (var it in realmNumbers) {
             Debug.Log($"{it.Key}:{it.Value}");
         }
     }

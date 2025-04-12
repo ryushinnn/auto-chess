@@ -188,7 +188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconImage: {fileID: 134804266797624827}
   nameText: {fileID: 5499211990637906426}
-  currentStageText: {fileID: 5487724136181366757}
+  currentNumberText: {fileID: 5487724136181366757}
   stageTexts:
   - {fileID: 1840251173732374611}
   - {fileID: 2358520393973010717}
