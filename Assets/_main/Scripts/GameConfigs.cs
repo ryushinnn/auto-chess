@@ -13,49 +13,49 @@ public static class GameConfigs {
         new() {
             level = 2,
             xpToNextLevel = 4,
-            maxHeroesOnMap = 1,
+            maxHeroesOnMap = 2,
             rates = new[] {70, 29, 1}
         },
         new() {
             level = 3,
             xpToNextLevel = 8,
-            maxHeroesOnMap = 1,
+            maxHeroesOnMap = 3,
             rates = new[] {50, 47, 3}
         },
         new() {
             level = 4,
             xpToNextLevel = 16,
-            maxHeroesOnMap = 1,
+            maxHeroesOnMap = 4,
             rates = new[] {30, 65, 5}
         },
         new() {
             level = 5,
             xpToNextLevel = 32,
-            maxHeroesOnMap = 1,
+            maxHeroesOnMap = 5,
             rates = new[] {20, 70, 10}
         },
         new() {
             level = 6,
             xpToNextLevel = 64,
-            maxHeroesOnMap = 1,
+            maxHeroesOnMap = 6,
             rates = new[] {10, 70, 20}
         },
         new() {
             level = 7,
             xpToNextLevel = 128,
-            maxHeroesOnMap = 1,
+            maxHeroesOnMap = 7,
             rates = new[] {1, 64, 35}
         },
         new() {
             level = 8,
             xpToNextLevel = 256,
-            maxHeroesOnMap = 1,
+            maxHeroesOnMap = 8,
             rates = new[] {0, 40, 60}
         },
         new() {
             level = 9,
             xpToNextLevel = -1,
-            maxHeroesOnMap = 1,
+            maxHeroesOnMap = 9,
             rates = new[] {0, 1, 99}
         }
     };

@@ -80,25 +80,77 @@ public class HeroPicker : MonoBehaviour {
             return;
         }
         
-        if ((node is DeckNode dNode && (dNode.HasNone() || dNode.Has(hero)))
-            || (node is MapNode mNode && (mNode.HasNone() || mNode.HasOnly(hero)))) {
-            
-            hero.SetNode(node);
-            hero.ResetPosition();
-            node = null;
-            MapVisual.Instance.Highlight(false);
-            GameManager.Instance.LineUp.RecalculateHeroesOnMap();
-        }
-        else {
-            var otherHero = node.Get<Hero>();
-            if (otherHero == null) {
+        
+        if (node is DeckNode dNode) {
+            // case 0: move to self
+            if (dNode.Has(hero)) {
                 hero.ResetPosition();
+                node = null;
+                MapVisual.Instance.Highlight(false);
             }
+            // case 1: move map/deck -> deck
+            else if (dNode.HasNone()) {
+                hero.SetNode(node);
+                hero.ResetPosition();
+                node = null;
+                MapVisual.Instance.Highlight(false);
+                GameManager.Instance.LineUp.RecalculateHeroesOnMap();
+            }
+            // case 2: swap
             else {
-                hero.SwapNode(otherHero);
+                var otherHero = node.Get<Hero>();
+                if (otherHero == null) {
+                    hero.ResetPosition();
+                }
+                else {
+                    hero.SwapNode(otherHero);
+                }
+                node = null;
+                MapVisual.Instance.MarkAsNotAvailable(false);
             }
-            node = null;
-            MapVisual.Instance.MarkAsNotAvailable(false);
+        }
+        else if (node is MapNode mNode) {
+            // case 0: move to self
+            if (mNode.HasOnly(hero)) {
+                hero.ResetPosition();
+                node = null;
+                MapVisual.Instance.Highlight(false);
+            }
+            // case 1: move map -> map
+            else if (hero.MNode != null && mNode.HasNone()) {
+                hero.SetNode(node);
+                hero.ResetPosition();
+                node = null;
+                MapVisual.Instance.Highlight(false);
+            }
+            // case 2: move deck -> map
+            else if (hero.DNode != null && mNode.HasNone()) {
+                if (GameManager.Instance.LineUp.Full) {
+                    hero.ResetPosition();
+                    node = null;
+                    MapVisual.Instance.Highlight(false);
+                }
+                else {
+                    hero.SetNode(node);
+                    hero.ResetPosition();
+                    node = null;
+                    MapVisual.Instance.Highlight(false);
+                    GameManager.Instance.LineUp.RecalculateHeroesOnMap();
+                }
+            }
+            // case 3: swap
+            else {
+                Debug.Log("swap");
+                var otherHero = node.Get<Hero>();
+                if (otherHero == null) {
+                    hero.ResetPosition();
+                }
+                else {
+                    hero.SwapNode(otherHero);
+                }
+                node = null;
+                MapVisual.Instance.MarkAsNotAvailable(false);
+            }
         }
     }
 }

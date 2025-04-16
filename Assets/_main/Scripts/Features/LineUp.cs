@@ -12,6 +12,8 @@ public class LineUp : MonoBehaviour {
     Dictionary<Role, int> roleNumbers = new();
     Dictionary<Realm, int> realmNumbers = new();
     HashSet<HeroTrait> uniqueTraits = new();
+    
+    public bool Full => heroesOnMap >= maxHeroesOnMap;
 
     int heroesOnMap;
     int maxHeroesOnMap;
