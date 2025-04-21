@@ -19,4 +19,8 @@ public class ArenaUIManager : Singleton<ArenaUIManager> {
         lineUp.Open();
         inventory.Close();
     }
+
+    public void Collapse() {
+        shop.Close();
+    }
 }
