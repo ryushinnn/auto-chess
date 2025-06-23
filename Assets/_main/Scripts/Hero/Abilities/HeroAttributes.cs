@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RExt.Extension;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -187,6 +188,35 @@ public class HeroAttributes : HeroAbility {
 
     public bool Crit() {
         return Random.value < criticalChance;
+    }
+    
+    public Damage GetDamage(DamageType damageType, bool crit, float[] fixedValues = null, (float perc, DamageType type)[] scaledValues = null) {
+        var pen = damageType switch {
+            DamageType.Physical => PhysicalPenetration,
+            DamageType.Magical => MagicalPenetration,
+            DamageType.True => 0
+        };
+
+        var value = 0f;
+
+        if (fixedValues.IsNotEmpty()) {
+            value = fixedValues.Sum();
+        }
+
+        if (scaledValues.IsNotEmpty()) {
+            foreach (var val in scaledValues) {
+                value += val.type switch {
+                    DamageType.Physical => PhysicalDamage * val.perc,
+                    DamageType.Magical => MagicalDamage * val.perc,
+                };
+            }
+        }
+
+        if (crit) {
+            value *= CriticalDamage;
+        }
+
+        return Damage.Create(value, damageType, pen, crit);
     }
 
     public void AddAttributeModifier(AttributeModifier modifier) {

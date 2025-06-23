@@ -21,6 +21,7 @@ public class AttackProcessor_Yone : AttackProcessor {
         customInt["sword"] = (int)YoneSword.Divine;
     }
 
+    /*
     public override void Execute() {
         CalculateDamage(out var damage);
         var sword = (YoneSword)customInt["sword"];
@@ -58,6 +59,7 @@ public class AttackProcessor_Yone : AttackProcessor {
         });
         customInt["sword"] = (customInt["sword"] + 1) % 2;
     }
+    */
 }
 
 public enum YoneSword {

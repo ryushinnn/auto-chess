@@ -17,6 +17,7 @@ public class AttackProcessor_Teemo : AttackProcessor {
     
     public AttackProcessor_Teemo(Hero hero) : base(hero) { }
 
+    /*
     public override void Execute() {
         CalculateDamage(out var mainDmg);
         hero.Mecanim.Attack(new Action[]{
@@ -64,4 +65,5 @@ public class AttackProcessor_Teemo : AttackProcessor {
             }
         });
     }
+    */
 }

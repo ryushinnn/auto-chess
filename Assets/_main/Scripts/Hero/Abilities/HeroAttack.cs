@@ -17,6 +17,9 @@ public class HeroAttack : HeroAbility {
     
     AttackProcessor processor;
     [SerializeField, ReadOnly] float currentAttackCooldown;
+    [SerializeField, ReadOnly] float timer;
+    [SerializeField, ReadOnly] bool isAttacking;
+    [SerializeField, ReadOnly] float duration;
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
@@ -29,6 +32,8 @@ public class HeroAttack : HeroAbility {
             "Teemo" => new AttackProcessor_Teemo(hero),
             _ => new AttackProcessor(hero)
         };
+        
+        Debug.Log(processor.Description);
     }
 
     public override void ResetAll() {
@@ -36,10 +41,8 @@ public class HeroAttack : HeroAbility {
     }
 
     public override void Process() {
-        if (currentAttackCooldown > 0) {
-            currentAttackCooldown -= Time.deltaTime;
-        }
-        processor.Process();
+        HandleCooldown();
+        HandleAttack();
     }
 
     protected override void FindReferences() {
@@ -53,16 +56,20 @@ public class HeroAttack : HeroAbility {
         if (currentAttackCooldown > 0 
             || BlockedByOtherActions()
             || BlockedByStatusEffects()) return false;
-        
+
+        isAttacking = true;
+        timer = 0;
         rotation.Rotate(hero.Target.transform.position - hero.transform.position);
-        processor.Execute();
         currentAttackCooldown = 1 / attributes.AttackSpeed;
+        processor.Begin(out duration);
+        hero.Mecanim.Attack();
         return true;
     }
 
     public void Interrupt() {
         hero.Mecanim.InterruptAttack();
         currentAttackCooldown = 1 / attributes.AttackSpeed;
+        processor.End(false);
     }
 
     public void RefreshAttackCooldown() {
@@ -75,5 +82,23 @@ public class HeroAttack : HeroAbility {
 
     bool BlockedByStatusEffects() {
         return effects.IsAirborne || effects.IsStun;
+    }
+
+    void HandleAttack() {
+        if (!isAttacking) return;
+
+        timer += Time.deltaTime;
+        processor.Process(timer);
+        
+        if (timer > duration) {
+            isAttacking = false;
+            processor.End(true);
+        }
+    }
+
+    void HandleCooldown() {
+        if (currentAttackCooldown > 0) {
+            currentAttackCooldown -= Time.deltaTime;
+        }
     }
 }

@@ -1,8 +1,18 @@
 ﻿using System;
-using Random = UnityEngine.Random;
+using System.Linq;
+using RExt.Extension;
+using UnityEngine;
 
 [Serializable]
 public class AttackProcessor {
+    public float AnimationLength { get; protected set; }
+    public float[] Timers { get; protected set; }
+    public string Description { get; protected set; }
+
+    protected float atkTimeMul;
+    protected int atkExecuted;
+    protected float trueTimer;
+    
     public CustomData<int> CustomInt => customInt;
     
     protected readonly Hero hero;
@@ -14,50 +24,17 @@ public class AttackProcessor {
         attributes = this.hero.GetAbility<HeroAttributes>();
     }
 
-    public virtual void Process() {
-        
+    public virtual void Begin(out float actualAnimLength) {
+        var expectedAnimLength = 1 / attributes.AttackSpeed;
+        atkTimeMul = Mathf.Max(1, AnimationLength / expectedAnimLength);
+        actualAnimLength = AnimationLength / atkTimeMul;
+        hero.Mecanim.ModifyAttackTime_New(atkTimeMul);
+        atkExecuted = 0;
     }
 
-    public virtual void Execute() {
-        CalculateDamage(out var damage);
-        hero.Mecanim.Attack(new Action[]{
-            () => {
-                if (hero.Target == null) return;
-                var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(damage);
-                var heal = outputDamage * attributes.LifeSteal;
-                if (heal > 0) {
-                    attributes.Heal(heal);
-                }
-                attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
-            }
-        });
+    public virtual void Process(float timer) {
+        trueTimer = timer * atkTimeMul;
     }
-    
-    protected virtual void CalculateDamage(out Damage damage) {
-        damage = new Damage();
-        damage.value = attributes.PhysicalDamage + attributes.MagicalDamage;
-        if (attributes.PhysicalDamage > attributes.MagicalDamage) {
-            damage.type = DamageType.Physical;
-            damage.penetration = attributes.PhysicalPenetration;
-        }
-        else if (attributes.PhysicalDamage < attributes.MagicalDamage) {
-            damage.type = DamageType.Magical;
-            damage.penetration = attributes.MagicalPenetration;
-        }
-        else {
-            if (attributes.PhysicalPenetration > attributes.MagicalPenetration) {
-                damage.type = DamageType.Physical;
-                damage.penetration = attributes.PhysicalPenetration;
-            }
-            else {
-                damage.type = DamageType.Magical;
-                damage.penetration = attributes.MagicalPenetration;
-            }
-        }
 
-        damage.crit = attributes.Crit();
-        if (damage.crit) {
-            damage.value *= attributes.CriticalDamage;
-        }
-    }
+    public virtual void End(bool complete) { }
 }

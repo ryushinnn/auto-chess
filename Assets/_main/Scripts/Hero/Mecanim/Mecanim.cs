@@ -77,6 +77,10 @@ public abstract class Mecanim : MonoBehaviour {
         }
         attackCoroutine = StartCoroutine(DoAttack(events));
     }
+
+    public virtual void Attack() {
+        Interact(Interaction.Attack);
+    }
     
     protected virtual IEnumerator DoAttack(Action[] events) {
         Interact(Interaction.Attack);
@@ -111,6 +115,11 @@ public abstract class Mecanim : MonoBehaviour {
     public void ModifyAttackTime(float atkSpd) {
         var time = 1 / atkSpd;
         attackTimeMultiplier = Mathf.Max(1, defaultAttackFullTime / time);
+        animator.SetFloat(paramAttackMultiplier, attackTimeMultiplier);
+    }
+
+    public void ModifyAttackTime_New(float atkTimeMul) {
+        attackTimeMultiplier = atkTimeMul;
         animator.SetFloat(paramAttackMultiplier, attackTimeMultiplier);
     }
 

@@ -11,6 +11,7 @@ public class AttackProcessor_Yasuo : AttackProcessor {
     
     public AttackProcessor_Yasuo(Hero hero) : base(hero) { }
 
+    /*
     public override void Execute() {
         CalculateDamage(out var damage);
         hero.Mecanim.Attack(new Action[]{
@@ -39,4 +40,5 @@ public class AttackProcessor_Yasuo : AttackProcessor {
             }
         });
     }
+    */
 }
