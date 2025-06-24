@@ -1,13 +1,10 @@
-/// <summary>
-/// 
-/// </summary>
-public class AttackProcessor_Aatrox_Light : AttackProcessor {
-    public AttackProcessor_Aatrox_Light(Hero hero) : base(hero) {
-        AnimationLength = 1.367f;
-        Timers = new[] { 0.18f };
+﻿public class AttackProcessor_Irelia : AttackProcessor {
+    public AttackProcessor_Irelia(Hero hero) : base(hero) {
+        AnimationLength = 1.3f;
+        Timers = new[] { 0.2f };
         Description = "Gây sát thương vật lý bằng (100% sát thương vật lý)";
     }
-
+    
     public override void Process(float timer) {
         base.Process(timer);
 

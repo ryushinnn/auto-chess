@@ -1185,34 +1185,24 @@ MonoBehaviour:
     type: 3}
   myTeam:
   - active: 1
-    id: Aatrox_Dark
+    id: Yasuo
     star: 0
     mapNode: {x: 0, y: 3}
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
     - {fileID: 11400000, guid: b538eec87a753f34a992d366a3cd4321, type: 2}
-  - active: 0
-    id: Yone
-    star: 0
-    mapNode: {x: 0, y: 4}
-    items:
-    - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
   enemyTeam:
   - active: 1
-    id: MissFortune
+    id: Yone
     star: 0
     mapNode: {x: 7, y: 4}
     items:
     - {fileID: 11400000, guid: 8be836fef515b094986252b4c9ce8c90, type: 2}
     - {fileID: 11400000, guid: 8d105db34d57d72429a7dafadd916efe, type: 2}
-  - active: 0
-    id: Tristana
-    star: 0
-    mapNode: {x: 7, y: 3}
-    items: []
   shop: {fileID: 2122394115}
   lineUp: {fileID: 797194647}
   level: 0
+  xp: 0
 --- !u!4 &1473852640
 Transform:
   m_ObjectHideFlags: 0
@@ -2906,6 +2896,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5663827720335401549, guid: 8f44c28ea92351c4fa71534a0fab7b02,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 37.181152
+      objectReference: {fileID: 0}
     - target: {fileID: 5694544822032756492, guid: 8f44c28ea92351c4fa71534a0fab7b02,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3540,6 +3535,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8421708935017806248, guid: 8f44c28ea92351c4fa71534a0fab7b02,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 120.6499
       objectReference: {fileID: 0}
     - target: {fileID: 8437282200607595029, guid: 8f44c28ea92351c4fa71534a0fab7b02,
         type: 3}

@@ -1,11 +1,8 @@
-/// <summary>
-/// 
-/// </summary>
-public class AttackProcessor_Aatrox_Light : AttackProcessor {
-    public AttackProcessor_Aatrox_Light(Hero hero) : base(hero) {
-        AnimationLength = 1.367f;
-        Timers = new[] { 0.18f };
-        Description = "Gây sát thương vật lý bằng (100% sát thương vật lý)";
+﻿public class AttackProcessor_Morgana : AttackProcessor {
+    public AttackProcessor_Morgana(Hero hero) : base(hero) {
+        AnimationLength = 2f;
+        Timers = new[] { 0.14f };
+        Description = "Gây sát thương phép bằng (100% sát thương phép)";
     }
 
     public override void Process(float timer) {
@@ -13,7 +10,7 @@ public class AttackProcessor_Aatrox_Light : AttackProcessor {
 
         if (trueTimer >= Timers[0] && atkExecuted == 0) {
             if (hero.Target != null) {
-                var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical));
+                var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical));
                 var heal = outputDmg * attributes.LifeSteal;
                 if (heal > 0) {
                     attributes.Heal(heal);

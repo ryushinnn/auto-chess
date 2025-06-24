@@ -219,6 +219,25 @@ public class HeroAttributes : HeroAbility {
         return Damage.Create(value, damageType, pen, crit);
     }
 
+    public Damage GetDamage(DamageType damageType) {
+        var pen = damageType switch {
+            DamageType.Physical => PhysicalPenetration,
+            DamageType.Magical => MagicalPenetration,
+        };
+        
+        var value = damageType switch {
+            DamageType.Physical => PhysicalDamage,
+            DamageType.Magical => MagicalDamage,
+        };
+
+        var crit = Crit();
+        if (crit) {
+            value *= CriticalDamage;
+        }
+        
+        return Damage.Create(value, damageType, pen, crit);
+    }
+
     public void AddAttributeModifier(AttributeModifier modifier) {
         var group = modifierGroups.Find(x => x.key == modifier.key);
         if (group == null) {

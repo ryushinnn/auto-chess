@@ -20,14 +20,6 @@ public class Mecanim_Aatrox : Mecanim {
         }
     }
 
-    protected override IEnumerator DoAttack(Action[] events) {
-        Interact(Interaction.Attack);
-        for (int i = 0; i < events.Length; i++) {
-            yield return BetterWaitForSeconds.Wait(defaultAttackTime[i] / attackTimeMultiplier);
-            events[i]();
-        }
-    }
-
     protected override IEnumerator DoUseSkill(Action[] events) {
         Interact(Interaction.Skill, (paramSkill, 0));
         yield return BetterWaitForSeconds.Wait(0.6f);

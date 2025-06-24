@@ -28,10 +28,10 @@ public class AttackProcessor_Aatrox_Dark : AttackProcessor {
             if (hero.Target != null) {
                 var targetAtb = hero.Target.GetAbility<HeroAttributes>();
                 var perc = Mathf.Lerp(MIN_DMG_MUL, MAX_DMG_MUL, targetAtb.HpLostPercentage);
-                var damage = attributes.GetDamage(DamageType.Physical, false, scaledValues: new[] {
+                var baseDmg = attributes.GetDamage(DamageType.Physical, false, scaledValues: new[] {
                     (perc, DamageType.Physical)
                 });
-                var outputDmg = targetAtb.TakeDamage(damage);
+                var outputDmg = targetAtb.TakeDamage(baseDmg);
                 var heal = outputDmg * attributes.LifeSteal;
                 if (heal > 0) {
                     attributes.Heal(heal);
@@ -43,10 +43,10 @@ public class AttackProcessor_Aatrox_Dark : AttackProcessor {
             if (hero.Target != null) {
                 var targetAtb = hero.Target.GetAbility<HeroAttributes>();
                 var perc = Mathf.Lerp(MIN_DMG_MUL, MAX_DMG_MUL, targetAtb.HpLostPercentage);
-                var damage = attributes.GetDamage(DamageType.Physical, true, scaledValues: new[] {
+                var baseDmg = attributes.GetDamage(DamageType.Physical, true, scaledValues: new[] {
                     (perc, DamageType.Physical)
                 });
-                var outputDmg = targetAtb.TakeDamage(damage);
+                var outputDmg = targetAtb.TakeDamage(baseDmg);
                 var heal = outputDmg * attributes.LifeSteal;
                 if (heal > 0) {
                     attributes.Heal(heal);

@@ -175,7 +175,7 @@ public abstract class Mecanim : MonoBehaviour {
     
     [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     void dev_Attack() {
-        Attack(new Action[]{()=>{}});
+        Attack();
     }
 
     [Button, ShowIf("@UnityEngine.Application.isPlaying")]

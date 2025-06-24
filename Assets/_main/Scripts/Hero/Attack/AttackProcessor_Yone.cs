@@ -17,22 +17,31 @@ public class AttackProcessor_Yone : AttackProcessor {
     const float DEVIL_VAMP_MAX = 0.2f;
 
     public AttackProcessor_Yone(Hero hero) : base(hero) {
+        AnimationLength = 1.367f;
+        Timers = new[] { 0.66f };
+        Description = "Thay đổi qua lại giữa Thần Kiếm và Quỷ Kiếm sau mỗi đòn đánh.\n" +
+                      $"Thần Kiếm: Thêm 1 cộng dồn (tối đa {DIVINE_WEAKENING_MAX_STACK} cộng dồn " +
+                      $"và làm mới thời gian duy trì ({DIVINE_WEAKENING_DURATION}s) hiệu ứng SUY YẾU " +
+                      $"trên mục tiêu\n" +
+                      $"Quỷ Kiếm: Cho thêm tối đa {DEVIL_VAMP_MAX*100}% hút máu, dựa vào " +
+                      $"máu đã mất\n" +
+                      $"Thanh Kiếm cuối cùng được sử dụng sẽ quyết định kỹ năng sẽ kích hoạt\n" +
+                      $"SUY YẾU: Giảm {DIVINE_WEAKENING_PER_STACK * -100}% sát thương";
+        
         customInt = new CustomData<int>();
         customInt["sword"] = (int)YoneSword.Divine;
     }
 
-    /*
-    public override void Execute() {
-        CalculateDamage(out var damage);
-        var sword = (YoneSword)customInt["sword"];
-        hero.Mecanim.Attack(new Action[]{
-            () => {
-                if (hero.Target == null) return;
-                
-                var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(damage);
-                var heal = outputDamage * attributes.LifeSteal;
+    public override void Process(float timer) {
+        base.Process(timer);
+
+        if (trueTimer >= Timers[0] && atkExecuted == 0) {
+            if (hero.Target != null) {
+                var sword = (YoneSword)customInt["sword"];
+                var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical));
+                var heal = outputDmg * attributes.LifeSteal;
                 if (sword == YoneSword.Devil) {
-                    heal += outputDamage * Mathf.Lerp(DEVIL_VAMP_MIN, DEVIL_VAMP_MAX, attributes.HpLostPercentage);
+                    heal += outputDmg * Mathf.Lerp(DEVIL_VAMP_MIN, DEVIL_VAMP_MAX, attributes.HpLostPercentage);
                 }
 
                 if (heal > 0) {
@@ -55,11 +64,13 @@ public class AttackProcessor_Yone : AttackProcessor {
                             nextStacks
                         ));
                 }
+                
+                attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
             }
-        });
-        customInt["sword"] = (customInt["sword"] + 1) % 2;
+            customInt["sword"] = (customInt["sword"] + 1) % 2;
+            atkExecuted++;
+        }
     }
-    */
 }
 
 public enum YoneSword {

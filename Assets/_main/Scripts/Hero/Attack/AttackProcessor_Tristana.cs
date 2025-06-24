@@ -1,10 +1,7 @@
-/// <summary>
-/// 
-/// </summary>
-public class AttackProcessor_Aatrox_Light : AttackProcessor {
-    public AttackProcessor_Aatrox_Light(Hero hero) : base(hero) {
-        AnimationLength = 1.367f;
-        Timers = new[] { 0.18f };
+﻿public class AttackProcessor_Tristana : AttackProcessor {
+    public AttackProcessor_Tristana(Hero hero) : base(hero) {
+        AnimationLength = 0.933f;
+        Timers = new[] { 0.17f };
         Description = "Gây sát thương vật lý bằng (100% sát thương vật lý)";
     }
 

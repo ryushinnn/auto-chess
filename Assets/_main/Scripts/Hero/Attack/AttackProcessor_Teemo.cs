@@ -14,16 +14,21 @@ public class AttackProcessor_Teemo : AttackProcessor {
     public const int INTERVAL = 500; //ms
     public const float MAX_HP_DMG = 0.001f;
     public const float DMG_MUL_LIMIT = 0.01f;
-    
-    public AttackProcessor_Teemo(Hero hero) : base(hero) { }
 
-    /*
-    public override void Execute() {
-        CalculateDamage(out var mainDmg);
-        hero.Mecanim.Attack(new Action[]{
-            () => {
-                if (hero.Target == null) return;
+    public AttackProcessor_Teemo(Hero hero) : base(hero) {
+        AnimationLength = 0.933f;
+        Timers = new[] { 0.17f };
+        Description = $"Mỗi đòn đánh sẽ thêm 1 cộng dồn (tối đa {MAX_STACKS} cộng dồn) " +
+                      $"và làm mới thời gian duy trì ({TOTAL_TIME / 1000f}s) của hiệu ứng HOẢ NGỤC.\n" +
+                      $"HOẢ NGỤC: Mỗi {INTERVAL / 1000f}s gây sát thương chuẩn bằng {MAX_HP_DMG * 100}% " +
+                      $"máu tối đa của mục tiêu, tối đa bằng {DMG_MUL_LIMIT * 100}% sát thương phép.";
+    }
 
+    public override void Process(float timer) {
+        base.Process(timer);
+
+        if (trueTimer >= Timers[0] && atkExecuted == 0) {
+            if (hero.Target != null) {
                 var currentStacks = hero.Target.GetAbility<HeroMark>().GetMark(DOT_KEY, hero)?.stacks ?? 0;
                 var nextStacks = Mathf.Min(currentStacks + 1, MAX_STACKS);
 
@@ -33,16 +38,16 @@ public class AttackProcessor_Teemo : AttackProcessor {
                     0
                 );
 
-                var outputDamage = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
+                var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
                     new[] {
-                        mainDmg,
+                        attributes.GetDamage(DamageType.Magical),
                         igniteDmg,
                     }) - igniteDmg.value;
                 // why subtract ignite dmg???
                 // add it to TakeDamage just for nicer visual (2 HpText arranges vertically),
                 // it doesn't actually count as this attack's dmg
 
-                var heal = outputDamage * attributes.LifeSteal;
+                var heal = outputDmg * attributes.LifeSteal;
                 if (heal > 0) {
                     attributes.Heal(heal);
                 }
@@ -63,7 +68,8 @@ public class AttackProcessor_Teemo : AttackProcessor {
                 // why subtract 1 from stack???
                 // 1 stack is already applied in TakeDamage
             }
-        });
+
+            atkExecuted++;
+        }
     }
-    */
 }
