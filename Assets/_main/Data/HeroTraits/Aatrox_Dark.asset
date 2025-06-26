@@ -36,8 +36,8 @@ MonoBehaviour:
   magicalPenetration: 0
   lifeSteal: 0
   tenacity: 0
-  energyRegenPerAttack: 1
-  energyRegenPerHit: 1
+  energyRegenPerAttack: 20
+  energyRegenPerHit: 10
   attackRange: 1
   minDps: 90
   avgDps: 90

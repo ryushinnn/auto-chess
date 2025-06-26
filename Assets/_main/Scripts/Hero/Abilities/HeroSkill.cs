@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class HeroSkill : HeroAbility {
@@ -10,8 +11,9 @@ public class HeroSkill : HeroAbility {
     HeroAttack attack;
     
     SkillProcessor processor;
-    bool isUsingSkill;
-    Tween resetUsingSkillTween;
+    [SerializeField, ReadOnly] float timer;
+    [SerializeField, ReadOnly] bool isUsingSkill;
+    [SerializeField, ReadOnly] float duration;
 
     public override void Initialize(Hero hero) {
         base.Initialize(hero);
@@ -33,15 +35,16 @@ public class HeroSkill : HeroAbility {
             "Teemo" => new SkillProcessor_Teemo(hero),
             "Tristana" => new SkillProcessor_Tristana(hero),
         };
+
+        Debug.Log(processor.Description);
     }
 
     public override void ResetAll() {
         isUsingSkill = false;
-        resetUsingSkillTween?.Kill();
     }
 
     public override void Process() {
-        processor.Process();
+        HandleSkill();
     }
 
     protected override void FindReferences() {
@@ -58,20 +61,17 @@ public class HeroSkill : HeroAbility {
             || BlockedByStatusEffects()) return false;
         
         isUsingSkill = true;
+        timer = 0;
         rotation.Rotate(hero.Target.transform.position - hero.transform.position);
-        processor.Execute(out var duration);
-        resetUsingSkillTween?.Kill();
-        resetUsingSkillTween = DOVirtual.DelayedCall(duration, () => {
-            isUsingSkill = false;
-            attack.RefreshAttackCooldown();
-        });
+        processor.Begin(out duration);
+        hero.Mecanim.UseSkill();
         return true;
     }
 
     public void Interrupt() {
         isUsingSkill = false;
-        processor.Cancel();
-        resetUsingSkillTween?.Kill();
+        hero.Mecanim.InterruptSkill();
+        processor.End(false);
     }
     
     bool BlockedByOtherActions() {
@@ -80,5 +80,17 @@ public class HeroSkill : HeroAbility {
     
     bool BlockedByStatusEffects() {
         return effects.IsAirborne || effects.IsStun || effects.IsSilent;
+    }
+
+    void HandleSkill() {
+        if (!isUsingSkill) return;
+
+        timer += Time.deltaTime;
+        processor.Process(timer);
+
+        if (timer > duration) {
+            isUsingSkill = false;
+            processor.End(true);
+        }
     }
 }

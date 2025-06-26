@@ -18,7 +18,7 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
     
     public SkillProcessor_Caitlyn(Hero hero) : base(hero) {
         events = new Action[] { DrinkTea, Focus };
-        unstoppable = true;
+        Unstoppable = true;
     }
 
     void DrinkTea() {

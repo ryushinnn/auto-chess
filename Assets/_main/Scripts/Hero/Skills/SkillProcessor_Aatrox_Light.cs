@@ -23,7 +23,7 @@ public class SkillProcessor_Aatrox_Light : SkillProcessor {
 
     public SkillProcessor_Aatrox_Light(Hero hero) : base(hero) {
         events = new Action[]{LightSlash, MediumSlash, HeavySlash};
-        unstoppable = true;
+        Unstoppable = true;
     }
 
     void LightSlash() {

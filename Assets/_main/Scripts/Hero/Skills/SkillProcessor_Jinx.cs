@@ -18,7 +18,7 @@ public class SkillProcessor_Jinx : SkillProcessor {
     
     public SkillProcessor_Jinx(Hero hero) : base(hero) {
         events = new Action[] { ShotRockets };
-        unstoppable = true;
+        Unstoppable = true;
     }
 
     async void ShotRockets() {

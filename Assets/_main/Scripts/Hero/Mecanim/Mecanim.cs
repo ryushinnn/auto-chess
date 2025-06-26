@@ -103,7 +103,13 @@ public abstract class Mecanim : MonoBehaviour {
         return skillFullTimes[0];
     }
 
-    protected abstract IEnumerator DoUseSkill(Action[] events);
+    protected virtual IEnumerator DoUseSkill(Action[] events) {
+        yield break;
+    }
+
+    public virtual void UseSkill() {
+        Interact(Interaction.Skill);
+    }
 
     public virtual void InterruptSkill() {
         DoNothing();

@@ -24,19 +24,50 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
     const float HP_THRESHOLD = 0.5f;
 
     public SkillProcessor_Aatrox_Dark(Hero hero) : base(hero) {
+        AnimationLength = 5;
+        Timers = new[] { 0.6f, 2.3f, 4.1f };
+        Unstoppable = true;
+        Description = "Chém 3 lần, lần lượt gây sát thương vật lý bằng " +
+                      $"({DMG_MUL_0 * 100}%/{DMG_MUL_1 * 100}%/{DMG_MUL_2 * 100}% sát " +
+                      $"thương vật lý) và hất tung mục tiêu trong " +
+                      $"{AIRBORNE_TIME_0}s/{AIRBORNE_TIME_1}s/{AIRBORNE_TIME_2}s. " +
+                      $"Nếu mục tiêu dưới {HP_THRESHOLD * 100}% máu, các đòn chém " +
+                      $"sẽ gây thêm hiệu ứng:\n" +
+                      $"- Đòn 1: giảm {ARMOR_REDUCE_MUL * -100}% giáp trong {ARMOR_REDUCE_DURATION}s\n" +
+                      $"- Đòn 2: gây thêm sát thương chuẩn bằng ({BONUS_TRUE_DMG_MUL * 100}% sát thương vật lý)\n" +
+                      $"- Đòn 3: Có thể chí mạng\n" +
+                      $"Khi đang sử dụng kỹ năng, không thể bị cản phá";
+        
         events = new Action[]{LightSlash, MediumSlash, HeavySlash};
-        unstoppable = true;
+    }
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            LightSlash();
+            skillExecuted++;
+        }
+        else if (timer >= Timers[1] && skillExecuted == 1) {
+            MediumSlash();
+            skillExecuted++;
+        }
+        else if (timer >= Timers[2] && skillExecuted == 2) {
+            HeavySlash();
+            skillExecuted++;
+        }
     }
 
     void LightSlash() {
         if (hero.Target == null) return;
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(
-                attributes.PhysicalDamage * DMG_MUL_0,
-                DamageType.Physical,
-                attributes.PhysicalPenetration
-            ));
+        // hero.Target.GetAbility<HeroAttributes>().TakeDamage(
+        //     Damage.Create(
+        //         attributes.PhysicalDamage * DMG_MUL_0,
+        //         DamageType.Physical,
+        //         attributes.PhysicalPenetration
+        //     ));
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+            scaledValues: new[] { (DMG_MUL_0, DamageType.Physical) })
+        );
         
         if (hero.Target.GetAbility<HeroAttributes>().HpPercentage < HP_THRESHOLD) {
             hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(
@@ -57,12 +88,15 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
         if (hero.Target == null) return;
         
         if (hero.Target.GetAbility<HeroAttributes>().HpPercentage >= HP_THRESHOLD) {
-            hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-                Damage.Create(
-                    attributes.PhysicalDamage * DMG_MUL_1,
-                    DamageType.Physical,
-                    attributes.PhysicalPenetration
-                ));
+            // hero.Target.GetAbility<HeroAttributes>().TakeDamage(
+            //     Damage.Create(
+            //         attributes.PhysicalDamage * DMG_MUL_1,
+            //         DamageType.Physical,
+            //         attributes.PhysicalPenetration
+            //     ));
+            hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+                scaledValues: new[] { (DMG_MUL_1, DamageType.Physical) })
+            );
         }
         else {
             hero.Target.GetAbility<HeroAttributes>().TakeDamage(
@@ -77,6 +111,11 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
                         DamageType.True,
                         0
                     )
+                });
+            hero.Target.GetAbility<HeroAttributes>().TakeDamage(
+                new[] {
+                    attributes.GetDamage(DamageType.Physical, false, scaledValues:new[]{(DMG_MUL_1, DamageType.Physical)}),
+                    attributes.GetDamage(DamageType.True, false, scaledValues:new[]{(BONUS_TRUE_DMG_MUL, DamageType.Physical)})
                 });
         }
         

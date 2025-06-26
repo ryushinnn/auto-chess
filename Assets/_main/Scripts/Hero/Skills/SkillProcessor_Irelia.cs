@@ -10,7 +10,7 @@ public class SkillProcessor_Irelia : SkillProcessor {
     
     public SkillProcessor_Irelia(Hero hero) : base(hero) {
         events = new Action[] { SummonDragon };
-        unstoppable = true;
+        Unstoppable = true;
     }
 
     void SummonDragon() {

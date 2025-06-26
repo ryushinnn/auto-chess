@@ -19,7 +19,7 @@ public class SkillProcessor_Katarina : SkillProcessor {
 
     public SkillProcessor_Katarina(Hero hero) : base(hero) {
         events = new Action[] { TurnAround };
-        unstoppable = true;
+        Unstoppable = true;
     }
 
     async void TurnAround() {

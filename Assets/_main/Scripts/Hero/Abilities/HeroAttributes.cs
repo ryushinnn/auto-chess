@@ -190,8 +190,8 @@ public class HeroAttributes : HeroAbility {
         return Random.value < criticalChance;
     }
     
-    public Damage GetDamage(DamageType damageType, bool crit, float[] fixedValues = null, (float perc, DamageType type)[] scaledValues = null) {
-        var pen = damageType switch {
+    public Damage GetDamage(DamageType outputType, bool crit, float[] fixedValues = null, (float perc, DamageType type)[] scaledValues = null) {
+        var pen = outputType switch {
             DamageType.Physical => PhysicalPenetration,
             DamageType.Magical => MagicalPenetration,
             DamageType.True => 0
@@ -205,6 +205,10 @@ public class HeroAttributes : HeroAbility {
 
         if (scaledValues.IsNotEmpty()) {
             foreach (var val in scaledValues) {
+                if (val.type == DamageType.True) {
+                    Debug.LogError("True Damage can't be used as input type");
+                    continue;
+                }
                 value += val.type switch {
                     DamageType.Physical => PhysicalDamage * val.perc,
                     DamageType.Magical => MagicalDamage * val.perc,
@@ -216,16 +220,21 @@ public class HeroAttributes : HeroAbility {
             value *= CriticalDamage;
         }
 
-        return Damage.Create(value, damageType, pen, crit);
+        return Damage.Create(value, outputType, pen, crit);
     }
 
-    public Damage GetDamage(DamageType damageType) {
-        var pen = damageType switch {
+    public Damage GetDamage(DamageType outputType) {
+        if (outputType == DamageType.True) {
+            Debug.LogError("True Damage can't be used as input type");
+            return Damage.Create(0, outputType, 0);
+        }
+        
+        var pen = outputType switch {
             DamageType.Physical => PhysicalPenetration,
             DamageType.Magical => MagicalPenetration,
         };
         
-        var value = damageType switch {
+        var value = outputType switch {
             DamageType.Physical => PhysicalDamage,
             DamageType.Magical => MagicalDamage,
         };
@@ -235,7 +244,7 @@ public class HeroAttributes : HeroAbility {
             value *= CriticalDamage;
         }
         
-        return Damage.Create(value, damageType, pen, crit);
+        return Damage.Create(value, outputType, pen, crit);
     }
 
     public void AddAttributeModifier(AttributeModifier modifier) {

@@ -67,6 +67,7 @@ public class HeroAttack : HeroAbility {
     }
 
     public void Interrupt() {
+        isAttacking = false;
         hero.Mecanim.InterruptAttack();
         currentAttackCooldown = 1 / attributes.AttackSpeed;
         processor.End(false);

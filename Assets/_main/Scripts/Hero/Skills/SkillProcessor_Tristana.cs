@@ -11,7 +11,7 @@ public class SkillProcessor_Tristana : SkillProcessor {
     
     public SkillProcessor_Tristana(Hero hero) : base(hero) {
         events = new Action[]{Greeting};
-        unstoppable = true;
+        Unstoppable = true;
     }
 
     void Greeting() {
