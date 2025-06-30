@@ -1,17 +1,24 @@
-﻿using System;
-
-/// <summary>
-/// tang 200% toc do danh, 20% ti le chi mang, trong 4s
-/// </summary>
-public class SkillProcessor_Tristana : SkillProcessor {
+﻿public class SkillProcessor_Tristana : SkillProcessor {
     const float ATK_SPD_MUL = 5f;
     const float CRIT_CHANCE_MUL = 0.2f;
     const float DURATION = 4f;
     const string EFFECT_KEY = "tristana_furious";
     
     public SkillProcessor_Tristana(Hero hero) : base(hero) {
-        events = new Action[]{Greeting};
+        AnimationLength = 2.2f;
+        Timers = new[] { 0.625f };
         Unstoppable = true;
+        Description = $"Tăng {ATK_SPD_MUL*100}% tốc độ đánh và " +
+                      $"{CRIT_CHANCE_MUL * 100}% tỷ lệ chí mạng, duy trì {DURATION}s.\n" +
+                      $"Trong thời gian sử dụng kỹ năng (không phải thời gian " +
+                      $"duy trì của kĩ năng), không thể bị cản phá.";
+    }
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            Greeting();
+            skillExecuted++;
+        }
     }
 
     void Greeting() {

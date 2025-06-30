@@ -117,7 +117,7 @@ public class GameManager : Singleton<GameManager> {
 [Serializable]
 public class TeamMember {
     public bool active;
-    public string id;
+    [StringDropdown(typeof(HeroId))] public string id;
     public int star;
     public Vector2Int mapNode;
     public Item[] items;

@@ -1,13 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Random = UnityEngine.Random;
 
-/// <summary>
-/// bien thanh loc xoay lien tuc gay st xung quanh 10 lan
-/// moi lan gay st phep = 30% st vat ly, kem theo 80% xuyen khang phep, co the chi mang
-/// ke dich chiu st se nhan antiheal 3s
-/// </summary>
 public class SkillProcessor_Katarina : SkillProcessor {
     public const int HITS = 10;
     public const int INTERVAL = 100; //ms
@@ -18,8 +12,21 @@ public class SkillProcessor_Katarina : SkillProcessor {
     List<Hero> affectedTargets = new();
 
     public SkillProcessor_Katarina(Hero hero) : base(hero) {
-        events = new Action[] { TurnAround };
+        AnimationLength = 1.1f;
         Unstoppable = true;
+        Description = "Biến thành lốc xoáy liên tục gây sát thương xung quanh, tổng cộng " +
+                      $"{HITS} lần. Mỗi lần gây sát thương phép bằng ({DMG_MUL*100}% " +
+                      $"sát thương vật lý) kèm {PENETRATION*100}% xuyên kháng, có thể " +
+                      $"chí mạng. Kẻ địch chịu sát thương sẽ nhận hiệu ứng giảm hồi máu " +
+                      $"trong {ANTI_HEAL_DURATION}s.\n" +
+                      $"Trong thời gian sử dụng kỹ năng, không thể bị cản phá.";
+    }
+
+    public override void Process(float timer) {
+        if (skillExecuted == 0) {
+            TurnAround();
+            skillExecuted++;
+        }
     }
 
     async void TurnAround() {
@@ -34,23 +41,16 @@ public class SkillProcessor_Katarina : SkillProcessor {
     void Cut() {
         if (hero.Target == null) return;
 
-        var dmg = attributes.PhysicalDamage * DMG_MUL;
-        var crit = attributes.Crit();
-        if (crit) {
-            dmg *= attributes.CriticalDamage;
-        }
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(
-                dmg,
-                DamageType.Magical,
-                PENETRATION,
-                crit
-            ),!affectedTargets.Contains(hero.Target));
-
-        if (!affectedTargets.Contains(hero.Target)) {
-            hero.Target.GetAbility<HeroStatusEffects>().AntiHeal(ANTI_HEAL_DURATION);
-        }
+        var dmg = attributes.GetDamage(DamageType.Magical, attributes.Crit(),
+            scaledValues: new[] { (DMG_MUL, DamageType.Physical) });
+        dmg.penetration = PENETRATION;
+        var isNewTarget = !affectedTargets.Contains(hero.Target);
         
-        affectedTargets.Add(hero.Target);
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg,isNewTarget);
+
+        if (isNewTarget) {
+            hero.Target.GetAbility<HeroStatusEffects>().AntiHeal(ANTI_HEAL_DURATION);
+            affectedTargets.Add(hero.Target);
+        }
     }
 }

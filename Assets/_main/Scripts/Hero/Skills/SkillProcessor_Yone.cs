@@ -1,32 +1,70 @@
-using System;
-using Random = UnityEngine.Random;
-
-/// <summary>
-/// than kiem: lao toi chem 1 nhat gay 250% st vat ly, hat tung muc tieu 1.5s
-/// neu tieu diet ke dich, hoi phuc 50 nang luong
-/// quy kiem: chem nhanh 4 nhat, 3 nhat dau gay 50% st vat ly, phat cuoi gay 250% st vat ly
-/// cac nhat chem nay co the chi mang
-/// </summary>
 public class SkillProcessor_Yone : SkillProcessor {
     const float DIVINE_DMG_MUL = 2.5f;
     const float DIVINE_AIRBORNE_TIME = 1.5f;
     const float DIVINE_REGEN_ENERGY = 50f;
     const float DEVIL_DMG_MUL_0 = 0.5f;
     const float DEVIL_DMG_MUL_1 = 2.5f;
+    const float DIVINE_ANIM_LENGTH = 4;
+    const float DEVIL_ANIM_LENGTH = 4.25f;
+    readonly float[] DIVINE_TIMERS = { 1.66f };
+    readonly float[] DEVIL_TIMERS = { 0.12f, 0.72f, 1.08f, 2.24f };
+
+    AttackProcessor_Yone atkProcessor;
+    YoneSword sword;
     
     public SkillProcessor_Yone(Hero hero) : base(hero) {
-        events = new Action[] { Judge, LightSmite, HeavySmite };
+        Description = "Kĩ năng được sử dụng sẽ dựa vào thanh kiếm đang sẵn sàng.\n" +
+                      "- Thần Kiếm: Lao tới chém 1 nhát gây sát thương vật lý bằng " +
+                      $"({DIVINE_DMG_MUL * 100}% sát thương vật lý) và hất tung mục tiêu " +
+                      $"trong {DIVINE_AIRBORNE_TIME}s. Nếu nhát chém nàt tiêu diệt mục tiêu, " +
+                      $"hồi phục {DIVINE_REGEN_ENERGY} năng lượng.\n" +
+                      $"- Quỷ Kiếm: Chém liên hoàn 4 nhát, 3 nhát đầu gây sát thương phép " +
+                      $"bằng ({DEVIL_DMG_MUL_0 * 100}% sát thương vật lý), nhát chém cuối gây " +
+                      $"sát thương phép bằng ({DEVIL_DMG_MUL_1 * 100}% sát thương vật lý), các " +
+                      $"nhát chém này đều có thể chí mạng.";
+
+        atkProcessor = this.hero.GetAbility<HeroAttack>().Processor as AttackProcessor_Yone;
+    }
+
+    public override void Begin(out float animLength) {
+        sword = (YoneSword)atkProcessor.CustomInt["sword"];
+        AnimationLength = sword == YoneSword.Divine ? DIVINE_ANIM_LENGTH : DEVIL_ANIM_LENGTH;
+        Timers = sword == YoneSword.Divine ? DIVINE_TIMERS : DEVIL_TIMERS;
+        base.Begin(out animLength);
+    }
+
+    public override void Process(float timer) {
+        if (sword == YoneSword.Divine) {
+            if (timer >= Timers[0] && skillExecuted == 0) {
+                Judge();
+                skillExecuted++;
+            }
+        }
+        else {
+            if (timer >= Timers[0] && skillExecuted == 0) {
+                LightSmite();
+                skillExecuted++;
+            }
+            else if (timer >= Timers[1] && skillExecuted == 1) {
+                LightSmite();
+                skillExecuted++;
+            }
+            else if (timer >= Timers[2] && skillExecuted == 2) {
+                LightSmite();
+                skillExecuted++;
+            }
+            else if (timer >= Timers[3] && skillExecuted == 3) {
+                HeavySmite();
+                skillExecuted++;
+            }
+        }
     }
 
     void Judge() {
         if (hero.Target == null) return;
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(
-                attributes.PhysicalDamage * DIVINE_DMG_MUL,
-                DamageType.Physical, 
-                attributes.PhysicalPenetration
-            ));
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical,false,
+            scaledValues:new[]{(DIVINE_DMG_MUL, DamageType.Physical)}));
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(DIVINE_AIRBORNE_TIME);
         
         if (!hero.Target.GetAbility<HeroAttributes>().IsAlive){
@@ -37,34 +75,14 @@ public class SkillProcessor_Yone : SkillProcessor {
     void LightSmite() {
         if (hero.Target == null) return;
         
-        var dmg = attributes.PhysicalDamage * DEVIL_DMG_MUL_0;
-        var crit = attributes.Crit();
-        if (crit) {
-            dmg *= attributes.CriticalDamage;
-        }
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(
-                dmg,
-                DamageType.Physical, 
-                attributes.PhysicalPenetration,
-                crit
-            ));
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, attributes.Crit(),
+            scaledValues: new[] { (DEVIL_DMG_MUL_0, DamageType.Physical) }));
     }
 
     void HeavySmite() {
         if (hero.Target == null) return;
         
-        var dmg = attributes.PhysicalDamage * DEVIL_DMG_MUL_1;
-        var crit = attributes.Crit();
-        if (crit) {
-            dmg *= attributes.CriticalDamage;
-        }
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(
-                dmg,
-                DamageType.Physical, 
-                attributes.PhysicalPenetration,
-                crit
-            ));
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical,attributes.Crit(),
+            scaledValues: new[] { (DEVIL_DMG_MUL_1, DamageType.Physical) }));
     }
 }

@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Random = UnityEngine.Random;
 
-/// <summary>
-/// ban 5 qua ten lua, moi qua gay st = 70% st vat ly, co the chi mang
-/// sat thuong dau ra ngau nhien la st vat ly, st phep, hoac st chuan
-/// net la st vat ly hoac st phep thi co 50% xuyen giap
-/// </summary>
 public class SkillProcessor_Jinx : SkillProcessor {
     public const int ROCKETS = 5;
     public const int INTERVAL = 200;
@@ -17,8 +12,23 @@ public class SkillProcessor_Jinx : SkillProcessor {
     List<Hero> affectedTargets = new();
     
     public SkillProcessor_Jinx(Hero hero) : base(hero) {
-        events = new Action[] { ShotRockets };
+        AnimationLength = 4.2f;
+        Timers = new[] { 2f };
         Unstoppable = true;
+        Description = "Bắn 5 quả tên lửa, mỗi quả gây sát thương bằng " +
+                      $"({DMG_MUL_PER_ROCKET * 100}% sát thương vật lý), " +
+                      $"có thể chí mạng. Sát thương đầu ra ngẫu nhiên là " +
+                      $"sát thương vật lý, sát thương phép hoặc sát thương chuẩn. " +
+                      $"Nếu là sát thương vật lý thì sẽ kèm {PENETRATION * 100}% xuyên giáp. " +
+                      $"Nếu là sát thương phép thì sẽ kèm {PENETRATION * 100}% xuyên kháng.\n" +
+                      $"Trong thời gian sử dụng kỹ năng, không thể bị cản phá.";
+    }
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            ShotRockets();
+            skillExecuted++;
+        }
     }
 
     async void ShotRockets() {
@@ -34,18 +44,32 @@ public class SkillProcessor_Jinx : SkillProcessor {
         if (hero.Target == null) return;
 
         var type = Random.Range(0, 3);
-        var dmg = attributes.PhysicalDamage * DMG_MUL_PER_ROCKET;
-        var crit = attributes.Crit();
-        if (crit) {
-            dmg *= attributes.CriticalDamage;
+        Damage dmg = default;
+        switch (type) {
+            case 0:
+                dmg = attributes.GetDamage(DamageType.Physical, attributes.Crit(),
+                    scaledValues: new[] { (DMG_MUL_PER_ROCKET, DamageType.Physical) });
+                dmg.penetration = PENETRATION;
+                break;
+            
+            case 1:
+                dmg = attributes.GetDamage(DamageType.Magical, attributes.Crit(),
+                    scaledValues: new[] { (DMG_MUL_PER_ROCKET, DamageType.Physical) });
+                dmg.penetration = PENETRATION;
+                break;
+            
+            case 2:
+                dmg = attributes.GetDamage(DamageType.True, attributes.Crit(),
+                    scaledValues: new[] { (DMG_MUL_PER_ROCKET, DamageType.Physical) });
+                break;
         }
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(type switch {
-            0 => Damage.Create(dmg * DMG_MUL_PER_ROCKET, DamageType.Physical, PENETRATION, crit),
-            1 => Damage.Create(dmg * DMG_MUL_PER_ROCKET, DamageType.Magical, PENETRATION, crit),
-            _ => Damage.Create(dmg * DMG_MUL_PER_ROCKET, DamageType.True, 0,crit),
-        }
-        , !affectedTargets.Contains(hero.Target));
+
+        var isNewTarget = !affectedTargets.Contains(hero.Target);
         
-        affectedTargets.Add(hero.Target);
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, isNewTarget);
+
+        if (isNewTarget) {
+            affectedTargets.Add(hero.Target);
+        }
     }
 }

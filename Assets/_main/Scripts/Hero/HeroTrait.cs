@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Hero/Trait")]
 public class HeroTrait : ScriptableObject {
     [TitleGroup("Identity")]
-    public string id;
+    [StringDropdown(typeof(HeroId))] public string id;
     public new string name;
     public string subName;
     public bool summoned;
@@ -79,4 +79,23 @@ public class HeroTrait : ScriptableObject {
     public string DisplayName() {
         return name + (subName.IsValid() ? "\n" + subName : "");
     }
+}
+
+public static class HeroId {
+    public const string Aatrox_Dark = "Aatrox_Dark";
+    public const string Aatrox_Light = "Aatrox_Light";
+    public const string Akali = "Akali";
+    public const string Ashe = "Ashe";
+    public const string Caitlyn = "Caitlyn";
+    public const string Irelia = "Irelia";
+    public const string Jinx = "Jinx";
+    public const string Katarina = "Katarina";
+    public const string Malphite = "Malphite";
+    public const string MissFortune = "MissFortune";
+    public const string Morgana = "Morgana";
+    public const string Teemo = "Teemo";
+    public const string Tristana = "Tristana";
+    public const string Yasuo = "Yasuo";
+    public const string Yone = "Yone";
+    public const string Zed = "Zed";
 }

@@ -1,10 +1,3 @@
-using System;
-
-/// <summary>
-/// nem phi tieu vao 1 muc tieu, gay 100% st vat ly
-/// sau do nhay xuong va kich no phi tieu gay st chi mang nen muc tieu chinh
-/// va pham vi 1 xung quanh, gay choang 1s cho muc tieu chinh va choang 0.5s cho muc tieu khac
-/// </summary>
 public class SkillProcessor_Zed : SkillProcessor {
     Hero aimedTarget;
     
@@ -14,30 +7,38 @@ public class SkillProcessor_Zed : SkillProcessor {
     const float STUN_OTHERS = 0.5f;
 
     public SkillProcessor_Zed(Hero hero) : base(hero) {
-        events = new Action[]{ThrowShurikens, TriggerExplosion};
+        AnimationLength = 3;
+        Timers = new[] { 0.83f, 1.66f };
+        Description = "Nhảy lên và ném phi tiêu vào 1 mục tiêu gây sát thương vật lý bằng " +
+                      $"({DMG_MUL * 100}% sát thương vật lý) sau đó nhảy xuống, kích nổ phi tiêu " +
+                      $"gây sát thương chí mạng cho mục tiêu và phạm vi {RANGE} xung quanh, " +
+                      $"gây choáng {STUN_MAIN} cho mục tiêu chính và {STUN_OTHERS} cho các mục tiêu khác.";
+    }
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            ThrowShurikens();
+            skillExecuted++;
+        }
+        else if (timer >= Timers[1] && skillExecuted == 1) {
+            TriggerExplosion();
+            skillExecuted++;
+        }
     }
 
     void ThrowShurikens() {
         if (hero.Target == null) return;
 
         aimedTarget = hero.Target;
-        aimedTarget.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(
-                attributes.PhysicalDamage * DMG_MUL, 
-                DamageType.Physical, 
-                attributes.PhysicalPenetration
-            ));
+        aimedTarget.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+            scaledValues: new[] { (DMG_MUL, DamageType.Physical) }));
     }
 
     void TriggerExplosion() {
         if (aimedTarget == null) return;
         
-        aimedTarget.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(
-                attributes.PhysicalDamage * attributes.CriticalDamage,
-                DamageType.Physical,
-                attributes.PhysicalPenetration
-            ));
+        aimedTarget.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical,true,
+            scaledValues: new[] { (1f, DamageType.Physical) }));
         aimedTarget.GetAbility<HeroStatusEffects>().Stun(STUN_MAIN);
         
         // same error with yasuo skill, review later

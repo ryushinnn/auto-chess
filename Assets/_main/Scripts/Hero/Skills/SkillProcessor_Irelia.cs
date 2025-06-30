@@ -1,23 +1,29 @@
-using System;
-
-/// <summary>
-/// trieu hoi rong tan cong ke dich, gay st phep = 250% st vat ly
-/// hat tung ke dich trong 1s
-/// </summary>
 public class SkillProcessor_Irelia : SkillProcessor {
     const float DMG_MUL = 2.5f;
     const float AIRBRONE_TIME = 1; //ms
     
     public SkillProcessor_Irelia(Hero hero) : base(hero) {
-        events = new Action[] { SummonDragon };
+        AnimationLength = 4.8f;
+        Timers = new[] { 4.23f };
+        Description = "Triệu hồi rồng thần tấn công kẻ địch gây sát thương phép " +
+                      $"bằng ({DMG_MUL * 100}% sát thương vật lý) và hất tung " +
+                      $"mục tiêu trong {AIRBRONE_TIME}s.\n" +
+                      $"Trong thời gian sử dụng kỹ năng, không thể bị cản phá.";
         Unstoppable = true;
+    }
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            SummonDragon();
+            skillExecuted++;
+        }
     }
 
     void SummonDragon() {
         if (hero.Target == null) return;
 
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(attributes.PhysicalDamage * DMG_MUL, DamageType.Magical, attributes.MagicalPenetration));
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
+            scaledValues: new[]{(DMG_MUL, DamageType.Physical)}));
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBRONE_TIME);
     }
 }

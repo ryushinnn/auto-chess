@@ -1,15 +1,5 @@
 using System;
-using Random = UnityEngine.Random;
 
-/// <summary>
-/// chem 3 lan, lan luot gay 70%/150%/200% st vat ly,
-/// hat tung muc tieu 0.2s/0.2s/0.5s
-/// neu muc tieu duoi 50% mau, cac don chem se gay them hieu ung
-/// don 1: giam 25% giap trong 5s 
-/// don 2: gay them st chuan = 50% st vat ly
-/// don 3: co the chi mang
-/// khi dang dung skill, khong the can pha
-/// </summary>
 public class SkillProcessor_Aatrox_Dark : SkillProcessor {
     const float DMG_MUL_0 = 0.7f;
     const float DMG_MUL_1 = 1.5f;
@@ -37,8 +27,6 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
                       $"- Đòn 2: gây thêm sát thương chuẩn bằng ({BONUS_TRUE_DMG_MUL * 100}% sát thương vật lý)\n" +
                       $"- Đòn 3: Có thể chí mạng\n" +
                       $"Khi đang sử dụng kỹ năng, không thể bị cản phá";
-        
-        events = new Action[]{LightSlash, MediumSlash, HeavySlash};
     }
 
     public override void Process(float timer) {
@@ -59,12 +47,6 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
     void LightSlash() {
         if (hero.Target == null) return;
         
-        // hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-        //     Damage.Create(
-        //         attributes.PhysicalDamage * DMG_MUL_0,
-        //         DamageType.Physical,
-        //         attributes.PhysicalPenetration
-        //     ));
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
             scaledValues: new[] { (DMG_MUL_0, DamageType.Physical) })
         );
@@ -88,12 +70,6 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
         if (hero.Target == null) return;
         
         if (hero.Target.GetAbility<HeroAttributes>().HpPercentage >= HP_THRESHOLD) {
-            // hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            //     Damage.Create(
-            //         attributes.PhysicalDamage * DMG_MUL_1,
-            //         DamageType.Physical,
-            //         attributes.PhysicalPenetration
-            //     ));
             hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
                 scaledValues: new[] { (DMG_MUL_1, DamageType.Physical) })
             );
@@ -125,18 +101,9 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
     void HeavySlash() {
         if (hero.Target == null) return;
         
-        var dmg = attributes.PhysicalDamage * DMG_MUL_2;
-        var crit = attributes.Crit();
-        if (crit) {
-            dmg *= attributes.CriticalDamage;
-        }
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(
-                dmg,
-                DamageType.Physical,
-                attributes.PhysicalPenetration,
-                crit
-            ));
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, attributes.Crit(),
+            scaledValues: new[] { (DMG_MUL_2, DamageType.Physical) })
+        );
         
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_2);
     }

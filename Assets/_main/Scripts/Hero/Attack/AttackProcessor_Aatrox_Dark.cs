@@ -1,12 +1,6 @@
 using System;
 using UnityEngine;
 
-/// <summary>
-/// don danh gay st 2 lan, moi lan gay 30-50% st vat ly
-/// dua theo mau da mat cua muc tieu
-/// don danh dau tien ko the chi mang
-/// don danh thu 2 chac chan chi mang
-/// </summary>
 public class AttackProcessor_Aatrox_Dark : AttackProcessor {
     const float MIN_DMG_MUL = 0.5f;
     const float MAX_DMG_MUL = 1;

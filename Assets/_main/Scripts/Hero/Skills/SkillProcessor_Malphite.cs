@@ -1,11 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-/// <summary>
-/// tang 200% giap va khoang phep, toi da khang hieu ung,
-/// nhung bi giam 50% toc do danh, duy tri 5s
-/// nhay len roi giam xuong gay st = 100% st vay ly va hat tung ke dich 2s
-/// </summary>
 public class SkillProcessor_Malphite : SkillProcessor {
     const string EFFECT_KEY = "malphite_unstoppable";
     const float DEFENSE_MUL = 2;
@@ -15,7 +10,24 @@ public class SkillProcessor_Malphite : SkillProcessor {
     const float AIRBORNE_DURATION = 2f;
     
     public SkillProcessor_Malphite(Hero hero) : base(hero) {
-        events = new Action[] { Strengthen, Slam };
+        AnimationLength = 4.7f;
+        Timers = new[] { 0.46f, 2.3f };
+        Description = $"Tăng {DEFENSE_MUL * 100}% giáp và kháng phép, tối đa kháng hiệu ứng, " +
+                      $"nhưng bị giảm {ATK_SPEED_REDUCE_MUL * -100}% tốc độ đánh, " +
+                      $"duy trì {EFFECT_DURATION}s. Vận sức nhảy lên rồi giáng xuống " +
+                      $"gây sát thương vật lý bằng ({DMG_MUL * 100}% sát thương vật lý) " +
+                      $"và hất tung kẻ địch trong {AIRBORNE_DURATION}s.";
+    }
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            Strengthen();
+            skillExecuted++;
+        }
+        else if (timer >= Timers[1] && skillExecuted == 1) {
+            Slam();
+            skillExecuted++;
+        }
     }
 
     void Strengthen() {
@@ -38,12 +50,8 @@ public class SkillProcessor_Malphite : SkillProcessor {
     void Slam() {
         if (hero.Target == null) return;
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(
-                attributes.PhysicalDamage * DMG_MUL,
-                DamageType.Physical,
-                attributes.PhysicalPenetration
-            ));
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+            scaledValues: new[] { (DMG_MUL, DamageType.Physical) }));
         
         hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_DURATION);
     }

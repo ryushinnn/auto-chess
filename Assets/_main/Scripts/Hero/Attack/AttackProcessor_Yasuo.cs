@@ -1,8 +1,5 @@
 ﻿using System;
 
-/// <summary>
-/// moi don danh thu 3 se gay them 50% st chuan
-/// </summary>
 public class AttackProcessor_Yasuo : AttackProcessor {
     int count = 0;
     

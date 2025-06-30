@@ -2,19 +2,35 @@
 using RExt.Extension;
 using UnityEngine;
 
-/// <summary>
-/// nem 3 qua bom, gay 100% st phep, +10% st phep voi moi cong don thieu dot
-/// moi qua bom deu gay them hieu ung thieu dot
-/// qua thu 3 gay st chi mang
-/// </summary>
 public class SkillProcessor_Teemo : SkillProcessor {
     const float DMG_MUL = 1f;
     const float DMG_MUL_PER_IGNITE = 0.1f;
     
     public SkillProcessor_Teemo(Hero hero) : base(hero) {
-        events = new Action[]{ThrowBomb, ThrowBigBomb};
+        AnimationLength = 4;
+        Timers = new[] { 1.56f, 2.73f, 3.29f };
+        Description = "Ném 3 quả bom, mỗi quả bom gây sát thương phép bằng " +
+                      $"({DMG_MUL * 100}% sát thương phép), tăng {DMG_MUL_PER_IGNITE * 100}% " +
+                      $"sát thương với mỗi cộng dồn HOẢ NGỤC trên mục tiêu. Mỗi quả bom " +
+                      $"đều thêm 1 cộng dồn và làm mới thời gian duy trì của hiệu ứng " +
+                      $"HOẢ NGỤC. Quả bom thứ 3 gây sát thương chí mạng.";
     }
-    
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            ThrowBomb();
+            skillExecuted++;
+        }
+        else if (timer >= Timers[1] && skillExecuted == 1) {
+            ThrowBomb();
+            skillExecuted++;
+        }
+        else if (timer >= Timers[2] && skillExecuted == 2) {
+            ThrowBigBomb();
+            skillExecuted++;
+        }
+    }
+
     void ThrowBomb() {
         if (hero.Target == null) return;
 
@@ -27,14 +43,10 @@ public class SkillProcessor_Teemo : SkillProcessor {
             0
         );
 
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            new[] {
-                Damage.Create(
-                    attributes.MagicalDamage * (DMG_MUL + DMG_MUL_PER_IGNITE * currentStacks),
-                    DamageType.Magical,
-                    attributes.MagicalPenetration),
-                igniteDmg
-            });
+        var mainDmg = attributes.GetDamage(DamageType.Magical, false,
+            scaledValues: new[] { (DMG_MUL + DMG_MUL_PER_IGNITE * currentStacks, DamageType.Magical) });
+
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] { mainDmg, igniteDmg });
         
         hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
             DamageOverTime.Create(
@@ -61,15 +73,10 @@ public class SkillProcessor_Teemo : SkillProcessor {
             0
         );
 
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            new[] {
-                Damage.Create(
-                    attributes.MagicalDamage * (DMG_MUL + DMG_MUL_PER_IGNITE * currentStacks) * attributes.CriticalDamage,
-                    DamageType.Magical,
-                    attributes.MagicalPenetration,
-                    true),
-                igniteDmg
-            });
+        var mainDmg = attributes.GetDamage(DamageType.Magical, true,
+            scaledValues: new[] { (DMG_MUL + DMG_MUL_PER_IGNITE * currentStacks, DamageType.Magical) });
+
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] { mainDmg, igniteDmg });
         
         hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
             DamageOverTime.Create(

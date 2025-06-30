@@ -26,10 +26,20 @@ public class HeroAttack : HeroAbility {
         processor = hero.Trait.id switch {
             "Aatrox_Dark" => new AttackProcessor_Aatrox_Dark(hero),
             "Aatrox_Light" => new AttackProcessor_Aatrox_Light(hero),
+            "Akali" => new AttackProcessor_Akali(hero),
+            "Ashe" => new AttackProcessor_Ashe(hero),
+            "Caitlyn" => new AttackProcessor_Caitlyn(hero),
+            "Irelia" => new AttackProcessor_Irelia(hero),
+            "Jinx" => new AttackProcessor_Jinx(hero),
+            "Katarina" => new AttackProcessor_Katarina(hero),
+            "Malphite" => new AttackProcessor_Malphite(hero),
+            "MissFortune" => new AttackProcessor_MissFortune(hero),
+            "Morgana" => new AttackProcessor_Morgana(hero),
+            "Teemo" => new AttackProcessor_Teemo(hero),
+            "Tristana" => new AttackProcessor_Tristana(hero),
             "Yasuo" => new AttackProcessor_Yasuo(hero),
             "Yone" => new AttackProcessor_Yone(hero),
-            "MissFortune" => new AttackProcessor_MissFortune(hero),
-            "Teemo" => new AttackProcessor_Teemo(hero),
+            "Zed" => new AttackProcessor_Zed(hero),
             _ => new AttackProcessor(hero)
         };
         

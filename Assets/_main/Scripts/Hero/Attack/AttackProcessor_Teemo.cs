@@ -2,11 +2,6 @@
 using RExt.Extension;
 using UnityEngine;
 
-/// <summary>
-/// don danh se kem theo 1 cong don hoa nguc trong 3s
-/// moi 0.5s gay st chuan = 0.1% maxhp cua ke dich, toi da = 1% st phep
-/// cong don toi da 5 lan
-/// </summary>
 public class AttackProcessor_Teemo : AttackProcessor {
     public const string DOT_KEY = "teemo_hell_flame";
     public const int MAX_STACKS = 5;

@@ -120,6 +120,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 1
+  timer: 0
+  isUsingSkill: 0
+  duration: 0
 --- !u!1 &1677607567005159238
 GameObject:
   m_ObjectHideFlags: 0
@@ -1061,6 +1064,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8215626553261558385}
+  - component: {fileID: 8079385057818814487}
   m_Layer: 6
   m_Name: UI
   m_TagString: Untagged
@@ -1084,6 +1088,19 @@ Transform:
   - {fileID: 5339945467397470380}
   m_Father: {fileID: 5818875195950071551}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8079385057818814487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4840080407112861970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d386dc6f3f44db5b9bab009538b3bca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 8494226802168659207}
 --- !u!1 &4922584208460983745
 GameObject:
   m_ObjectHideFlags: 0
@@ -1359,6 +1376,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActive: 1
   currentAttackCooldown: 0
+  timer: 0
+  isAttacking: 0
+  duration: 0
 --- !u!1 &6400240761740710661
 GameObject:
   m_ObjectHideFlags: 0
@@ -1669,6 +1689,7 @@ MonoBehaviour:
   side: 0
   rank: 0
   state: 0
+  isOnMap: 0
   target: {fileID: 0}
   dev_mapNode: {x: 0, y: 0}
   dev_targetNode: {x: 0, y: 0}

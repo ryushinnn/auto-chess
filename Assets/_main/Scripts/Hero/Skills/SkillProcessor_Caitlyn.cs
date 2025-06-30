@@ -2,10 +2,6 @@ using System;
 using System.Threading.Tasks;
 using RExt.Extension;
 
-/// <summary>
-/// an banh hoi mau trong 1.5s, moi 0.25s hoi mau = 3% maxhp + 15% st vat ly
-/// sau do tang 25% toc do danh trong 3s
-/// </summary>
 public class SkillProcessor_Caitlyn : SkillProcessor {
     const float HP_MUL_TO_HEAL = 0.03f;
     const float DMG_MUL_TO_HEAL = 0.15f;
@@ -17,8 +13,25 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
     const string ATK_SPD_KEY = "caitlyn_cake_atkspd";
     
     public SkillProcessor_Caitlyn(Hero hero) : base(hero) {
-        events = new Action[] { DrinkTea, Focus };
+        AnimationLength = 6.5f;
+        Timers = new[] { 2.2f, 5.6f };
         Unstoppable = true;
+        Description = $"Ăn bánh giúp hồi máu trong {TOTAL_TIME/1000f}s, " +
+                      $"mỗi {INTERVAL/1000f}s hồi máu bằng ({HP_MUL_TO_HEAL*100}% máu tối đa + " +
+                      $"{DMG_MUL_TO_HEAL*100}% sát thương vật lý). Sau đó tăng " +
+                      $"{ATK_SPD_MUL*100}% tốc độ đánh trong {ATK_SPD_DURATION}s\n" +
+                      $"Trong thời gian sử dụng kỹ năng, không thể bị cản phá.";        
+    }
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            DrinkTea();
+            skillExecuted++;
+        }
+        else if (timer >= Timers[1] && skillExecuted == 1) {
+            Focus();
+            skillExecuted++;
+        }
     }
 
     void DrinkTea() {

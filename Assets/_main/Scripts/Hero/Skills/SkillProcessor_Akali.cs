@@ -1,17 +1,21 @@
-﻿using System;
-
-/// <summary>
-/// nem bom mu vao 1 muc tieu
-/// neu muc tieu co nhieu hon hoac bang 50 nang luong, gay cam lang 2s
-/// neu muc tieu co it hon 50 nang luong, gay choang 1s,
-/// </summary>
-public class SkillProcessor_Akali : SkillProcessor {
+﻿public class SkillProcessor_Akali : SkillProcessor {
     const float ENERGY_THRESHOLD = 50;
     const float SILENT_DURATION = 2;
     const float STUN_DURATION = 1;
     
     public SkillProcessor_Akali(Hero hero) : base(hero) {
-        events = new Action[]{ThrowBomb};
+        AnimationLength = 1;
+        Timers = new[] { 0.2f };
+        Description = $"Ném bom mù vào 1 mục tiêu, nếu mục tiêu có ít nhất {ENERGY_THRESHOLD} " +
+                      $"năng lượng, gây câm lặng trong {SILENT_DURATION}s, ngược lại gây " +
+                      $"choáng trong {STUN_DURATION}s.";
+    }
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            ThrowBomb();
+            skillExecuted++;
+        }
     }
 
     void ThrowBomb() {

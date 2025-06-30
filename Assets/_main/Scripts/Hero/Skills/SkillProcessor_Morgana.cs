@@ -1,16 +1,23 @@
 ﻿using System;
 using UnityEngine;
 
-/// <summary>
-/// hoi mau = 10% - 30% maxhp ban than + 200% st phep dua vao mau da mat
-/// </summary>
 public class SkillProcessor_Morgana : SkillProcessor {
     const float MAX_HP_TO_HEAL_MIN = 0.1f;
     const float MAX_HP_TO_HEAL_MAX = 0.3f;
     const float DMG_TO_HEAL_MUL = 2f;
 
     public SkillProcessor_Morgana(Hero hero) : base(hero) {
-        events = new Action[] { OpenWings };
+        AnimationLength = 1;
+        Timers = new[] { 0.41f };
+        Description = $"Hồi máu bằng ({MAX_HP_TO_HEAL_MIN * 100}%~{MAX_HP_TO_HEAL_MAX * 100}% " +
+                      $"máu tối đa + {DMG_TO_HEAL_MUL * 100}% sát thương phép).";
+    }
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            OpenWings();
+            skillExecuted++;
+        }
     }
 
     void OpenWings() {

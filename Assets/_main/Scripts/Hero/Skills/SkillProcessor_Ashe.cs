@@ -5,10 +5,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-/// <summary>
-/// ban ngau nhien 5-10 loat mua ten vao muc tieu va pham vi 1 xung quanh
-/// moi loat mua ten gay 25% st vat ly kem 80% xuyen giap va co the chi mang
-/// </summary>
 public class SkillProcessor_Ashe : SkillProcessor {
     const int MIN_ARROW_SET = 10;
     const int MAX_ARROW_SET = 20;
@@ -19,7 +15,19 @@ public class SkillProcessor_Ashe : SkillProcessor {
     List<Hero> affectedTargets = new();
     
     public SkillProcessor_Ashe(Hero hero) : base(hero) {
-        events = new Action[] { ShotArrows };
+        AnimationLength = 3;
+        Timers = new[] { 0.75f };
+        Description = $"Bắn ngẫu nhiên {MIN_ARROW_SET}-{MAX_ARROW_SET} loạt mưa tên vào mục tiêu " +
+                      "và phạm vi 1 xung quanh. Mỗi loạt mưa tên gây sát thương vật lý bằng " +
+                      $"({DMG_MUL * 100}% sát thương vật lý) kèm {PENETRATION*100}% " +
+                      $"xuyên giáp và có thể chí mạng.";
+    }
+
+    public override void Process(float timer) {
+        if (timer >= Timers[0] && skillExecuted == 0) {
+            ShotArrows();
+            skillExecuted++;
+        }
     }
 
     async void ShotArrows() {
@@ -35,20 +43,16 @@ public class SkillProcessor_Ashe : SkillProcessor {
 
     void ShotArrow() {
         if (hero.Target == null) return;
+
+        var dmg = attributes.GetDamage(DamageType.Physical, attributes.Crit(),
+            scaledValues: new[] { (DMG_MUL, DamageType.Physical) });
+        dmg.penetration = PENETRATION;
+        var isNewTarget = !affectedTargets.Contains(hero.Target);
         
-        var dmg = attributes.PhysicalDamage * DMG_MUL;
-        var crit = attributes.Crit();
-        if (crit) {
-            dmg *= attributes.CriticalDamage;
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, isNewTarget);
+
+        if (isNewTarget) {
+            affectedTargets.Add(hero.Target);
         }
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(
-            Damage.Create(
-                dmg,
-                DamageType.Physical, 
-                PENETRATION,
-                crit
-            ), !affectedTargets.Contains(hero.Target));
-        
-        affectedTargets.Add(hero.Target);
     }
 }

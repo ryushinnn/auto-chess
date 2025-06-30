@@ -4,15 +4,20 @@ using RExt.Utils;
 using UnityEngine;
 
 public class Mecanim_Caitlyn : Mecanim {
-    protected override IEnumerator DoUseSkill(Action[] events) {
+    Coroutine skillCoroutine;
+    
+    public override void UseSkill() {
+        if (skillCoroutine != null) {
+            StopCoroutine(skillCoroutine);
+        }
+        skillCoroutine = StartCoroutine(DoUseSkill());
+    }
+
+    IEnumerator DoUseSkill() {
         Interact(Interaction.Skill, (paramSkill, 0));
         yield return BetterWaitForSeconds.Wait(1f);
         bodyParts.SetBodyParts(0,("cake",true));
-        yield return BetterWaitForSeconds.Wait(1.2f);
-        events[0]();
-        yield return BetterWaitForSeconds.Wait(1.9f);
+        yield return BetterWaitForSeconds.Wait(3.1f);
         bodyParts.SetBodyParts(0,("cake",false));
-        yield return BetterWaitForSeconds.Wait(1.5f);
-        events[1]();
     }
 }
