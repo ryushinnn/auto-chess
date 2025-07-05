@@ -6,8 +6,9 @@
     public SkillProcessor_Akali(Hero hero) : base(hero) {
         AnimationLength = 1;
         Timers = new[] { 0.2f };
+        Name = "Ám Quang Chi Thuật";
         Description = $"Ném bom mù vào 1 mục tiêu, nếu mục tiêu có ít nhất {ENERGY_THRESHOLD} " +
-                      $"năng lượng, gây câm lặng trong {SILENT_DURATION}s, ngược lại gây " +
+                      $"<sprite name=eng>, gây câm lặng trong {SILENT_DURATION}s, ngược lại gây " +
                       $"choáng trong {STUN_DURATION}s.";
     }
 

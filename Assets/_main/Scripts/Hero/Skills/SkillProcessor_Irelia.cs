@@ -5,10 +5,10 @@ public class SkillProcessor_Irelia : SkillProcessor {
     public SkillProcessor_Irelia(Hero hero) : base(hero) {
         AnimationLength = 4.8f;
         Timers = new[] { 4.23f };
-        Description = "Triệu hồi rồng thần tấn công kẻ địch gây sát thương phép " +
-                      $"bằng ({DMG_MUL * 100}% sát thương vật lý) và hất tung " +
-                      $"mục tiêu trong {AIRBRONE_TIME}s.\n" +
-                      $"Trong thời gian sử dụng kỹ năng, không thể bị cản phá.";
+        Name = "Hắc Long Chưởng";
+        Description = $"Triệu hồi rồng thần tấn công kẻ địch gây ({DMG_MUL * 100}% <sprite name=pdmg>) sát thương phép " +
+                      $"và hất tung mục tiêu trong {AIRBRONE_TIME}s.\n" +
+                      $"(Trong thời gian sử dụng kỹ năng, không thể bị cản phá)";
         Unstoppable = true;
     }
 

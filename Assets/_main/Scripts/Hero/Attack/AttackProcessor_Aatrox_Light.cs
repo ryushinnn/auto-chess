@@ -2,7 +2,6 @@ public class AttackProcessor_Aatrox_Light : AttackProcessor {
     public AttackProcessor_Aatrox_Light(Hero hero) : base(hero) {
         AnimationLength = 1.367f;
         Timers = new[] { 0.18f };
-        Description = "Gây sát thương phép bằng (100% sát thương phép)";
     }
 
     public override void Process(float timer) {

@@ -8,10 +8,9 @@ public class AttackProcessor_Aatrox_Dark : AttackProcessor {
     public AttackProcessor_Aatrox_Dark(Hero hero) : base(hero) {
         AnimationLength = 2.167f;
         Timers = new[] { 0.9f, 1.9f };
-        Description = "Chém 2 lần, mỗi lần gây sát thương vật lý " +
-                      $"bằng ({MIN_DMG_MUL * 100}%~{MAX_DMG_MUL * 100}% " +
-                      $"sát thương vật lý) dựa trên máu đã mất của mục " +
-                      $"tiêu. Nhát chém đầu tiên không thể chí mạng, " +
+        Description = "Đòn đánh sẽ chém liên tiếp 2 nhát, mỗi nhát gây " +
+                      $"({MIN_DMG_MUL * 100}%~{MAX_DMG_MUL * 100}% <sprite name=pdmg>) sát thương vật lý " +
+                      $"dựa trên máu đã mất của mục tiêu. Nhát chém đầu tiên không thể chí mạng, " +
                       $"nhát chém thứ 2 chắc chắn chí mạng.";
     }
 

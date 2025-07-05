@@ -26,6 +26,9 @@ public class HeroPicker : MonoBehaviour {
         if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mapLayerMask) && hit.collider != null) {
             offset = new Vector3(hero.transform.position.x - hit.point.x, 0, hero.transform.position.z - hit.point.z);
         }
+
+        ArenaUIManager.Instance.HeroInfo.Open();
+        ArenaUIManager.Instance.HeroInfo.Initialize(hero);
     }
 
     void OnMouseDrag() {

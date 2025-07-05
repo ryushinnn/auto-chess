@@ -16,11 +16,12 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
         AnimationLength = 6.5f;
         Timers = new[] { 2.2f, 5.6f };
         Unstoppable = true;
+        Name = "Đến giờ trà chiều rồi! ^_^";
         Description = $"Ăn bánh giúp hồi máu trong {TOTAL_TIME/1000f}s, " +
-                      $"mỗi {INTERVAL/1000f}s hồi máu bằng ({HP_MUL_TO_HEAL*100}% máu tối đa + " +
-                      $"{DMG_MUL_TO_HEAL*100}% sát thương vật lý). Sau đó tăng " +
-                      $"{ATK_SPD_MUL*100}% tốc độ đánh trong {ATK_SPD_DURATION}s\n" +
-                      $"Trong thời gian sử dụng kỹ năng, không thể bị cản phá.";        
+                      $"mỗi {INTERVAL/1000f}s hồi máu bằng ({HP_MUL_TO_HEAL*100}% <sprite name=hp> tối đa + " +
+                      $"{DMG_MUL_TO_HEAL*100}% <sprite name=pdmg>). Sau đó tăng " +
+                      $"{ATK_SPD_MUL*100}% <sprite name=aspd> trong {ATK_SPD_DURATION}s.\n" +
+                      $"(Trong thời gian sử dụng kỹ năng, không thể bị cản phá)";        
     }
 
     public override void Process(float timer) {

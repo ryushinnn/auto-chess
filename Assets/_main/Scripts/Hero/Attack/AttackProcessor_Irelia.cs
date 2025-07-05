@@ -2,7 +2,6 @@
     public AttackProcessor_Irelia(Hero hero) : base(hero) {
         AnimationLength = 1.3f;
         Timers = new[] { 0.2f };
-        Description = "Gây sát thương vật lý bằng (100% sát thương vật lý)";
     }
     
     public override void Process(float timer) {

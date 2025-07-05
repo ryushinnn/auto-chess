@@ -18,13 +18,13 @@ public class SkillProcessor_Aatrox_Light : SkillProcessor {
         AnimationLength = 5f;
         Timers = new[] { 0.6f, 2.3f, 4.1f };
         Unstoppable = true;
-        Description = "Chém 3 lần, lần lượt gây sát thương phép bằng " +
-                      $"({DMG_MUL_0 * 100}%/{DMG_MUL_1 * 100}%/{DMG_MUL_2 * 100}% sát thương phép) " +
+        Name = "Nguyệt Thực: Bạch Vân Liên Trảm";
+        Description = $"Chém 3 nhát, lần lượt gây ({DMG_MUL_0 * 100}%/{DMG_MUL_1 * 100}%/{DMG_MUL_2 * 100}% <sprite name=mdmg>) sát thương phép " +
                       $"và hất tung mục tiêu trong {AIRBORNE_TIME_0}s/{AIRBORNE_TIME_1}s/{AIRBORNE_TIME_2}s " +
-                      $"và hồi máu bằng {VAMP_0 * 100}%/{VAMP_1 * 100}%/{VAMP_2 * 100}% " +
-                      $"sát thương gây ra. Nếu máu thấp hơn {HP_THRESHOLD * 100}%, " +
-                      $"lượng máu hồi phục x{VAMP_MUL_WHEN_LOW_HP}.\n" +
-                      $"Khi đang sử dụng kĩ năng, không thể bị cản phá.";
+                      $"đồng thời hồi máu bằng {VAMP_0 * 100}%/{VAMP_1 * 100}%/{VAMP_2 * 100}% " +
+                      $"sát thương gây ra. Nếu bản thân có thấp hơn {HP_THRESHOLD * 100}% <sprite name=hp>, " +
+                      $"lượng máu hồi phục gấp {VAMP_MUL_WHEN_LOW_HP} lần.\n" +
+                      $"(Khi đang sử dụng kĩ năng, không thể bị cản phá)";
     }
     
     public override void Process(float timer) {

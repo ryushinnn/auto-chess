@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HeroSkill : HeroAbility {
     public bool IsUsingSkill => isUsingSkill;
+    public SkillProcessor Processor => processor;
 
     HeroAttributes attributes;
     HeroRotation rotation;

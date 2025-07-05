@@ -2,7 +2,6 @@
     public AttackProcessor_Akali(Hero hero) : base(hero) {
         AnimationLength = 1.2f;
         Timers = new[] { 0.18f };
-        Description = "Gây sát thương phép bằng (100% sát thương phép)";
     }
     
     public override void Process(float timer) {

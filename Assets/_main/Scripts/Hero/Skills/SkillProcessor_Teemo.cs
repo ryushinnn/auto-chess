@@ -9,11 +9,11 @@ public class SkillProcessor_Teemo : SkillProcessor {
     public SkillProcessor_Teemo(Hero hero) : base(hero) {
         AnimationLength = 4;
         Timers = new[] { 1.56f, 2.73f, 3.29f };
-        Description = "Ném 3 quả bom, mỗi quả bom gây sát thương phép bằng " +
-                      $"({DMG_MUL * 100}% sát thương phép), tăng {DMG_MUL_PER_IGNITE * 100}% " +
-                      $"sát thương với mỗi cộng dồn HOẢ NGỤC trên mục tiêu. Mỗi quả bom " +
+        Description = $"Ném 3 quả bom, mỗi quả bom gây ({DMG_MUL * 100}% <sprite name=mdmg>) sát thương phép" +
+                      $", tăng {DMG_MUL_PER_IGNITE * 100}% " +
+                      $"sát thương với mỗi cộng dồn <color=red>HOẢ NGỤC</color> trên mục tiêu. Mỗi quả bom " +
                       $"đều thêm 1 cộng dồn và làm mới thời gian duy trì của hiệu ứng " +
-                      $"HOẢ NGỤC. Quả bom thứ 3 gây sát thương chí mạng.";
+                      $"<color=red>HOẢ NGỤC</color>. Quả bom thứ 3 gây sát thương chí mạng.";
     }
 
     public override void Process(float timer) {

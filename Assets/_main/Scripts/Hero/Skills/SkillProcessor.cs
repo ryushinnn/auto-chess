@@ -5,6 +5,7 @@ public abstract class SkillProcessor {
     public float AnimationLength { get; protected set; }
     public float[] Timers { get; protected set; }
     public bool Unstoppable { get; protected set; }
+    public string Name { get; protected set; }
     public string Description { get; protected set; }
     
     protected readonly Hero hero;

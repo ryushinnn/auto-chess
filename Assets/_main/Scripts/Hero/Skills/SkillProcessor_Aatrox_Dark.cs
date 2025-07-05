@@ -17,16 +17,15 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
         AnimationLength = 5;
         Timers = new[] { 0.6f, 2.3f, 4.1f };
         Unstoppable = true;
-        Description = "Chém 3 lần, lần lượt gây sát thương vật lý bằng " +
-                      $"({DMG_MUL_0 * 100}%/{DMG_MUL_1 * 100}%/{DMG_MUL_2 * 100}% sát " +
-                      $"thương vật lý) và hất tung mục tiêu trong " +
-                      $"{AIRBORNE_TIME_0}s/{AIRBORNE_TIME_1}s/{AIRBORNE_TIME_2}s. " +
-                      $"Nếu mục tiêu dưới {HP_THRESHOLD * 100}% máu, các đòn chém " +
+        Name = "Nhật Thực: Huyết Sát Cửu U";
+        Description = $"Chém 3 nhát, lần lượt gây ({DMG_MUL_0 * 100}%/{DMG_MUL_1 * 100}%/{DMG_MUL_2 * 100}% <sprite name=pdmg>) sát thương vật lý " +
+                      $"và hất tung mục tiêu trong {AIRBORNE_TIME_0}s/{AIRBORNE_TIME_1}s/{AIRBORNE_TIME_2}s. " +
+                      $"Nếu mục tiêu dưới {HP_THRESHOLD * 100}% <sprite name=hp>, các nhát chém " +
                       $"sẽ gây thêm hiệu ứng:\n" +
-                      $"- Đòn 1: giảm {ARMOR_REDUCE_MUL * -100}% giáp trong {ARMOR_REDUCE_DURATION}s\n" +
-                      $"- Đòn 2: gây thêm sát thương chuẩn bằng ({BONUS_TRUE_DMG_MUL * 100}% sát thương vật lý)\n" +
-                      $"- Đòn 3: Có thể chí mạng\n" +
-                      $"Khi đang sử dụng kỹ năng, không thể bị cản phá";
+                      $"- Đầu tiên: giảm {ARMOR_REDUCE_MUL * -100}% <sprite name=arm> trong {ARMOR_REDUCE_DURATION}s\n" +
+                      $"- Thứ 2: gây thêm ({BONUS_TRUE_DMG_MUL * 100}% <sprite name=pdmg>) sát thương chuẩn\n" +
+                      $"- Thứ 3: Có thể chí mạng\n" +
+                      $"(Khi đang sử dụng kỹ năng, không thể bị cản phá)";
     }
 
     public override void Process(float timer) {
