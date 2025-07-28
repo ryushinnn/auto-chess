@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager> {
+    public event Action<int> onLevelUp; 
     public Shop Shop => shop;
     public LineUp LineUp => lineUp;
     
@@ -48,6 +49,7 @@ public class GameManager : Singleton<GameManager> {
         ArenaUIManager.Instance.Arena.UpdateLevelText(level);
         ArenaUIManager.Instance.Arena.UpdateXpText(xp, currentLevelConfig.xpToNextLevel);
         lineUp.SetHeroesLimit(currentLevelConfig.maxHeroesOnMap);
+        onLevelUp?.Invoke(level);
     }
     
     [Button]

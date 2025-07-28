@@ -2,7 +2,6 @@
     public AttackProcessor_Morgana(Hero hero) : base(hero) {
         AnimationLength = 2f;
         Timers = new[] { 0.14f };
-        Description = "Gây sát thương phép bằng (100% sát thương phép)";
     }
 
     public override void Process(float timer) {

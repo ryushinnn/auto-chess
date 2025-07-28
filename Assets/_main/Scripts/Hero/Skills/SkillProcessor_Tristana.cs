@@ -8,10 +8,9 @@
         AnimationLength = 2.2f;
         Timers = new[] { 0.625f };
         Unstoppable = true;
-        Description = $"Tăng {ATK_SPD_MUL*100}% tốc độ đánh và " +
-                      $"{CRIT_CHANCE_MUL * 100}% tỷ lệ chí mạng, duy trì {DURATION}s.\n" +
-                      $"Trong thời gian sử dụng kỹ năng (không phải thời gian " +
-                      $"duy trì của kĩ năng), không thể bị cản phá.";
+        Name = "Chiến Pháo Cuồng Nộ";
+        Description = $"Tăng {ATK_SPD_MUL*100}% <sprite name=aspd> và " +
+                      $"{CRIT_CHANCE_MUL * 100}% <sprite name=crc>, duy trì {DURATION}s.";
     }
 
     public override void Process(float timer) {

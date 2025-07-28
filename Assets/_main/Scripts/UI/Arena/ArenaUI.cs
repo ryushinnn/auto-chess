@@ -27,7 +27,7 @@ public class ArenaUI : BaseUI {
     
     public void UpdateLineUpText(int current, int max) {
         lineUpText.text = $"{current}/{max}";
-        lineUpText.color = current >= max ? Color.red : Color.blue;
+        lineUpText.color = current >= max ? Color.red : Color.white;
     }
 
     void SwitchShop() {

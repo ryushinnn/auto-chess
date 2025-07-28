@@ -71,21 +71,8 @@ public abstract class Mecanim : MonoBehaviour {
         Interact(Interaction.None);
     }
 
-    public virtual void Attack(Action[] events) {
-        if (attackCoroutine != null) {
-            StopCoroutine(attackCoroutine);
-        }
-        attackCoroutine = StartCoroutine(DoAttack(events));
-    }
-
     public virtual void Attack() {
         Interact(Interaction.Attack);
-    }
-    
-    protected virtual IEnumerator DoAttack(Action[] events) {
-        Interact(Interaction.Attack);
-        yield return BetterWaitForSeconds.Wait(defaultAttackTime[0] / attackTimeMultiplier);
-        events[0].Invoke();
     }
 
     public virtual void InterruptAttack() {
@@ -93,18 +80,6 @@ public abstract class Mecanim : MonoBehaviour {
         if (attackCoroutine != null) {
             StopCoroutine(attackCoroutine);
         }
-    }
-
-    public virtual float UseSkill(Action[] events) {
-        if (useSkillCoroutine != null) {
-            StopCoroutine(useSkillCoroutine);
-        }
-        useSkillCoroutine = StartCoroutine(DoUseSkill(events));
-        return skillFullTimes[0];
-    }
-
-    protected virtual IEnumerator DoUseSkill(Action[] events) {
-        yield break;
     }
 
     public virtual void UseSkill() {
@@ -186,6 +161,6 @@ public abstract class Mecanim : MonoBehaviour {
 
     [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     void dev_Skill() {
-        UseSkill(new Action[] { () => { } });
+        UseSkill();
     }
 }

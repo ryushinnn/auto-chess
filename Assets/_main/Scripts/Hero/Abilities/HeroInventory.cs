@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -65,6 +66,10 @@ public class HeroInventory : HeroAbility {
             itemIcons[i].sprite = itemSlots[i].item.icon;
         }
         ui.anchoredPosition = new Vector2(ui.anchoredPosition.x, itemSlots.Count > 0 ? UI_HEIGHT_WITH_ITEM : UI_HEIGHT_NO_ITEM);
+    }
+
+    public Item[] Get() {
+        return itemSlots.Select(x => x.item).ToArray();
     }
 
     [Button]

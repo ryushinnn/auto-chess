@@ -9,8 +9,8 @@ public class AttackProcessor_Yasuo : AttackProcessor {
     public AttackProcessor_Yasuo(Hero hero) : base(hero) {
         AnimationLength = 1.333f;
         Timers = new[] { 0.33f };
-        Description = $"Mỗi đòn đánh thứ {COUNT_LIMIT + 1} sẽ gây thêm sát thương chuẩn " +
-                      $"bằng ({DMG_MUL * 100}% sát thương vật lý).";
+        Description = $"Mỗi đòn đánh thứ {COUNT_LIMIT + 1} sẽ gây thêm " +
+                      $"({DMG_MUL * 100}% <sprite name=pdmg>) sát thương chuẩn.";
     }
 
     public override void Process(float timer) {

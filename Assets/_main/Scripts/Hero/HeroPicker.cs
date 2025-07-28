@@ -11,6 +11,12 @@ public class HeroPicker : MonoBehaviour {
     Node node;
     Vector3 offset;
 
+    Vector3 originPos;
+    float mouseDownTime;
+    bool dragged;
+
+    const float DRAG_THRESHOLD = 0.1f;
+    const float HOLD_DURATION_THRESHOLD = 0.5f;
     const float DRAG_POS_Y = 1;
 
     void Awake() {
@@ -26,9 +32,10 @@ public class HeroPicker : MonoBehaviour {
         if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mapLayerMask) && hit.collider != null) {
             offset = new Vector3(hero.transform.position.x - hit.point.x, 0, hero.transform.position.z - hit.point.z);
         }
-
-        ArenaUIManager.Instance.HeroInfo.Open();
-        ArenaUIManager.Instance.HeroInfo.Initialize(hero);
+        
+        dragged = false;
+        originPos = hero.transform.position;
+        mouseDownTime = Time.unscaledTime;
     }
 
     void OnMouseDrag() {
@@ -69,6 +76,10 @@ public class HeroPicker : MonoBehaviour {
             MapVisual.Instance.Highlight(false);
             MapVisual.Instance.MarkAsNotAvailable(false);
             node = null;
+        }
+        
+        if ((hero.transform.position - originPos).sqrMagnitude > DRAG_THRESHOLD * DRAG_THRESHOLD) {
+            dragged = true;
         }
     }
 
@@ -154,6 +165,10 @@ public class HeroPicker : MonoBehaviour {
                 node = null;
                 MapVisual.Instance.MarkAsNotAvailable(false);
             }
+        }
+
+        if (!dragged && Time.unscaledTime - mouseDownTime < HOLD_DURATION_THRESHOLD) {
+            ArenaUIManager.Instance.HeroInfo.Open(hero);
         }
     }
 }

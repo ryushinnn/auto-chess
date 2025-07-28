@@ -15,15 +15,17 @@
     public SkillProcessor_MissFortune(Hero hero) : base(hero) {
         AnimationLength = 2.8f;
         Timers = new[] { 1f, 1.3f };
+        Name = "Hơi thở của Hoa Cải!";
         Description = "Bắn lần lượt 2 viên đạn.\n" +
-                      $"- Viên đầu tiên: Gây sát thương vật lý bằng ({L_PHYSICAL_DMG_MUL_0 * 100}% sát thương vật lý + " +
-                      $"{L_MAGICAL_DMG_MUL_0*100}% sát thương phép) cộng với sát thương phép bằng " +
-                      $"({L_PHYSICAL_DMG_MUL_1*100}% sát thương vật lý + {L_MAGICAL_DMG_MUL_1 * 100}% sát thương phép). " +
-                      $"Hồi máu bằng {VAMP_MUL * 100}% sát thương gây ra.\n" +
-                      $"- Viên thứ 2: Gây sát thương vật lý bằng ({R_PHYSICAL_DMG_MUL_0 * 100}% sát thương vật lý + " +
-                      $"{R_MAGICAL_DMG_MUL_0*100}% sát thương phép) cộng với sát thương phép bằng " +
-                      $"({R_PHYSICAL_DMG_MUL_1*100}% sát thương vật lý + {R_MAGICAL_DMG_MUL_1 * 100}% sát thương phép). " +
-                      $"Mục tiêu bị giảm {REDUCE_DEFENSE_MUL * -100}% giáp và kháng phép trong {REDUCE_DEFENSE_DURATION}s.\n" +
+                      $"- Viên đầu tiên: Gây ({L_PHYSICAL_DMG_MUL_0 * 100}% <sprite name=pdmg> + " +
+                      $"{L_MAGICAL_DMG_MUL_0*100}% <sprite name=mdmg>) sát thương vật lý cùng với " +
+                      $"({L_PHYSICAL_DMG_MUL_1*100}% <sprite name=pdmg> + {L_MAGICAL_DMG_MUL_1 * 100}% <sprite name=mdmg>) " +
+                      $"sát thương phép. Hồi máu bằng {VAMP_MUL * 100}% sát thương gây ra.\n" +
+                      $"- Viên thứ 2: Gây ({R_PHYSICAL_DMG_MUL_0 * 100}% <sprite name=pdmg> + " +
+                      $"{R_MAGICAL_DMG_MUL_0*100}% <sprite name=mdmg>) sát thương vật lý cùng với " +
+                      $"({R_PHYSICAL_DMG_MUL_1*100}% <sprite name=pdmg> + {R_MAGICAL_DMG_MUL_1 * 100}% <sprite name=mdmg>) " +
+                      $"sát thương phép. Mục tiêu bị giảm {REDUCE_DEFENSE_MUL * -100}% <sprite name=arm> và <sprite name=res> " +
+                      $"trong {REDUCE_DEFENSE_DURATION}s.\n" +
                       $"Các viên đạn đều có thể chí mạng.";
     }
 

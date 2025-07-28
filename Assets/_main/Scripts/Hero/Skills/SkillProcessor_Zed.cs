@@ -9,10 +9,11 @@ public class SkillProcessor_Zed : SkillProcessor {
     public SkillProcessor_Zed(Hero hero) : base(hero) {
         AnimationLength = 3;
         Timers = new[] { 0.83f, 1.66f };
-        Description = "Nhảy lên và ném phi tiêu vào 1 mục tiêu gây sát thương vật lý bằng " +
-                      $"({DMG_MUL * 100}% sát thương vật lý) sau đó nhảy xuống, kích nổ phi tiêu " +
+        Name = "Phi Tiêu Bộc Phá";
+        Description = "Nhảy lên và ném phi tiêu vào 1 mục tiêu gây " +
+                      $"({DMG_MUL * 100}% <sprite name=pdmg>) sát thương vật lý sau đó nhảy xuống, kích nổ phi tiêu " +
                       $"gây sát thương chí mạng cho mục tiêu và phạm vi {RANGE} xung quanh, " +
-                      $"gây choáng {STUN_MAIN} cho mục tiêu chính và {STUN_OTHERS} cho các mục tiêu khác.";
+                      $"gây choáng {STUN_MAIN}s cho mục tiêu chính và {STUN_OTHERS}s cho các mục tiêu khác.";
     }
 
     public override void Process(float timer) {

@@ -15,8 +15,8 @@ public class Shop : MonoBehaviour {
     public void Refresh() {
         for (int i=0; i<SHOP_SLOTS_COUNT; i++) {
             var levelConfig = GameConfigs.LEVEL_CONFIGS[GameManager.Instance.Level - 1];
-            var price = GetRandomPrices(levelConfig.rates);
-            var matchedHeroes = HeroTraitDB.Instance.FindAll(e => e.price == price && !e.summoned);
+            var rep = GetRandomReputation(levelConfig.rates);
+            var matchedHeroes = HeroTraitDB.Instance.FindAll(e => e.reputation == rep && !e.summoned);
             var randomHero = matchedHeroes[Random.Range(0, matchedHeroes.Count)];
             heroes[i] = randomHero;
         }
@@ -27,24 +27,26 @@ public class Shop : MonoBehaviour {
         success = GameManager.Instance.LineUp.Add(hero);
     }
 
-    public void SwitchLock(bool? value = null) {
+    public bool SwitchLock(bool? value = null) {
         if (value.HasValue) {
             lockAutoRefresh = value.Value;
-            return;
+        }
+        else {
+            lockAutoRefresh = !lockAutoRefresh;
         }
 
-        lockAutoRefresh = !lockAutoRefresh;
+        return lockAutoRefresh;
     }
     
-    int GetRandomPrices(int[] rates) {
+    Reputation GetRandomReputation(int[] rates) {
         var random = Random.value;
         var totalRate = 0f;
         for (int i = 0; i < rates.Length; i++) {
             totalRate += rates[i] / 100f;
             if (random <= totalRate) {
-                return GameConfigs.HERO_PRICES[i];
+                return (Reputation)(i + 1);
             }
         }
-        return GameConfigs.HERO_PRICES[0];
+        return (Reputation)(rates.Length);
     }
 }

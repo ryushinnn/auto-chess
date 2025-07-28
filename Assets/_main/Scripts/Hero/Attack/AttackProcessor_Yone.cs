@@ -13,16 +13,16 @@ public class AttackProcessor_Yone : AttackProcessor {
     public AttackProcessor_Yone(Hero hero) : base(hero) {
         AnimationLength = 1.367f;
         Timers = new[] { 0.5f };
-        Description = "Thay đổi qua lại giữa Thần Kiếm và Quỷ Kiếm sau mỗi đòn đánh.\n" +
-                      $"- Thần Kiếm: Gây sát thương vật lý bằng (100% sát thương vật lý). " +
-                      $"Thêm 1 cộng dồn (tối đa {DIVINE_WEAKENING_MAX_STACK} cộng dồn " +
-                      $"và làm mới thời gian duy trì ({DIVINE_WEAKENING_DURATION}s) hiệu ứng SUY YẾU " +
+        Description = "Thay đổi qua lại giữa <color=yellow>Thần Kiếm</color> và <color=purple>Quỷ Kiếm</color> sau mỗi đòn đánh.\n" +
+                      $"- <color=yellow>Thần Kiếm</color>: Gây (100% <sprite name=pdmg>) sát thương vật lý. " +
+                      $"Thêm 1 cộng dồn (tối đa {DIVINE_WEAKENING_MAX_STACK} cộng dồn) " +
+                      $"và làm mới thời gian duy trì ({DIVINE_WEAKENING_DURATION}s) hiệu ứng <color=orange>SUY YẾU</color> " +
                       $"trên mục tiêu\n" +
-                      $"- Quỷ Kiếm: Gây sát thương phép bằng (100% sát thương vật lý). " +
-                      $"Cho thêm tối đa {DEVIL_VAMP_MAX*100}% hút máu, dựa vào " +
-                      $"máu đã mất\n" +
-                      $"Thanh Kiếm cuối cùng được sử dụng sẽ quyết định kỹ năng sẽ kích hoạt\n" +
-                      $"SUY YẾU: Giảm {DIVINE_WEAKENING_PER_STACK * -100}% sát thương";
+                      $"<color=orange>SUY YẾU</color>: Giảm {DIVINE_WEAKENING_PER_STACK * -100}% <sprite name=pdmg> " +
+                      $"và <sprite name=mdmg> của mục tiêu.\n" +
+                      $"- <color=purple>Quỷ Kiếm</color>: Gây (100% <sprite name=pdmg>) sát thương phép. " +
+                      $"Nhận thêm tối đa {DEVIL_VAMP_MAX * 100}% <sprite name=ls>, dựa trên " +
+                      $"máu đã mất";
         
         customInt = new CustomData<int>();
         customInt["sword"] = (int)YoneSword.Divine;

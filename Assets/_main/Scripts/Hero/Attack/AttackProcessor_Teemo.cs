@@ -16,7 +16,7 @@ public class AttackProcessor_Teemo : AttackProcessor {
         Description = $"Đòn đánh sẽ thêm 1 cộng dồn (tối đa {MAX_STACKS} cộng dồn) " +
                       $"và làm mới thời gian duy trì ({TOTAL_TIME / 1000f}s) của hiệu ứng <color=red>HOẢ NGỤC</color>.\n" +
                       $"<color=red>HOẢ NGỤC</color>: Mỗi {INTERVAL / 1000f}s gây sát thương chuẩn bằng {MAX_HP_DMG * 100}% " +
-                      $"<sprite name=hp> tối đa của mục tiêu, tối đa bằng {DMG_MUL_LIMIT * 100}% <sprite name=mdmg>.";
+                      $"<sprite name=hp> tối đa của mục tiêu, không vượt quá {DMG_MUL_LIMIT * 100}% <sprite name=mdmg>.";
     }
 
     public override void Process(float timer) {

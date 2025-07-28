@@ -2,7 +2,6 @@
     public AttackProcessor_Tristana(Hero hero) : base(hero) {
         AnimationLength = 0.933f;
         Timers = new[] { 0.17f };
-        Description = "Gây sát thương vật lý bằng (100% sát thương vật lý)";
     }
 
     public override void Process(float timer) {

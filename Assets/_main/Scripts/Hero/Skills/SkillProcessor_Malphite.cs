@@ -12,10 +12,11 @@ public class SkillProcessor_Malphite : SkillProcessor {
     public SkillProcessor_Malphite(Hero hero) : base(hero) {
         AnimationLength = 4.7f;
         Timers = new[] { 0.46f, 2.3f };
-        Description = $"Tăng {DEFENSE_MUL * 100}% giáp và kháng phép, tối đa kháng hiệu ứng, " +
-                      $"nhưng bị giảm {ATK_SPEED_REDUCE_MUL * -100}% tốc độ đánh, " +
-                      $"duy trì {EFFECT_DURATION}s. Vận sức nhảy lên rồi giáng xuống " +
-                      $"gây sát thương vật lý bằng ({DMG_MUL * 100}% sát thương vật lý) " +
+        Name = "Kim Cang Bất Hoại";
+        Description = $"Tăng {DEFENSE_MUL * 100}% <sprite name=arm> và <sprite name=res>, " +
+                      $"nhận tối đa <sprite name=ten>, nhưng bị giảm {ATK_SPEED_REDUCE_MUL * -100}% <sprite name=aspd>, " +
+                      $"duy trì {EFFECT_DURATION}s. Sau đó vận sức nhảy lên rồi giáng xuống " +
+                      $"gây ({DMG_MUL * 100}% <sprite name=pdmg>) sát thương vật lý " +
                       $"và hất tung kẻ địch trong {AIRBORNE_DURATION}s.";
     }
 

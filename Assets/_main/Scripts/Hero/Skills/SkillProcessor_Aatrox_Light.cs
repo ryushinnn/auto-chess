@@ -23,8 +23,7 @@ public class SkillProcessor_Aatrox_Light : SkillProcessor {
                       $"và hất tung mục tiêu trong {AIRBORNE_TIME_0}s/{AIRBORNE_TIME_1}s/{AIRBORNE_TIME_2}s " +
                       $"đồng thời hồi máu bằng {VAMP_0 * 100}%/{VAMP_1 * 100}%/{VAMP_2 * 100}% " +
                       $"sát thương gây ra. Nếu bản thân có thấp hơn {HP_THRESHOLD * 100}% <sprite name=hp>, " +
-                      $"lượng máu hồi phục gấp {VAMP_MUL_WHEN_LOW_HP} lần.\n" +
-                      $"(Khi đang sử dụng kĩ năng, không thể bị cản phá)";
+                      $"lượng máu hồi phục gấp {VAMP_MUL_WHEN_LOW_HP} lần.";
     }
     
     public override void Process(float timer) {

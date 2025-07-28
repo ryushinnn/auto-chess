@@ -13,14 +13,15 @@ public class SkillProcessor_Yone : SkillProcessor {
     YoneSword sword;
     
     public SkillProcessor_Yone(Hero hero) : base(hero) {
-        Description = "Kĩ năng được sử dụng sẽ dựa vào thanh kiếm đang sẵn sàng.\n" +
-                      "- Thần Kiếm: Lao tới chém 1 nhát gây sát thương vật lý bằng " +
-                      $"({DIVINE_DMG_MUL * 100}% sát thương vật lý) và hất tung mục tiêu " +
-                      $"trong {DIVINE_AIRBORNE_TIME}s. Nếu nhát chém nàt tiêu diệt mục tiêu, " +
-                      $"hồi phục {DIVINE_REGEN_ENERGY} năng lượng.\n" +
-                      $"- Quỷ Kiếm: Chém liên hoàn 4 nhát, 3 nhát đầu gây sát thương phép " +
-                      $"bằng ({DEVIL_DMG_MUL_0 * 100}% sát thương vật lý), nhát chém cuối gây " +
-                      $"sát thương phép bằng ({DEVIL_DMG_MUL_1 * 100}% sát thương vật lý), các " +
+        Name = "Thiên Ân/Tuyệt Diệt";
+        Description = "Thanh Kiếm sắp sử dụng (đang sẵn sàng) sẽ quyết định kỹ năng nào sẽ được kích hoạt.\n" +
+                      "- <color=yellow>Thần Kiếm</color>: Lao tới chém 1 nhát gây " +
+                      $"({DIVINE_DMG_MUL * 100}% <sprite name=pdmg>) sát thương vật lý và hất tung mục tiêu " +
+                      $"trong {DIVINE_AIRBORNE_TIME}s. Nếu nhát chém này tiêu diệt mục tiêu, " +
+                      $"hồi phục {DIVINE_REGEN_ENERGY} <sprite name=eng>.\n" +
+                      $"- <color=purple>Quỷ Kiếm</color>: Chém liên hoàn 4 nhát, 3 nhát đầu gây " +
+                      $"({DEVIL_DMG_MUL_0 * 100}% <sprite name=pdmg>) sát thương phép, nhát chém cuối gây " +
+                      $"({DEVIL_DMG_MUL_1 * 100}% <sprite name=pdmg>) sát thương phép, các " +
                       $"nhát chém này đều có thể chí mạng.";
 
         atkProcessor = this.hero.GetAbility<HeroAttack>().Processor as AttackProcessor_Yone;

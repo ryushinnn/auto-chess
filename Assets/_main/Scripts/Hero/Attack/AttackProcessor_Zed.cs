@@ -2,7 +2,6 @@
     public AttackProcessor_Zed(Hero hero) : base(hero) {
         AnimationLength = 1.267f;
         Timers = new[] { 0.25f };
-        Description = "Gây sát thương vật lý bằng (100% sát thương vật lý)";
     }
     
     public override void Process(float timer) {

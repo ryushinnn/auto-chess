@@ -11,31 +11,46 @@ public class ShopUI : BaseUI {
     [SerializeField] Shop_Hero[] heroes;
     [SerializeField] Button refreshButton;
     [SerializeField] TMP_Text refreshCostText;
-    [SerializeField] GameObject lockedMark;
+    [SerializeField] Image lockedImage;
+    [SerializeField] Sprite lockedSprite, unlockedSprite;
     [SerializeField] Button lockButton;
+    [SerializeField] TMP_Text unknownRateText, eliteRateText, legendaryRateText;
 
-    void Start() {
+    void Awake() {
         refreshButton.onClick.AddListener(Refresh);
         lockButton.onClick.AddListener(Lock);
-        refreshCostText.text = GameConfigs.REFRESH_COST.ToString();
+        refreshCostText.text = $"<sprite name=coin>{GameConfigs.REFRESH_COST}";
+        lockedImage.sprite = unlockedSprite;
+        UpdateRates(1);
+    }
+
+    void Start() {
         GameManager.Instance.Shop.onRefresh += UpdateHeroes;
-        lockedMark.SetActive(false);
+        GameManager.Instance.onLevelUp += UpdateRates;
     }
 
     void UpdateHeroes(HeroTrait[] traits) {
+        var delayMul = 0.1f;
         for (int i = 0; i < heroes.Length; i++) {
-            heroes[i].Initialize(traits[i]);
+            heroes[i].SetData(traits[i], i * delayMul);
         }
+    }
+
+    void UpdateRates(int level) {
+        var rates = GameConfigs.LEVEL_CONFIGS[level - 1].rates;
+        unknownRateText.text = $"{rates[0]}%";
+        eliteRateText.text = $"{rates[1]}%";
+        legendaryRateText.text = $"{rates[2]}%";
     }
 
     void Refresh() {
         GameManager.Instance.Shop.Refresh();
         GameManager.Instance.Shop.SwitchLock(false);
-        lockedMark.SetActive(false);
+        lockedImage.sprite = unlockedSprite;
     }
 
     void Lock() {
-        GameManager.Instance.Shop.SwitchLock();
-        lockedMark.SetActive(!lockedMark.activeSelf);
+        var locked = GameManager.Instance.Shop.SwitchLock();
+        lockedImage.sprite = locked ? lockedSprite : unlockedSprite;
     }
 }

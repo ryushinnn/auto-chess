@@ -24,8 +24,7 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
                       $"sẽ gây thêm hiệu ứng:\n" +
                       $"- Đầu tiên: giảm {ARMOR_REDUCE_MUL * -100}% <sprite name=arm> trong {ARMOR_REDUCE_DURATION}s\n" +
                       $"- Thứ 2: gây thêm ({BONUS_TRUE_DMG_MUL * 100}% <sprite name=pdmg>) sát thương chuẩn\n" +
-                      $"- Thứ 3: Có thể chí mạng\n" +
-                      $"(Khi đang sử dụng kỹ năng, không thể bị cản phá)";
+                      $"- Thứ 3: Có thể chí mạng";
     }
 
     public override void Process(float timer) {

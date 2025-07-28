@@ -9,8 +9,10 @@ public class SkillProcessor_Morgana : SkillProcessor {
     public SkillProcessor_Morgana(Hero hero) : base(hero) {
         AnimationLength = 1;
         Timers = new[] { 0.41f };
+        Name = "Thần Quang Phổ Chiếu";
         Description = $"Hồi máu bằng ({MAX_HP_TO_HEAL_MIN * 100}%~{MAX_HP_TO_HEAL_MAX * 100}% " +
-                      $"máu tối đa + {DMG_TO_HEAL_MUL * 100}% sát thương phép).";
+                      $"<sprite name=hp> tối đa + {DMG_TO_HEAL_MUL * 100}% <sprite name=mdmg>) " +
+                      $"dựa trên máu đã mất.";
     }
 
     public override void Process(float timer) {

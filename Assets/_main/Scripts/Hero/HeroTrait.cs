@@ -12,7 +12,7 @@ public class HeroTrait : ScriptableObject {
     public bool summoned;
     [HideIf("summoned")] public Realm realm;
     [HideIf("summoned")] public Role role;
-    [HideIf("summoned")] public int price;
+    [HideIf("summoned")] public Reputation reputation;
     
     [TitleGroup("Asset")]
     public Mecanim mecanim;
@@ -72,7 +72,7 @@ public class HeroTrait : ScriptableObject {
         if (summoned) {
             realm = Realm.None;
             role = Role.None;
-            price = -1;
+            reputation = Reputation.None;
         }
     }
 
@@ -98,4 +98,31 @@ public static class HeroId {
     public const string Yasuo = "Yasuo";
     public const string Yone = "Yone";
     public const string Zed = "Zed";
+}
+
+public enum Realm {
+    None,
+    Mortal,
+    Divine,
+    Nether,
+    Mecha,
+    Chaos
+}
+
+[Flags]
+public enum Role {
+    None = 0x00,
+    Duelist = 0x01,
+    Sorcerer = 0x02,
+    Marksman = 0x04,
+    Assassin = 0x08,
+    Bruiser = 0x10,
+    Cultist = 0x20,
+}
+
+public enum Reputation {
+    None,
+    Unknown,
+    Elite,
+    Legendary,
 }

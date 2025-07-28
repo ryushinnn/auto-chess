@@ -36,8 +36,6 @@ public class HeroSkill : HeroAbility {
             "Teemo" => new SkillProcessor_Teemo(hero),
             "Tristana" => new SkillProcessor_Tristana(hero),
         };
-
-        Debug.Log(processor.Description);
     }
 
     public override void ResetAll() {

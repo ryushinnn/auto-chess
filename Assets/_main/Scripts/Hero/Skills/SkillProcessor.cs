@@ -10,21 +10,12 @@ public abstract class SkillProcessor {
     
     protected readonly Hero hero;
     protected readonly HeroAttributes attributes;
-    protected readonly HeroMark mark;
-    protected Action[] events;
-    
-    protected Tween resetUnstoppableTween;
     
     protected int skillExecuted;
 
     protected SkillProcessor(Hero hero) {
         this.hero = hero;
         attributes = this.hero.GetAbility<HeroAttributes>();
-        mark = this.hero.GetAbility<HeroMark>();
-    }
-    
-    public virtual void Process() {
-        
     }
 
     public virtual void Begin(out float animLength) {
@@ -44,26 +35,5 @@ public abstract class SkillProcessor {
         if (Unstoppable) {
             hero.GetAbility<HeroStatusEffects>().Unstoppable(false);
         }
-    }
-    
-    public virtual void Execute(out float duration) {
-        duration = hero.Mecanim.UseSkill(events);
-        if (Unstoppable) {
-            hero.GetAbility<HeroStatusEffects>().Unstoppable(true);
-        }
-        hero.GetAbility<HeroAttributes>().UseAllEnergy();
-        resetUnstoppableTween?.Kill();  
-        resetUnstoppableTween = DOVirtual.DelayedCall(duration, () => {
-            if (Unstoppable) {
-                hero.GetAbility<HeroStatusEffects>().Unstoppable(false);
-            }
-        });
-    }
-    
-    public virtual void Cancel() {
-        hero.Mecanim.InterruptSkill();
-        if (Unstoppable) {
-            hero.GetAbility<HeroStatusEffects>().Unstoppable(false);
-        }   
     }
 }

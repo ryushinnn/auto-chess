@@ -2,7 +2,6 @@
     public AttackProcessor_Malphite(Hero hero) : base(hero) {
         AnimationLength = 1.1f;
         Timers = new[] { 0.17f };
-        Description = "Gây sát thương vật lý bằng (100% sát thương vật lý)";
     }
 
     public override void Process(float timer) {

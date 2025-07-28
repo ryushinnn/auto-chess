@@ -10,11 +10,10 @@ public class AttackProcessor_MissFortune : AttackProcessor {
     public AttackProcessor_MissFortune(Hero hero) : base(hero) {
         AnimationLength = 1.167f;
         Timers = new[] { 0.35f };
-        Description = "Bắn cùng lúc 2 viên đạn. 1 viên gây sát thương " +
-                      $"vật lý bằng ({PHYSICAL_DMG_MUL_0 * 100}% sát thương vật lý + " +
-                      $"{MAGICAL_DMG_MUL_0*100}% sát thương phép), viên còn lại " +
-                      $"gây sát thương phép bằng ({PHYSICAL_DMG_MUL_1*100}% sát thương " +
-                      $"vật lý + {MAGICAL_DMG_MUL_1 * 100}% sát thương phép)";
+        Description = $"Đòn đánh bắn cùng lúc 2 viên đạn. 1 viên gây ({PHYSICAL_DMG_MUL_0 * 100}% <sprite name=pdmg> + " +
+                      $"{MAGICAL_DMG_MUL_0*100}% <sprite name=mdmg>) sát thương vật lý, viên còn lại " +
+                      $"gây ({PHYSICAL_DMG_MUL_1*100}% <sprite name=pdmg> + {MAGICAL_DMG_MUL_1 * 100}% <sprite name=mdmg>) " +
+                      $"sát thương phép.";
     }
 
     public override void Process(float timer) {

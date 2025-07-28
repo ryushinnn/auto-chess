@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public static class GameConfigs {
     public const int NUMBER_OF_HEROES_TO_LEVEL_UP = 3;
     public const float STATS_MUL_UPON_LV2 = 2;
@@ -60,7 +62,11 @@ public static class GameConfigs {
         }
     };
 
-    public static readonly int[] HERO_PRICES = new[] { 1, 3, 5 };
+    public static readonly Dictionary<Reputation, int> HERO_PRICES = new() {
+        {Reputation.Unknown, 1},
+        {Reputation.Elite, 3},
+        {Reputation.Legendary, 5},
+    };
     public const int REFRESH_COST = 2;
 
     public static readonly RoleConfig[] ROLE_CONFIGS = {
@@ -111,7 +117,8 @@ public static class GameConfigs {
             realm = Realm.Chaos,
             stages = new[] { 2, 3, 4, 5}
         }
-    };}
+    };
+}
 
 public class LevelConfig {
     public int level;

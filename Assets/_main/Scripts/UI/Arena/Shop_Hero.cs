@@ -13,11 +13,17 @@ public class Shop_Hero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [SerializeField] TMP_Text priceText;
     [SerializeField] Shop_Hero_Destiny[] destinies;
     [SerializeField] GameObject soldMark;
+    [SerializeField] Image backgroundImage;
+    [SerializeField] Sprite unknownSprite, eliteSprite, legendarySprite;
+    [SerializeField] GameObject preview;
+    [SerializeField] GameObject backside;
     
     Button button;
     Tween tween;
     HeroTrait trait;
     bool sold;
+
+    Sequence revealSeq;
 
     void Awake() {
         button = GetComponent<Button>();
@@ -27,12 +33,12 @@ public class Shop_Hero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         button.onClick.AddListener(Purchase);
     }
 
-    public void Initialize(HeroTrait trait) {
+    public void SetData(HeroTrait trait, float revealDelay) {
         this.trait = trait;
         thumbnailImage.sprite = trait.thumbnail;
         thumbnailImage.transform.SetUniformScale();
         nameText.text = trait.DisplayName();
-        priceText.text = trait.price.ToString();
+        priceText.text = $"<sprite name=coin>{GameConfigs.HERO_PRICES[this.trait.reputation]}";
         destinies[0].Initialize(trait.realm);
         var roles = trait.role.GetAllFlags().Where(x=>x != 0).ToArray();
         for (int i = 1; i <= 2; i++) {
@@ -48,6 +54,14 @@ public class Shop_Hero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         sold = false;
         soldMark.SetActive(false);
         button.interactable = true;
+        
+        backgroundImage.sprite = trait.reputation switch {
+            Reputation.Unknown => unknownSprite,
+            Reputation.Elite => eliteSprite,
+            Reputation.Legendary => legendarySprite,
+        };
+        
+        PlayRevealAnimation(revealDelay);
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
@@ -76,5 +90,30 @@ public class Shop_Hero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         sold = true;
         soldMark.SetActive(true);
         button.interactable = false;
+    }
+
+    void PlayRevealAnimation(float delay) {
+        preview.SetActive(false);
+        backside.SetActive(true);
+        transform.SetUniformScale();
+        var revealed = false;
+        revealSeq?.Kill();
+        revealSeq = DOTween.Sequence();
+        revealSeq.AppendInterval(delay)
+            .Append(DOVirtual.Float(0, 1, 0.25f, val => {
+                if (val < 0.5f) {
+                    transform.localScale = new Vector3(1 - val / 0.5f, 1, 1);
+                }
+                else {
+                    if (!revealed) {
+                        preview.SetActive(true);
+                        backside.SetActive(false);
+                        revealed = true;
+                    }
+                    transform.localScale = new Vector3((val-0.5f)/0.5f, 1, 1);
+                }
+            }).OnComplete(() => {
+                transform.SetUniformScale();
+            }));
     }
 }

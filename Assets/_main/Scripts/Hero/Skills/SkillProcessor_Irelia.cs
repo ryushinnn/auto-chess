@@ -7,8 +7,7 @@ public class SkillProcessor_Irelia : SkillProcessor {
         Timers = new[] { 4.23f };
         Name = "Hắc Long Chưởng";
         Description = $"Triệu hồi rồng thần tấn công kẻ địch gây ({DMG_MUL * 100}% <sprite name=pdmg>) sát thương phép " +
-                      $"và hất tung mục tiêu trong {AIRBRONE_TIME}s.\n" +
-                      $"(Trong thời gian sử dụng kỹ năng, không thể bị cản phá)";
+                      $"và hất tung mục tiêu trong {AIRBRONE_TIME}s.";
         Unstoppable = true;
     }
 

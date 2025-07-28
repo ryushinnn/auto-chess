@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public class SkillProcessor_Ashe : SkillProcessor {
     const int MIN_ARROW_SET = 10;
     const int MAX_ARROW_SET = 20;
+    const float DMG_BASE = 5;
     const float DMG_MUL = 0.2f;
     const int TOTAL_TIME = 2000; //ms
     
@@ -18,7 +19,7 @@ public class SkillProcessor_Ashe : SkillProcessor {
         Timers = new[] { 0.75f };
         Name = "Thiên Giáng Thần Vũ Tiễn";
         Description = $"Bắn ngẫu nhiên {MIN_ARROW_SET}-{MAX_ARROW_SET} loạt mưa tên vào mục tiêu " +
-                      $"và phạm vi 1 xung quanh. Mỗi loạt mưa tên gây ({DMG_MUL * 100}% <sprite name=pdmg>) sát thương vật lý " +
+                      $"và phạm vi 1 xung quanh. Mỗi loạt mưa tên gây ({DMG_BASE} + {DMG_MUL * 100}%<sprite name=pdmg>) sát thương vật lý " +
                       $"và có thể chí mạng.";
     }
 
@@ -44,7 +45,7 @@ public class SkillProcessor_Ashe : SkillProcessor {
         if (hero.Target == null) return;
 
         var dmg = attributes.GetDamage(DamageType.Physical, attributes.Crit(),
-            scaledValues: new[] { (DMG_MUL, DamageType.Physical) });
+            scaledValues: new[] { (DMG_MUL, DamageType.Physical) }, fixedValues: new[] { DMG_BASE });
         var isNewTarget = !affectedTargets.Contains(hero.Target);
         
         hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, isNewTarget);

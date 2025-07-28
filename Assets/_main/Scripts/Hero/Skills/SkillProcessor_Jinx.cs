@@ -7,7 +7,6 @@ public class SkillProcessor_Jinx : SkillProcessor {
     public const int ROCKETS = 5;
     public const int INTERVAL = 200;
     const float DMG_MUL_PER_ROCKET = 0.5f;
-    const float PENETRATION = 0.5f;
 
     List<Hero> affectedTargets = new();
     
@@ -15,13 +14,10 @@ public class SkillProcessor_Jinx : SkillProcessor {
         AnimationLength = 4.2f;
         Timers = new[] { 2f };
         Unstoppable = true;
-        Description = "Bắn 5 quả tên lửa, mỗi quả gây sát thương bằng " +
-                      $"({DMG_MUL_PER_ROCKET * 100}% sát thương vật lý), " +
-                      $"có thể chí mạng. Sát thương đầu ra ngẫu nhiên là " +
-                      $"sát thương vật lý, sát thương phép hoặc sát thương chuẩn. " +
-                      $"Nếu là sát thương vật lý thì sẽ kèm {PENETRATION * 100}% xuyên giáp. " +
-                      $"Nếu là sát thương phép thì sẽ kèm {PENETRATION * 100}% xuyên kháng.\n" +
-                      $"Trong thời gian sử dụng kỹ năng, không thể bị cản phá.";
+        Name = "Bùm! Bùm! Bùm! Bùm! Bùm!";
+        Description = $"Bắn 5 quả tên lửa, mỗi quả gây ({DMG_MUL_PER_ROCKET * 100}% <sprite name=pdmg>) sát thương, " +
+                      $"Sát thương đầu ra ngẫu nhiên là sát thương vật lý, sát thương phép hoặc sát thương chuẩn " +
+                      $"và có thể chí mạng.";
     }
 
     public override void Process(float timer) {
@@ -49,13 +45,11 @@ public class SkillProcessor_Jinx : SkillProcessor {
             case 0:
                 dmg = attributes.GetDamage(DamageType.Physical, attributes.Crit(),
                     scaledValues: new[] { (DMG_MUL_PER_ROCKET, DamageType.Physical) });
-                dmg.penetration = PENETRATION;
                 break;
             
             case 1:
                 dmg = attributes.GetDamage(DamageType.Magical, attributes.Crit(),
                     scaledValues: new[] { (DMG_MUL_PER_ROCKET, DamageType.Physical) });
-                dmg.penetration = PENETRATION;
                 break;
             
             case 2:

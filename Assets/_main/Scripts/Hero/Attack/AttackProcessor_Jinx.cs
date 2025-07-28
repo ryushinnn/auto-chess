@@ -2,7 +2,6 @@
     public AttackProcessor_Jinx(Hero hero) : base(hero) {
         AnimationLength = 1.067f;
         Timers = new[] { 0.37f };
-        Description = "Gây sát thương vật lý bằng (100% sát thương vật lý)";
     }
 
     public override void Process(float timer) {

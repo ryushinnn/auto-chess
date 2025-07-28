@@ -42,8 +42,6 @@ public class HeroAttack : HeroAbility {
             "Zed" => new AttackProcessor_Zed(hero),
             _ => new AttackProcessor(hero)
         };
-        
-        Debug.Log(processor.Description);
     }
 
     public override void ResetAll() {
