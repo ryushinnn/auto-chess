@@ -1,7 +1,7 @@
 using System;
 using DG.Tweening;
 
-public abstract class SkillProcessor {
+public class SkillProcessor {
     public float AnimationLength { get; protected set; }
     public float[] Timers { get; protected set; }
     public bool Unstoppable { get; protected set; }
@@ -13,7 +13,7 @@ public abstract class SkillProcessor {
     
     protected int skillExecuted;
 
-    protected SkillProcessor(Hero hero) {
+    public SkillProcessor(Hero hero) {
         this.hero = hero;
         attributes = this.hero.GetAbility<HeroAttributes>();
     }

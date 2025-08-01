@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HexCell : Indicator {
     [SerializeField] TMP_Text dev_label;
+    [SerializeField] GameObject flag;
     
     public int dev_X { get; private set; }
 
@@ -18,5 +19,9 @@ public class HexCell : Indicator {
 
     public void dev_SwitchLabel(bool state) {
         dev_label.gameObject.SetActive(state);
+    }
+    
+    public void SwitchFlag(bool state) {
+        flag.SetActive(state);
     }
 }

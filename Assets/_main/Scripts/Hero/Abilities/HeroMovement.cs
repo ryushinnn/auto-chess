@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
+using JetBrains.Annotations;
 using Pathfinding;
 using RExt.Utils;
 using Sirenix.OdinInspector;
@@ -7,115 +10,99 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class HeroMovement : HeroAbility {
-    public bool IsMoving => destination != null;
+    public bool ReachedDestination => reachedDestination;
 
     HeroRotation rotation;
     HeroAttributes attributes;
     
     Sequence moveSequence;
-    MapNode destination;
-    DestinationMark mark;
-
+    MapNode currentDestination;
+    MapNode currentTargetNode;
+    List<MapNode> path;
+    MapNode currentNode;
+    MapNode nextNode;
+    bool reachedDestination;
+    
     public override void ResetAll() {
         moveSequence?.Kill();
-        destination = null;
-        mark = null;
+        currentDestination = null;
         hero.Mecanim.Idle();
-    }
-
-    public override void Process() {
-        if (destination != null) {
-            hero.SetNode(Map.Instance.GetNode(hero.transform.position));
-        }
-        
-        hero.dev_destinationNode = destination != null ? new Vector2(destination.X, destination.Y) : new Vector2(-1, -1);
     }
 
     protected override void FindReferences() {
         rotation = hero.GetAbility<HeroRotation>();
         attributes = hero.GetAbility<HeroAttributes>();
     }
-
+    
     public void StartMove() {
-        if (Map.Instance.CheckAdjacency(hero.Target.MNode, hero.MNode, hero.Trait.attackRange)
-            && hero.MNode.HasAtFirst(hero)) {
+        var targetNode = hero.Target.GetNearestNode();
+        
+        // if target not move, no need to calculate new destination
+        if (targetNode == currentTargetNode) return;
+        
+        currentTargetNode = targetNode;
+        // if target in range, no need to calculate new destination
+        if (nextNode != null && Map.Instance.CheckAdjacency(nextNode, currentTargetNode, hero.Trait.attackRange)) return;
 
-            if (destination != null) {
-                Debug.Log($"{hero.name} already has target in range, stop at ({destination.X}, {destination.Y})");
-                destination.Remove(mark);
-                StopMove(true);
-            }
-            return;
+        var myNode = hero.GetNearestNode();
+        var destination = Map.Instance.GetNeighbors(currentTargetNode, hero.Trait.attackRange).Filter(x => x.IsEmpty()).GetNearestFrom(myNode)
+                      ?? Map.Instance.GetNearestNode(currentTargetNode, x => x.IsEmpty());
+        
+        // if destination not changed, no need to calculate new path
+        if (destination == currentDestination) return;
+
+        // update destination, calculate new path
+        currentDestination?.SetToEmpty();
+        currentDestination = destination;
+        currentDestination.ChangeState(MapNodeState.Targeted);
+        
+        hero.Mecanim.Run();
+
+        reachedDestination = false;
+        path = Map.Instance.FindPath(myNode, currentDestination);
+        moveSequence?.Kill();
+        moveSequence = DOTween.Sequence();
+        for (int i = 1; i < path.Count; i++) {
+            var node = path[i];
+            moveSequence.AppendCallback(() => {
+                nextNode = node;
+                rotation.Rotate(nextNode.WorldPosition - hero.transform.position);
+            })
+            .Append(hero.transform.DOMove(node.WorldPosition, 1/attributes.MovementSpeed).SetEase(Ease.Linear))
+            .AppendCallback(() => {
+                currentNode = node;
+                // check if target in range before reach destination, can early cancel move
+                if (currentNode != currentDestination && Map.Instance.CheckAdjacency(hero.Target.GetNearestNode(), currentNode, hero.Trait.attackRange)) {
+                    rotation.Rotate(hero.Target.transform.position - hero.transform.position);
+                    hero.SetNode(currentNode);
+                    // only reset it if it is targeted (by self)
+                    if (currentDestination.State == MapNodeState.Targeted) {
+                        currentDestination.SetToEmpty();
+                    }
+                    StopMove();
+                    reachedDestination = true;
+                }
+            });
         }
 
-        Func<MapNode, bool> destCondition = x => x.HasNone() || x == destination;
-        var newDest = Map.Instance.GetNearestAdjacentNode(hero.Target.MNode, hero.MNode, hero.Trait.attackRange, destCondition) 
-                      ??
-                      Map.Instance.GetNearestNode(hero.Target.MNode, destCondition);
-
-        // known issue: new dest and current dest has same distance to target
-        // sometimes hero move between 2 nodes repeatedly
-        
-        if (newDest == destination) return;
-
-        destination?.Remove(mark);
-        destination = newDest;
-        destination.Add(mark = new DestinationMark(hero));
-
-        Debug.Log($"{hero.name} change destination to ({destination.X}, {destination.Y})");
-        hero.Mecanim.Run();
-        
-        hero.Seeker.StartPath(hero.transform.position, destination.Position, path => {
-            moveSequence?.Kill();
-            moveSequence = DOTween.Sequence();
-
-            for (int i = 1; i < path.vectorPath.Count; i++) {
-                var wp = path.vectorPath[i];
-                moveSequence.AppendCallback(() => {
-                        rotation.Rotate(wp - hero.transform.position);
-                    })
-                    .Append(hero.transform.DOMove(wp, 1 / attributes.MovementSpeed).SetEase(Ease.Linear));
-            }
-
-            moveSequence.AppendCallback(() => {
-                Debug.Log($"{hero.name} reached ({destination.X}, {destination.Y})");
-                rotation.Rotate(hero.Target.MNode.Position - hero.transform.position);
-                destination.Remove(mark);
-                StopMove();
-            });
+        moveSequence.AppendCallback(() => {
+            rotation.Rotate(hero.Target.transform.position - hero.transform.position);
+            hero.SetNode(currentDestination);
+            StopMove();
+            reachedDestination = true;
         });
     }
 
-    public void StopMove(bool resetPosition = false) {
-        destination = null;
+    public void StopMove() {
         hero.Mecanim.Idle();
         moveSequence?.Kill();
-        if (resetPosition) {
-            // known issue: null ref exception here??? maybe because of current node is null
-            var emptyNode = Map.Instance.GetNearestNode(hero.MNode, x => x.HasAtFirst(hero) || x.HasNone());
-            hero.SetNode(emptyNode);
-            hero.ResetPosition();
-        }
-    }
-
-    [Button]
-    void Dev_StopMove() {
-        StopMove(true);
     }
 
     void OnDrawGizmos() {
-        if (hero != null 
-            && hero.MNode != null 
-            && destination != null 
-            && hero.Target?.MNode != null) {
-            
-            var offset = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
-            Gizmos.color = Color.red;
-            Utils.DrawArrow(hero.MNode.Position, destination.Position + offset);
-            Gizmos.color = Color.green;
-            Utils.DrawArrow(destination.Position + offset, hero.Target.MNode.Position);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(hero.MNode.Position + new Vector3(0,5,0), 0.25f);
+        if (path != null) {
+            for (int i = 1; i < path.Count; i++) {
+                Gizmos.DrawLine(path[i].WorldPosition, path[i - 1].WorldPosition);
+            }
         }
     }
 }

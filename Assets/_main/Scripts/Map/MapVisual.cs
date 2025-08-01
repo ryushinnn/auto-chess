@@ -33,7 +33,6 @@ public class MapVisual : Singleton<MapVisual> {
     
     
     
-    public SelectNodeMethod selectNodeMethod;
     public int range;
     public Direction direction;
     public Hero hero;
@@ -56,7 +55,7 @@ public class MapVisual : Singleton<MapVisual> {
         for (int i = 0; i < mapRow; i++) {
             for (int j = 0; j < mapColumn; j++) {
                 var cell = Instantiate(hexCell, hexParent);
-                cell.transform.localPosition = new Vector3(nodes[i, j].Position.x, 0, nodes[i, j].Position.z);
+                cell.transform.localPosition = new Vector3(nodes[i, j].WorldPosition.x, 0, nodes[i, j].WorldPosition.z);
                 cell.transform.localScale = new Vector3(width, 1, height);
                 cell.name = $"Hex[{i},{j}]";
                 cell.dev_SaveIndex(i,j);
@@ -70,7 +69,7 @@ public class MapVisual : Singleton<MapVisual> {
         squareCells = new SquareCell[deckSize];
         for (int i = 0; i < deckSize; i++) {
             var cell = Instantiate(squareCell, squareParent);
-            cell.transform.localPosition = new Vector3(nodes[i].Position.x, 0, nodes[i].Position.z);
+            cell.transform.localPosition = new Vector3(nodes[i].WorldPosition.x, 0, nodes[i].WorldPosition.z);
             cell.transform.localScale = new Vector3(width, 1, height);
             cell.name = $"Square[{i}]";
             cell.dev_SaveIndex(i);
@@ -83,7 +82,7 @@ public class MapVisual : Singleton<MapVisual> {
             hexCells[mNode.X, mNode.Y].SetNonEmpty(nonEmpty);
         }
         else if (node is DeckNode dNode) {
-            squareCells[dNode.Index].SetNonEmpty(nonEmpty);
+            squareCells[dNode.LinePosition].SetNonEmpty(nonEmpty);
         }
     }
 
@@ -97,7 +96,7 @@ public class MapVisual : Singleton<MapVisual> {
                 notAvailableHexCell.SetNotAvailable(true);
             }
             else if (node is DeckNode dNode) {
-                notAvailableSquareCell = squareCells[dNode.Index];
+                notAvailableSquareCell = squareCells[dNode.LinePosition];
                 notAvailableSquareCell.SetNotAvailable(true);
             }
         }
@@ -113,7 +112,7 @@ public class MapVisual : Singleton<MapVisual> {
                 highlightHexCell.SetHighlight(true);
             }
             else if (node is DeckNode dNode) {
-                highlightSquareCell = squareCells[dNode.Index];
+                highlightSquareCell = squareCells[dNode.LinePosition];
                 highlightSquareCell.SetHighlight(true);
             }
         }
@@ -229,5 +228,9 @@ public class MapVisual : Singleton<MapVisual> {
         for (int i=0;i<deckSize;i++) {
             squareCells[i].dev_SwitchLabel(false);
         }
+    }
+
+    public HexCell GetHexCell(int x, int y) {
+        return hexCells[x, y];
     }
 }

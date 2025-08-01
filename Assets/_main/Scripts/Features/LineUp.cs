@@ -93,7 +93,7 @@ public class LineUp : MonoBehaviour {
     }
     
     public void RecalculateHeroesOnMap() {
-        heroesOnMap = heroes.Count(x => x.MNode != null);
+        heroesOnMap = heroes.Count(x => x.MapNode != null);
         ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap, maxHeroesOnMap);
     }
 

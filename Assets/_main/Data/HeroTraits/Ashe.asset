@@ -23,7 +23,7 @@ MonoBehaviour:
   thumbnail: {fileID: 21300000, guid: 9ba403ddfe45c2d4babebcf1c076d982, type: 3}
   skillIcon: {fileID: 21300000, guid: d1b1c52c80ee4b647b5e0e3d681247bd, type: 3}
   maxHp: 19800
-  physicalDamage: 116
+  physicalDamage: 5000
   magicalDamage: 0
   armor: 16
   resistance: 15
@@ -38,8 +38,8 @@ MonoBehaviour:
   tenacity: 0
   energyRegenPerAttack: 15
   energyRegenPerHit: 4
-  attackRange: 4
-  minDps: 55.68
-  avgDps: 66.816
+  attackRange: 2
+  minDps: 2400
+  avgDps: 2880
   physicalReduction: 13.793103
   magicalReduction: 13.043478

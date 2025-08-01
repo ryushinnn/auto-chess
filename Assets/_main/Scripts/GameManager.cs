@@ -103,6 +103,25 @@ public class GameManager : Singleton<GameManager> {
         }
     }
 
+    public Hero GetNearestOpponent(Hero hero) {
+        Hero nearestHero = null;
+        var minDist = Mathf.Infinity;
+        foreach (var h in heroes) {
+            if (h.Side == hero.Side || !h.GetAbility<HeroAttributes>().IsAlive) continue;
+            var dist = Vector3.Distance(hero.transform.position, h.transform.position);
+            if (dist < minDist) {
+                nearestHero = h;
+                minDist = dist;
+            }
+        }
+
+        return nearestHero;
+    }
+
+    public Hero FindHeroOnNode(Node node) {
+        return heroes.Find(h => h.MapNode == node || h.DeckNode == node);
+    }
+
     [Button]
     void dev_ChangeState(HeroState state) {
         heroes.ForEach(x=>x.Switch(state));

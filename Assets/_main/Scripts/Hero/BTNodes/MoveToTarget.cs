@@ -10,13 +10,13 @@ public class MoveToTarget : BTNode {
     public override NodeState Evaluate() {
         var movement = hero.GetAbility<HeroMovement>();
         if (hero.Target == null) {
-            movement.StopMove(true);
+            movement.StopMove();
             State = NodeState.Failure;
             return State;
         }
         
-        hero.GetAbility<HeroMovement>().StartMove();
-        State = !movement.IsMoving ? NodeState.Success : NodeState.Running;
+        movement.StartMove();
+        State = movement.ReachedDestination ? NodeState.Success : NodeState.Running;
         return State;
     }
 }

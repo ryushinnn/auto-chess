@@ -20,7 +20,7 @@ public enum HeroRank {
     S
 }
 
-public class Hero : MonoBehaviour, IMapNodeObject {
+public class Hero : MonoBehaviour {
     [SerializeField] public bool debug;
     
     [SerializeField] Transform model;
@@ -31,14 +31,12 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     public HeroTrait Trait => trait;
     public TeamSide Side => side;
     public HeroRank Rank => rank;
-    public Seeker Seeker => seeker;
     public Transform Model => model;
     public Mecanim Mecanim => mecanim;
-    public MapNode MNode => node as MapNode;
-    public DeckNode DNode => node as DeckNode;
+    public MapNode MapNode => node as MapNode;
+    public DeckNode DeckNode => node as DeckNode;
     public Hero Target => target;
 
-    Seeker seeker;
     HeroBT bt;
     HeroPicker picker;
 
@@ -65,8 +63,8 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         Process();
         PostProcess();
         
-        dev_mapNode = MNode != null ? new Vector2(MNode.X, MNode.Y) : new Vector2(-1, -1);
-        dev_targetNode = target?.MNode != null ? new Vector2(target.MNode.X, target.MNode.Y) : new Vector2(-1, -1);
+        dev_mapNode = MapNode != null ? new Vector2(MapNode.X, MapNode.Y) : new Vector2(-1, -1);
+        dev_targetNode = target?.MapNode != null ? new Vector2(target.MapNode.X, target.MapNode.Y) : new Vector2(-1, -1);
     }
 
     void LateUpdate() {
@@ -84,7 +82,9 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         FindComponents();
         SetUpModel();
         abilities.ForEach(x=>x.Initialize(this));
-        bt.Initialize();
+        if (!name.Contains(HeroId._Dummy_)) {
+            bt.Initialize();
+        }
         Switch(HeroState.Preparation);
     }
 
@@ -122,21 +122,31 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     }
 
     public void SetNode(Node node) {
-        this.node?.Remove(this);
-        this.node = node;
-        this.node.Add(this);
-        
-        isOnMap = node is MapNode;
+        this.node?.SetToEmpty();
+        switch (node) {
+            case MapNode mn:
+                mn.ChangeState(MapNodeState.Owned);
+                this.node = mn;
+                isOnMap = true;
+                break;
+            
+            case DeckNode dn:
+                dn.ChangeState(DeckNodeState.Owned);
+                this.node = dn;
+                isOnMap = false;
+                break;
+        }
     }
 
     public void DeleteNode() {
-        node.Remove(this);
+        if (node == null) return;
+        node.SetToEmpty();
         node = null;
     }
 
     public void SwapNode(Hero hero) {
         var currentNode = node;
-        var newNode = (Node)hero.DNode ?? hero.MNode;
+        var newNode = (Node)hero.DeckNode ?? hero.MapNode;
         SetNode(newNode);
         ResetPosition();
         hero.SetNode(currentNode);
@@ -146,16 +156,15 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     public void ResetPosition(bool skipAnimation = false) {
         snapTween?.Kill();
         if (skipAnimation) {
-            transform.position = node.Position;
+            transform.position = node.WorldPosition;
         }
         else {
-            snapTween = transform.DOMove(node.Position, 0.1f);
+            snapTween = transform.DOMove(node.WorldPosition, 0.1f);
         }
     }
     
     public void FindTarget() {
-        Func<IMapNodeObject, bool> condition = x => x is Hero h && h.side != side;
-        target = Map.Instance.GetNearestNode(MNode, node => node.Any(condition))?.Get<Hero>(condition);
+        target = GameManager.Instance.GetNearestOpponent(this);
     }
 
     void FindAbilities() {
@@ -167,7 +176,6 @@ public class Hero : MonoBehaviour, IMapNodeObject {
     }
     
     void FindComponents() {
-        seeker = GetComponent<Seeker>();
         bt = GetComponent<HeroBT>();
         picker = GetComponent<HeroPicker>();
     }
@@ -213,6 +221,10 @@ public class Hero : MonoBehaviour, IMapNodeObject {
         }
     }
 
+    public MapNode GetNearestNode() {
+        return Map.Instance.GetNearestNode(transform.position);
+    }
+
     public void dev_Debug(object o) {
         if (!debug) return;
         Debug.Log(o);
@@ -231,6 +243,6 @@ public class Hero : MonoBehaviour, IMapNodeObject {
 
     [Button]
     void Dev_CheckNullMapNode() {
-        Debug.Log("mapNode is null: " + (MNode == null));
+        Debug.Log("mapNode is null: " + (MapNode == null));
     }
 }

@@ -1,43 +1,29 @@
 using System;
 using UnityEngine;
 
+public enum DeckNodeState {
+    Empty,
+    Owned,
+}
+
 public class DeckNode : Node {
-    public int Index { get; private set; }
-    
-    IMapNodeObject obj;
+    public int LinePosition { get; private set; }
+    public DeckNodeState State { get; private set; }
 
-    public void Initialize(int index, Vector3 position) {
-        Index = index;
-        Position = position;
+    public DeckNode(int index, Vector3 position) : base(position) {
+        LinePosition = index;
+        State = DeckNodeState.Empty;
     }
 
-    public override void Add(IMapNodeObject obj) {
-        this.obj = obj;
-    }
-    
-    public override void Remove(IMapNodeObject obj) {
-        if (this.obj == obj) {
-            this.obj = null;
-        }
+    public override bool IsEmpty() {
+        return State == DeckNodeState.Empty;
     }
     
-    public override T Get<T>(Func<T,bool> condition = null) {
-        if (this.obj is T obj && (condition == null || condition(obj))) {
-            return obj;
-        }
-
-        return default;
-    }
-
-    public bool HasNone() {
-        return obj == null;
-    }
-
-    public bool Has(IMapNodeObject obj) {
-        return obj == this.obj;
+    public override void SetToEmpty() {
+        State = DeckNodeState.Empty;
     }
     
-    public void Process(Action<IMapNodeObject> action) {
-        action(obj);
+    public void ChangeState(DeckNodeState state) {
+        State = state;
     }
 }

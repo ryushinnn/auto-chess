@@ -20,7 +20,7 @@ public class Deck : Singleton<Deck> {
 
     void LateUpdate() {
         for (int i = 0; i < SIZE; i++) {
-            MapVisual.Instance.MarkAsNonEmpty(nodes[i], !nodes[i].HasNone());
+            MapVisual.Instance.MarkAsNonEmpty(nodes[i], !nodes[i].IsEmpty());
         }
     }
 
@@ -32,7 +32,7 @@ public class Deck : Singleton<Deck> {
         var minDist = Mathf.Infinity;
         DeckNode node = null;
         for (int i = 0; i < SIZE; i++) {
-            var dist = Vector3.Distance(nodes[i].Position, position);
+            var dist = Vector3.Distance(nodes[i].WorldPosition, position);
             if (dist < minDist && (condition == null || condition(i))) {
                 minDist = dist;
                 node = nodes[i];
@@ -44,7 +44,7 @@ public class Deck : Singleton<Deck> {
 
     public DeckNode GetLowestAvailableNode() {
         for (int i = 0; i < SIZE; i++) {
-            if (nodes[i].HasNone()) {
+            if (nodes[i].IsEmpty()) {
                 return nodes[i];
             }
         }
@@ -55,12 +55,12 @@ public class Deck : Singleton<Deck> {
     void SpawnNodes() {
         nodes = new DeckNode[SIZE];
         for (int i = 0; i < SIZE; i++) {
-            var node = new DeckNode();
-            node.Initialize(i, new Vector3((i - SIZE / 2) * nodeWidth, 0, 0) + nodeParent.position);
+            var worldPos = new Vector3((i - SIZE / 2) * nodeWidth, 0, 0) + nodeParent.position;
+            var node = new DeckNode(i, worldPos);
             nodes[i] = node;
             var nodeVisual = new GameObject($"[{i}]");
             nodeVisual.transform.SetParent(nodeParent);
-            nodeVisual.transform.position = node.Position;
+            nodeVisual.transform.position = node.WorldPosition;
         }
         
         MapVisual.Instance.SpawnSquareIndicators(nodes, nodeWidth, nodeHeight);

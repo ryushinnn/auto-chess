@@ -3,47 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum MapNodeState {
+    Empty,
+    Targeted,
+    Owned,
+}
+
 public class MapNode : Node {
-    public int X { get; private set; }
-    public int Y { get; private set; }
+    public int X => GridPosition.x;
+    public int Y => GridPosition.y;
+    public Vector2Int GridPosition { get; private set; }
+    public MapNodeState State { get; private set; }
     
-    List<IMapNodeObject> objects = new();
-    
-    public void Initialize(int x, int y, Vector3 position) {
-        X = x;
-        Y = y;
-        Position = position;
+    public MapNode(int x, int y, Vector3 position) : base(position) {
+        GridPosition = new Vector2Int(x, y);
+        State = MapNodeState.Empty;
     }
 
-    public override void Add(IMapNodeObject obj) {
-        objects.Add(obj);
-    }
-    
-    public override void Remove(IMapNodeObject obj) {
-        objects.Remove(obj);
-    }
-
-    public override T Get<T>(Func<T, bool> condition = null) {
-        return (T)objects.FirstOrDefault(x=> x is T obj && (condition == null || condition(obj)));
-    }
-
-    public bool Any(Func<IMapNodeObject, bool> condition) {
-        return objects.Any(condition);
-    }
-
-    public bool HasOnly(IMapNodeObject obj) {
-        return objects.Count == 1 && objects[0] == obj;
+    public override bool IsEmpty() {
+        return State == MapNodeState.Empty;
     }
     
-    public bool HasAtFirst(IMapNodeObject obj) {
-        return objects.Count > 0 && objects[0] == obj;
+    public override void SetToEmpty() {
+        State = MapNodeState.Empty;
+    }
+    
+    public void ChangeState(MapNodeState state) {
+        State = state;
     }
 
-    public bool HasNone() {
-        return objects.Count == 0;
-    }
-
-    public void Process(Action<IMapNodeObject> action) {
-        objects.ForEach(action);
+    public override string ToString() {
+        return $"({X},{Y})";
     }
 }

@@ -38,7 +38,7 @@ MonoBehaviour:
   tenacity: 0
   energyRegenPerAttack: 15
   energyRegenPerHit: 4
-  attackRange: 4
+  attackRange: 8
   minDps: 50
   avgDps: 60
   physicalReduction: 16.666666

@@ -542,7 +542,7 @@ public class HeroAttributes : HeroAbility {
 
     void Die() {
         isAlive = false;
-        movement.StopMove(true);
+        movement.StopMove();
         hero.Mecanim.Death();
         hero.Mecanim.InterruptAttack();
         hero.Mecanim.InterruptSkill();
