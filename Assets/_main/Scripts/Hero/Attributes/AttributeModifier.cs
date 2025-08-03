@@ -1,5 +1,5 @@
 using System;
-using RExt.Extension;
+using RExt.Extensions;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;

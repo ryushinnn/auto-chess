@@ -8,12 +8,14 @@ public class GameManager : Singleton<GameManager> {
     public event Action<int> onLevelUp; 
     public Shop Shop => shop;
     public LineUp LineUp => lineUp;
+    public BattleField BattleField => battleField;
     
     [SerializeField] Hero heroPrefab;
     [SerializeField] TeamMember[] myTeam;
     [SerializeField] TeamMember[] enemyTeam;
     [SerializeField] Shop shop;
     [SerializeField] LineUp lineUp;
+    [SerializeField] BattleField battleField;
     [SerializeField, ReadOnly] int level;
     [SerializeField, ReadOnly] int xp;
 
@@ -21,7 +23,7 @@ public class GameManager : Singleton<GameManager> {
     
     public int Level => level;
 
-    List<Hero> heroes = new();
+    // List<Hero> heroes = new();
 
     int dev_count = 0;
 
@@ -55,39 +57,31 @@ public class GameManager : Singleton<GameManager> {
     [Button]
     void Initialize() {
         foreach (var e in myTeam) {
-            if (!e.active) continue;
             var trait = HeroTraitDB.Instance.Find(e.id);
             if (trait == null) {
                 Debug.LogError($"no hero trait with id {e.id}");
                 return;
             }
-            var hero = Instantiate(heroPrefab);
-            hero.name = $"{dev_count++}" + e.id;
-            hero.SetNode(Map.Instance.GetNode(e.mapNode.x, e.mapNode.y));
-            hero.ResetPosition(true);
-            hero.Initialize(trait, TeamSide.Ally);
+
+            var node = Map.Instance.GetNode(e.mapNode.x, e.mapNode.y);
+            var hero = battleField.SpawnHero(trait, TeamSide.Ally, node);
             foreach (var i in e.items) {
                 hero.GetAbility<HeroInventory>().Add(i);
             }
-            heroes.Add(hero);
         }
         
         foreach (var e in enemyTeam) {
-            if (!e.active) continue;
             var trait = HeroTraitDB.Instance.Find(e.id);
             if (trait == null) {
                 Debug.LogError($"no hero trait with id {e.id}");
                 return;
             }
-            var hero = Instantiate(heroPrefab);
-            hero.name = $"{dev_count++}" + e.id + " [Enemy]";
-            hero.SetNode(Map.Instance.GetNode(e.mapNode.x, e.mapNode.y));
-            hero.ResetPosition(true);
-            hero.Initialize(trait, TeamSide.Enemy);
+
+            var node = Map.Instance.GetNode(e.mapNode.x, e.mapNode.y);
+            var hero = battleField.SpawnHero(trait, TeamSide.Enemy, node);
             foreach (var i in e.items) {
                 hero.GetAbility<HeroInventory>().Add(i);
             }
-            heroes.Add(hero);
         }
     }
 
@@ -95,49 +89,10 @@ public class GameManager : Singleton<GameManager> {
     void Pause() {
         
     }
-
-    [Button]
-    void Clear() {
-        foreach (var h in heroes) {
-            Destroy(h.gameObject);
-        }
-    }
-
-    public Hero GetNearestOpponent(Hero hero) {
-        Hero nearestHero = null;
-        var minDist = Mathf.Infinity;
-        foreach (var h in heroes) {
-            if (h.Side == hero.Side || !h.GetAbility<HeroAttributes>().IsAlive) continue;
-            var dist = Vector3.Distance(hero.transform.position, h.transform.position);
-            if (dist < minDist) {
-                nearestHero = h;
-                minDist = dist;
-            }
-        }
-
-        return nearestHero;
-    }
-
-    public Hero FindHeroOnNode(Node node) {
-        return heroes.Find(h => h.MapNode == node || h.DeckNode == node);
-    }
-
-    [Button]
-    void dev_ChangeState(HeroState state) {
-        heroes.ForEach(x=>x.Switch(state));
-    }
-
-    [Button]
-    void dev_Battle() {
-        Initialize();
-        heroes.ForEach(x=>x.Switch(HeroState.ReadyToFight));
-        heroes.ForEach(x=>x.Switch(HeroState.InBattle));
-    }
 }
 
 [Serializable]
 public class TeamMember {
-    public bool active;
     [StringDropdown(typeof(HeroId))] public string id;
     public int star;
     public Vector2Int mapNode;

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using DG.Tweening;
-using RExt.Extension;
+using RExt.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using RExt.Extension;
+using RExt.Extensions;
 using UnityEngine;
 
 [Serializable]

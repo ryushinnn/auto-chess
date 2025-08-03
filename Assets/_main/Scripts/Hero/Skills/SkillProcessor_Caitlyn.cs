@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using RExt.Extension;
+using RExt.Extensions;
 
 public class SkillProcessor_Caitlyn : SkillProcessor {
     const float HP_MUL_TO_HEAL = 0.03f;

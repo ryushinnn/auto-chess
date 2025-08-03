@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Pathfinding;
-using RExt.Extension;
+using RExt.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,31 +27,25 @@ public class Hero : MonoBehaviour {
     [SerializeField] Transform abilitiesContainer;
     [SerializeField] Image rankIcon;
 
-    public string ID => id;
     public HeroTrait Trait => trait;
     public TeamSide Side => side;
     public HeroRank Rank => rank;
     public Transform Model => model;
     public Mecanim Mecanim => mecanim;
-    public MapNode MapNode => node as MapNode;
-    public DeckNode DeckNode => node as DeckNode;
     public Hero Target => target;
 
     HeroBT bt;
     HeroPicker picker;
 
-    [SerializeField, ReadOnly] string id;
     [SerializeField, ReadOnly] HeroTrait trait;
     [SerializeField, ReadOnly] TeamSide side;
     [SerializeField, ReadOnly] HeroRank rank;
     [SerializeField, ReadOnly] HeroState state;
-    [SerializeField, ReadOnly] bool isOnMap;
     [SerializeField, ReadOnly] Hero target;
     
     Mecanim mecanim;
     List<HeroAbility> abilities = new();
     Dictionary<Type, HeroAbility> cachedAbilities = new();
-    Node node;
     Tween snapTween;
 
     public Vector2 dev_mapNode;
@@ -62,21 +56,13 @@ public class Hero : MonoBehaviour {
         PreProcess();
         Process();
         PostProcess();
-        
-        dev_mapNode = MapNode != null ? new Vector2(MapNode.X, MapNode.Y) : new Vector2(-1, -1);
-        dev_targetNode = target?.MapNode != null ? new Vector2(target.MapNode.X, target.MapNode.Y) : new Vector2(-1, -1);
-    }
-
-    void LateUpdate() {
-        RemoveNodeOnDead();
     }
 
     public void Initialize(HeroTrait trait, TeamSide side) {
-        id = Guid.NewGuid().ToString();
         this.trait = trait;
         this.side = side;
         rank = HeroRank.B;
-        name = $"({rank}){trait.id} ID:{id}";
+        name = $"({rank}){trait.id}";
         rankIcon.sprite = AssetDB.Instance.GetRankIcon(rank);
         FindAbilities();
         FindComponents();
@@ -90,7 +76,7 @@ public class Hero : MonoBehaviour {
 
     public void Upgrade() {
         rank = rank.Next();
-        name = $"({rank}){trait.id} ID:{id}";
+        name = $"({rank}){trait.id}";
         rankIcon.sprite = AssetDB.Instance.GetRankIcon(rank);
         Debug.Log($"{trait.id} upgraded to {rank}");
     }
@@ -121,50 +107,18 @@ public class Hero : MonoBehaviour {
         return cachedAbilities[typeof(T)] as T;
     }
 
-    public void SetNode(Node node) {
-        this.node?.SetToEmpty();
-        switch (node) {
-            case MapNode mn:
-                mn.ChangeState(MapNodeState.Owned);
-                this.node = mn;
-                isOnMap = true;
-                break;
-            
-            case DeckNode dn:
-                dn.ChangeState(DeckNodeState.Owned);
-                this.node = dn;
-                isOnMap = false;
-                break;
-        }
-    }
-
-    public void DeleteNode() {
-        if (node == null) return;
-        node.SetToEmpty();
-        node = null;
-    }
-
-    public void SwapNode(Hero hero) {
-        var currentNode = node;
-        var newNode = (Node)hero.DeckNode ?? hero.MapNode;
-        SetNode(newNode);
-        ResetPosition();
-        hero.SetNode(currentNode);
-        hero.ResetPosition();
-    }
-
-    public void ResetPosition(bool skipAnimation = false) {
+    public void UpdatePosition(Node node, bool skipAnim = false) {
         snapTween?.Kill();
-        if (skipAnimation) {
+        if (skipAnim) {
             transform.position = node.WorldPosition;
         }
         else {
-            snapTween = transform.DOMove(node.WorldPosition, 0.1f);
+            snapTween = transform.DOMove(node.WorldPosition, 0.1f).SetEase(Ease.Linear);
         }
     }
     
     public void FindTarget() {
-        target = GameManager.Instance.GetNearestOpponent(this);
+        target = GameManager.Instance.BattleField.GetNearestOpponent(this);
     }
 
     void FindAbilities() {
@@ -213,14 +167,6 @@ public class Hero : MonoBehaviour {
         }
     }
 
-    void RemoveNodeOnDead() {
-        if (state == HeroState.InBattle
-            && !GetAbility<HeroAttributes>().IsAlive && node != null) {
-            
-            DeleteNode();
-        }
-    }
-
     public MapNode GetNearestNode() {
         return Map.Instance.GetNearestNode(transform.position);
     }
@@ -229,20 +175,9 @@ public class Hero : MonoBehaviour {
         if (!debug) return;
         Debug.Log(o);
     }
-
-    [Button]
-    void Dev_ChangeNode(int x, int y) {
-        SetNode(Map.Instance.GetNode(x,y));
-        ResetPosition(true);
-    }
     
     [Button]
     void Dev_ChangeState(HeroState state) {
         Switch(state);
-    }
-
-    [Button]
-    void Dev_CheckNullMapNode() {
-        Debug.Log("mapNode is null: " + (MapNode == null));
     }
 }

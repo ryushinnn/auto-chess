@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RExt.Extension;
+using RExt.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class LineUp : MonoBehaviour {
     [SerializeField] Hero heroPrefab;
-    [SerializeField, ReadOnly] List<Hero> heroes;
 
     Dictionary<Role, int> roleNumbers = new();
     Dictionary<Realm, int> realmNumbers = new();
     HashSet<HeroTrait> uniqueTraits = new();
+
+    Dictionary<Hero,Node> heroes = new();
     
     public bool Full => heroesOnMap >= maxHeroesOnMap;
 
@@ -60,9 +61,9 @@ public class LineUp : MonoBehaviour {
             // create new hero
             var hero = Instantiate(heroPrefab);
             hero.Initialize(trait, TeamSide.Ally);
-            hero.SetNode(availableDeckNode);
-            hero.ResetPosition(true);
-            heroes.Add(hero);
+            heroes.Add(hero, availableDeckNode);
+            hero.UpdatePosition(availableDeckNode);
+            availableDeckNode.ChangeState(NodeState.Occupied);
             RecalculateHeroesOnMap();
 
             if (uniqueTraits.Add(hero.Trait)) {
@@ -80,25 +81,27 @@ public class LineUp : MonoBehaviour {
         return false;
     }
 
-    public void Remove(string id) {
-        var hero = heroes.Find(x => x.ID == id);
-        heroes.Remove(hero);
-        Destroy(hero.gameObject);
-    }
-
     public void Remove(Hero hero) {
-        hero.DeleteNode();
+        heroes[hero].SetToEmpty();
         heroes.Remove(hero);
         Destroy(hero.gameObject);
     }
     
     public void RecalculateHeroesOnMap() {
-        heroesOnMap = heroes.Count(x => x.MapNode != null);
+        heroesOnMap = 0;
+        foreach (var (_, node) in heroes) {
+            if (node is MapNode) heroesOnMap++;
+        }
         ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap, maxHeroesOnMap);
     }
 
     bool MergeHeroes(HeroTrait trait, HeroRank rank, int required) {
-        var duplicates = heroes.FindAll(x => x.Trait == trait && x.Rank == rank);
+        var duplicates = new List<Hero>();
+        foreach (var (h, _) in heroes) {
+            if (h.Trait == trait && h.Rank == rank) {
+                duplicates.Add(h);
+            }
+        }
         if (duplicates.Count < required) return false;
 
         for (int i = required - 1; i >= 1; i--) {
@@ -107,6 +110,35 @@ public class LineUp : MonoBehaviour {
         duplicates[0].Upgrade();
         RecalculateHeroesOnMap();
         return true;
+    }
+
+    public Hero FindHeroOnNode(Node node) {
+        foreach (var (h, n) in heroes) {
+            if (node == n) return h;
+        }
+
+        return null;
+    }
+
+    public Node FindNodeOfHero(Hero hero) {
+        return heroes.GetValueOrDefault(hero);
+    }
+
+    public void UpdateHeroNode(Hero hero, Node node) {
+        var oldNode = heroes[hero];
+        if (oldNode != node) {
+            oldNode.SetToEmpty();
+            node.ChangeState(NodeState.Occupied);
+            heroes[hero] = node;
+        }
+        
+        hero.UpdatePosition(node);
+    }
+
+    public void SwapHeroNodes(Hero heroA, Hero heroB) {
+        (heroes[heroA], heroes[heroB]) = (heroes[heroB], heroes[heroA]);
+        heroA.UpdatePosition(heroes[heroA]);
+        heroB.UpdatePosition(heroes[heroB]);
     }
 
     [Button]

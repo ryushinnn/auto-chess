@@ -30,7 +30,7 @@
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.2.1"
       },
-      "hash": "aa1780302da52e70df97fa0cc0d716c39ebc21cb"
+      "hash": "ad98f78c65b06e9ac98244cfe3a4a6c139c6d963"
     },
     "com.ryushin.ryushin-script-tpl": {
       "version": "https://github.com/ryushinnn/ryushin-script-tpl.git",

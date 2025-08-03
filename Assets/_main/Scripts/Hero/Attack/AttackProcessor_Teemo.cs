@@ -1,5 +1,5 @@
 ﻿using System;
-using RExt.Extension;
+using RExt.Extensions;
 using UnityEngine;
 
 public class AttackProcessor_Teemo : AttackProcessor {

@@ -1,13 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DG.Tweening;
-using JetBrains.Annotations;
-using Pathfinding;
-using RExt.Utils;
-using Sirenix.OdinInspector;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class HeroMovement : HeroAbility {
     public bool ReachedDestination => reachedDestination;
@@ -54,7 +48,7 @@ public class HeroMovement : HeroAbility {
         // update destination, calculate new path
         currentDestination?.SetToEmpty();
         currentDestination = destination;
-        currentDestination.ChangeState(MapNodeState.Targeted);
+        currentDestination.ChangeState(NodeState.Targeted);
         
         hero.Mecanim.Run();
 
@@ -74,9 +68,9 @@ public class HeroMovement : HeroAbility {
                 // check if target in range before reach destination, can early cancel move
                 if (currentNode != currentDestination && Map.Instance.CheckAdjacency(hero.Target.GetNearestNode(), currentNode, hero.Trait.attackRange)) {
                     rotation.Rotate(hero.Target.transform.position - hero.transform.position);
-                    hero.SetNode(currentNode);
+                    currentNode.ChangeState(NodeState.Occupied);
                     // only reset it if it is targeted (by self)
-                    if (currentDestination.State == MapNodeState.Targeted) {
+                    if (currentDestination.State == NodeState.Targeted) {
                         currentDestination.SetToEmpty();
                     }
                     StopMove();
@@ -87,7 +81,7 @@ public class HeroMovement : HeroAbility {
 
         moveSequence.AppendCallback(() => {
             rotation.Rotate(hero.Target.transform.position - hero.transform.position);
-            hero.SetNode(currentDestination);
+            currentDestination.ChangeState(NodeState.Occupied);
             StopMove();
             reachedDestination = true;
         });

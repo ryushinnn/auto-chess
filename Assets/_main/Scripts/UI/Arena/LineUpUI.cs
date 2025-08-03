@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RExt.Extension;
+using RExt.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

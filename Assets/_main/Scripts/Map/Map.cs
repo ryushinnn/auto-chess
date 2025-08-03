@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using RExt.Extension;
+using RExt.Extensions;
 using RExt.Patterns.Singleton;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -26,8 +26,8 @@ public class Map : Singleton<Map> {
             for (int j=0; j<SIZE; j++) {
                 var cell = MapVisual.Instance.GetHexCell(i, j);
                 var node = nodes[i, j];
-                cell.SetHighlight(node.State == MapNodeState.Owned);
-                cell.SwitchFlag(node.State == MapNodeState.Targeted);
+                cell.SetHighlight(node.State == NodeState.Occupied);
+                cell.SwitchFlag(node.State == NodeState.Targeted);
             }
         }
     }
@@ -132,7 +132,7 @@ public class Map : Singleton<Map> {
 
     [Button]
     void SetOwned(int x, int y) {
-        nodes[x, y].ChangeState(MapNodeState.Owned);
+        nodes[x, y].ChangeState(NodeState.Occupied);
         MapVisual.Instance.MarkAsNonEmpty(nodes[x, y], true);
     }
 

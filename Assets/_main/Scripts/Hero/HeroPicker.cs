@@ -1,5 +1,6 @@
 ﻿using System;
 using DG.Tweening;
+using RExt.Extensions;
 using RExt.Utils;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ public class HeroPicker : MonoBehaviour {
     
     Hero hero;
     Tween tween;
-    Node node;
+    Node currentNode;
+    Node nextNode;
     Vector3 offset;
 
     Vector3 originPos;
@@ -32,6 +34,7 @@ public class HeroPicker : MonoBehaviour {
         if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mapLayerMask) && hit.collider != null) {
             offset = new Vector3(hero.transform.position.x - hit.point.x, 0, hero.transform.position.z - hit.point.z);
         }
+        currentNode = GameManager.Instance.LineUp.FindNodeOfHero(hero);
         
         dragged = false;
         originPos = hero.transform.position;
@@ -43,39 +46,39 @@ public class HeroPicker : MonoBehaviour {
         
         var ray = Utils.MainCamera().ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mapLayerMask) && hit.collider != null) {
-            var pointXZ = new Vector3(hit.point.x, 0, hit.point.z);
-            hero.transform.position = pointXZ + offset;
-            var deckNode = Deck.Instance.GetNode(pointXZ);
-            if (deckNode != null) {
-                if (deckNode.IsEmpty() || deckNode == hero.DeckNode) {
-                    MapVisual.Instance.Highlight(true, deckNode);
+            var point = hit.point.ToZeroY();
+            hero.transform.position = point + offset;
+            var selectedDeckNode = Deck.Instance.GetNearestNode(point);
+            if (selectedDeckNode != null) {
+                if (selectedDeckNode.IsEmpty() || selectedDeckNode == currentNode) {
+                    MapVisual.Instance.Highlight(true, selectedDeckNode);
                     MapVisual.Instance.MarkAsNotAvailable(false);
                 }
                 else {
                     MapVisual.Instance.Highlight(false);
-                    MapVisual.Instance.MarkAsNotAvailable(true, deckNode);
+                    MapVisual.Instance.MarkAsNotAvailable(true, selectedDeckNode);
                 }
-                node = deckNode;
+                nextNode = selectedDeckNode;
                 return;
             }
             
-            var mapNode = Map.Instance.GetNearestNode(pointXZ, n => n.X < Map.SIZE / 2);
-            if (mapNode != null) {
-                if (mapNode.IsEmpty() || mapNode == hero.MapNode) {
-                    MapVisual.Instance.Highlight(true, mapNode);
+            var selectedMapNode = Map.Instance.GetNearestNode(point, n => n.X < Map.SIZE / 2);
+            if (selectedMapNode != null) {
+                if (selectedMapNode.IsEmpty() || selectedMapNode == currentNode) {
+                    MapVisual.Instance.Highlight(true, selectedMapNode);
                     MapVisual.Instance.MarkAsNotAvailable(false);
                 }
                 else {
                     MapVisual.Instance.Highlight(false);
-                    MapVisual.Instance.MarkAsNotAvailable(true, mapNode);
+                    MapVisual.Instance.MarkAsNotAvailable(true, selectedMapNode);
                 }
-                node = mapNode;
+                nextNode = selectedMapNode;
                 return;
             }
 
             MapVisual.Instance.Highlight(false);
             MapVisual.Instance.MarkAsNotAvailable(false);
-            node = null;
+            nextNode = null;
         }
         
         if ((hero.transform.position - originPos).sqrMagnitude > DRAG_THRESHOLD * DRAG_THRESHOLD) {
@@ -88,81 +91,84 @@ public class HeroPicker : MonoBehaviour {
         
         tween?.Kill();
         tween = hero.Model.DOLocalMoveY(0, 0.2f);
-        if (node == null) {
+        if (nextNode == null) {
             MapVisual.Instance.Highlight(false);
             MapVisual.Instance.MarkAsNotAvailable(false);
             return;
         }
         
-        
-        if (node is DeckNode dn) {
+        if (nextNode is DeckNode) {
             // case 0: move to self
-            if (dn == hero.DeckNode) {
-                hero.ResetPosition();
-                node = null;
+            if (nextNode == currentNode) {
+                GameManager.Instance.LineUp.UpdateHeroNode(hero, currentNode);
+                nextNode = null;
                 MapVisual.Instance.Highlight(false);
             }
-            // case 1: move map/deck -> deck
-            else if (dn.IsEmpty()) {
-                hero.SetNode(node);
-                hero.ResetPosition();
-                node = null;
+            // case 1: move map/deck -> deck (not self)
+            else if (nextNode.IsEmpty()) {
+                GameManager.Instance.LineUp.UpdateHeroNode(hero, nextNode);
+                nextNode = null;
                 MapVisual.Instance.Highlight(false);
                 GameManager.Instance.LineUp.RecalculateHeroesOnMap();
             }
             // case 2: swap
             else {
-                var otherHero = GameManager.Instance.FindHeroOnNode(node);
-                if (otherHero == null) {
-                    hero.ResetPosition();
+                var other = GameManager.Instance.LineUp.FindHeroOnNode(nextNode);
+                // invalid, back to current node
+                if (other == null) {
+                    Debug.Log($"Something is wrong. node {nextNode} is occupied but no hero found");
+                    GameManager.Instance.LineUp.UpdateHeroNode(hero, currentNode);
                 }
+                // valid, swap
                 else {
-                    hero.SwapNode(otherHero);
+                    GameManager.Instance.LineUp.SwapHeroNodes(hero, other);
                 }
-                node = null;
+                nextNode = null;
                 MapVisual.Instance.MarkAsNotAvailable(false);
             }
         }
-        else if (node is MapNode mn) {
+        else if (nextNode is MapNode) {
             // case 0: move to self
-            if (mn == hero.MapNode) {
-                hero.ResetPosition();
-                node = null;
+            if (nextNode == currentNode) {
+                GameManager.Instance.LineUp.UpdateHeroNode(hero, currentNode);
+                nextNode = null;
                 MapVisual.Instance.Highlight(false);
             }
-            // case 1: move map -> map
-            else if (hero.MapNode != null && mn.IsEmpty()) {
-                hero.SetNode(node);
-                hero.ResetPosition();
-                node = null;
+            // case 1: move map -> map (not self)
+            else if (currentNode is MapNode && nextNode.IsEmpty()) {
+                GameManager.Instance.LineUp.UpdateHeroNode(hero, nextNode);
+                nextNode = null;
                 MapVisual.Instance.Highlight(false);
             }
             // case 2: move deck -> map
-            else if (hero.DeckNode != null && mn.IsEmpty()) {
+            else if (currentNode is DeckNode && nextNode.IsEmpty()) {
+                // invalid, back to current node
                 if (GameManager.Instance.LineUp.Full) {
-                    hero.ResetPosition();
-                    node = null;
+                    GameManager.Instance.LineUp.UpdateHeroNode(hero, currentNode);
+                    nextNode = null;
                     MapVisual.Instance.Highlight(false);
                 }
+                // valid, update node
                 else {
-                    hero.SetNode(node);
-                    hero.ResetPosition();
-                    node = null;
+                    GameManager.Instance.LineUp.UpdateHeroNode(hero, nextNode);
+                    nextNode = null;
                     MapVisual.Instance.Highlight(false);
                     GameManager.Instance.LineUp.RecalculateHeroesOnMap();
                 }
             }
             // case 3: swap
             else {
-                Debug.Log("swap");
-                var otherHero = GameManager.Instance.FindHeroOnNode(node);
-                if (otherHero == null) {
-                    hero.ResetPosition();
+                var other = GameManager.Instance.LineUp.FindHeroOnNode(nextNode);
+                // invalid, back to current node
+                if (other == null) {
+                    Debug.Log($"Something is wrong. node {nextNode} is occupied but no hero found");
+                    GameManager.Instance.LineUp.UpdateHeroNode(hero, currentNode);
                 }
+                // valid, swap
                 else {
-                    hero.SwapNode(otherHero);
+                    GameManager.Instance.LineUp.SwapHeroNodes(hero, other);
                 }
-                node = null;
+                nextNode = null;
                 MapVisual.Instance.MarkAsNotAvailable(false);
             }
         }

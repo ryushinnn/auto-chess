@@ -23,8 +23,22 @@ public class Deck : Singleton<Deck> {
             MapVisual.Instance.MarkAsNonEmpty(nodes[i], !nodes[i].IsEmpty());
         }
     }
+    
+    void SpawnNodes() {
+        nodes = new DeckNode[SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            var worldPos = new Vector3((i - SIZE / 2) * nodeWidth, 0, 0) + nodeParent.position;
+            var node = new DeckNode(i, worldPos);
+            nodes[i] = node;
+            var nodeVisual = new GameObject($"[{i}]");
+            nodeVisual.transform.SetParent(nodeParent);
+            nodeVisual.transform.position = node.WorldPosition;
+        }
+        
+        MapVisual.Instance.SpawnSquareIndicators(nodes, nodeWidth, nodeHeight);
+    }
 
-    public DeckNode GetNode(Vector3 position, Func<int, bool> condition = null) {
+    public DeckNode GetNearestNode(Vector3 position, Func<int, bool> condition = null) {
         if (position.x < LIMIT_X_LEFT || position.x > LIMIT_X_RIGHT || position.z > LIMIT_Z_UP) {
             return null;
         }
@@ -50,19 +64,5 @@ public class Deck : Singleton<Deck> {
         }
 
         return null;
-    }
-
-    void SpawnNodes() {
-        nodes = new DeckNode[SIZE];
-        for (int i = 0; i < SIZE; i++) {
-            var worldPos = new Vector3((i - SIZE / 2) * nodeWidth, 0, 0) + nodeParent.position;
-            var node = new DeckNode(i, worldPos);
-            nodes[i] = node;
-            var nodeVisual = new GameObject($"[{i}]");
-            nodeVisual.transform.SetParent(nodeParent);
-            nodeVisual.transform.position = node.WorldPosition;
-        }
-        
-        MapVisual.Instance.SpawnSquareIndicators(nodes, nodeWidth, nodeHeight);
     }
 }
