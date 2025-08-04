@@ -19,11 +19,11 @@ public abstract class Node {
         return State == NodeState.Empty;
     }
 
-    public void SetToEmpty() {
+    public virtual void SetToEmpty() {
         ChangeState(NodeState.Empty);
     }
     
-    public void ChangeState(NodeState state) {
+    public virtual void ChangeState(NodeState state) {
         State = state;
     }
 }

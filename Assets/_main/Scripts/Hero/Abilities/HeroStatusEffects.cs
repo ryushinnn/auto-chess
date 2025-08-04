@@ -80,7 +80,7 @@ public class HeroStatusEffects : HeroAbility {
         
         hero.GetAbility<HeroAttack>().Interrupt();
         hero.GetAbility<HeroSkill>().Interrupt();
-        hero.GetAbility<HeroMovement>().StopMove();
+        hero.GetAbility<HeroMovement>().StopMove(true);
     }
     
     public void Unstoppable(bool value) {
@@ -95,7 +95,7 @@ public class HeroStatusEffects : HeroAbility {
         stunDuration = Mathf.Max(stunDuration, duration);
         hero.GetAbility<HeroAttack>().Interrupt();
         hero.GetAbility<HeroSkill>().Interrupt();
-        hero.GetAbility<HeroMovement>().StopMove();
+        hero.GetAbility<HeroMovement>().StopMove(true);
     }
     
     public void Silent(float duration) {

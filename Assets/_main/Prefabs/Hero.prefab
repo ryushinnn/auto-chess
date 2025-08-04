@@ -1591,7 +1591,6 @@ GameObject:
   - component: {fileID: 5818875195950071551}
   - component: {fileID: 8657020387718133434}
   - component: {fileID: 276282976127478005}
-  - component: {fileID: 9216555523027126767}
   - component: {fileID: 2908747736769062559}
   m_Layer: 0
   m_Name: Hero
@@ -1655,28 +1654,11 @@ MonoBehaviour:
   model: {fileID: 8494226802168659207}
   abilitiesContainer: {fileID: 801794401438645641}
   rankIcon: {fileID: 6381064795183771975}
-  id: 
   trait: {fileID: 11400000, guid: 3497b5ea78b8c9a4b9efb1fddb0d2fc3, type: 2}
   side: 0
   rank: 0
   state: 0
-  isOnMap: 0
   target: {fileID: 0}
-  dev_mapNode: {x: 0, y: 0}
-  dev_targetNode: {x: 0, y: 0}
-  dev_destinationNode: {x: 0, y: 0}
---- !u!114 &9216555523027126767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7033077526733261554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f21d062a9297408e92096fea1e70d81f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2908747736769062559
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -61,28 +61,23 @@ public class HeroAttributes : HeroAbility {
     [SerializeField, ReadOnly] List<DamageOverTime> damageOverTimes = new();
     [SerializeField, ReadOnly] List<HealOverTime> healOverTimes = new();
 
-    public override void Initialize(Hero hero) {
-        base.Initialize(hero);
-        maxHp = this.hero.Trait.maxHp;
-        armor = this.hero.Trait.armor;
-        resistance = this.hero.Trait.resistance;
-        attackSpeed = this.hero.Trait.attackSpeed;
-        physicalDamage = this.hero.Trait.physicalDamage;
-        magicalDamage = this.hero.Trait.magicalDamage;
-        movementSpeed = this.hero.Trait.movementSpeed;
-        criticalChance = this.hero.Trait.criticalChance;
-        criticalDamage = this.hero.Trait.criticalDamage;
-        energyRegenEfficient = this.hero.Trait.energyRegenEfficient;
-        physicalPenetration = this.hero.Trait.physicalPenetration;
-        magicalPenetration = this.hero.Trait.magicalPenetration;
-        lifeSteal = this.hero.Trait.lifeSteal;
-        tenacity = this.hero.Trait.tenacity;
-    }
-
     public override void ResetAll() {
         isAlive = true;
-        hp = maxHp;
+        hp = maxHp = hero.Trait.maxHp;
         energy = 0;
+        armor = hero.Trait.armor;
+        resistance = hero.Trait.resistance;
+        attackSpeed = hero.Trait.attackSpeed;
+        physicalDamage = hero.Trait.physicalDamage;
+        magicalDamage = hero.Trait.magicalDamage;
+        movementSpeed = hero.Trait.movementSpeed;
+        criticalChance = hero.Trait.criticalChance;
+        criticalDamage = hero.Trait.criticalDamage;
+        energyRegenEfficient = hero.Trait.energyRegenEfficient;
+        physicalPenetration = hero.Trait.physicalPenetration;
+        magicalPenetration = hero.Trait.magicalPenetration;
+        lifeSteal = hero.Trait.lifeSteal;
+        tenacity = hero.Trait.tenacity;
         healthBar.UpdateAmount(1, true);
         energyBar.UpdateAmount(0, true);
     }
@@ -542,12 +537,14 @@ public class HeroAttributes : HeroAbility {
 
     void Die() {
         isAlive = false;
-        movement.StopMove();
+        movement.StopMove(true);
+        movement.ReleaseOccupiedNode();
         hero.Mecanim.Death();
         hero.Mecanim.InterruptAttack();
         hero.Mecanim.InterruptSkill();
         canvas.enabled = false;
         hero.name = "(DEAD) " + hero.name;
+        GameManager.Instance.BattleField.MarkHeroAsDead(hero);
     }
 
     [Button]

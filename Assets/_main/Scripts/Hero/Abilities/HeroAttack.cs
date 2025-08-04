@@ -21,30 +21,26 @@ public class HeroAttack : HeroAbility {
     [SerializeField, ReadOnly] bool isAttacking;
     [SerializeField, ReadOnly] float duration;
 
-    public override void Initialize(Hero hero) {
-        base.Initialize(hero);
+    public override void ResetAll() {
         processor = hero.Trait.id switch {
-            "Aatrox_Dark" => new AttackProcessor_Aatrox_Dark(hero),
-            "Aatrox_Light" => new AttackProcessor_Aatrox_Light(hero),
-            "Akali" => new AttackProcessor_Akali(hero),
-            "Ashe" => new AttackProcessor_Ashe(hero),
-            "Caitlyn" => new AttackProcessor_Caitlyn(hero),
-            "Irelia" => new AttackProcessor_Irelia(hero),
-            "Jinx" => new AttackProcessor_Jinx(hero),
-            "Katarina" => new AttackProcessor_Katarina(hero),
-            "Malphite" => new AttackProcessor_Malphite(hero),
-            "MissFortune" => new AttackProcessor_MissFortune(hero),
-            "Morgana" => new AttackProcessor_Morgana(hero),
-            "Teemo" => new AttackProcessor_Teemo(hero),
-            "Tristana" => new AttackProcessor_Tristana(hero),
-            "Yasuo" => new AttackProcessor_Yasuo(hero),
-            "Yone" => new AttackProcessor_Yone(hero),
-            "Zed" => new AttackProcessor_Zed(hero),
+            HeroId.Aatrox_Dark => new AttackProcessor_Aatrox_Dark(hero),
+            HeroId.Aatrox_Light => new AttackProcessor_Aatrox_Light(hero),
+            HeroId.Akali => new AttackProcessor_Akali(hero),
+            HeroId.Ashe => new AttackProcessor_Ashe(hero),
+            HeroId.Caitlyn => new AttackProcessor_Caitlyn(hero),
+            HeroId.Irelia => new AttackProcessor_Irelia(hero),
+            HeroId.Jinx => new AttackProcessor_Jinx(hero),
+            HeroId.Katarina => new AttackProcessor_Katarina(hero),
+            HeroId.Malphite => new AttackProcessor_Malphite(hero),
+            HeroId.MissFortune => new AttackProcessor_MissFortune(hero),
+            HeroId.Morgana => new AttackProcessor_Morgana(hero),
+            HeroId.Teemo => new AttackProcessor_Teemo(hero),
+            HeroId.Tristana => new AttackProcessor_Tristana(hero),
+            HeroId.Yasuo => new AttackProcessor_Yasuo(hero),
+            HeroId.Yone => new AttackProcessor_Yone(hero),
+            HeroId.Zed => new AttackProcessor_Zed(hero),
             _ => new AttackProcessor(hero)
         };
-    }
-
-    public override void ResetAll() {
         currentAttackCooldown = 0;
     }
 

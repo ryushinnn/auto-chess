@@ -1,7 +1,8 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public abstract class HeroAbility : MonoBehaviour {
-    [SerializeField] protected bool isActive = true;
+    [SerializeField, ReadOnly] protected bool isActive = true;
 
     public bool IsActive => isActive;
 
@@ -12,10 +13,13 @@ public abstract class HeroAbility : MonoBehaviour {
         FindReferences();
     }
 
+    public void Disable() {
+        isActive = false;
+        name = $"[DISABLED] {name}";
+    }
+
     public virtual void ResetAll() { }
-    public virtual void PreProcess() { }
     public virtual void Process() { }
-    public virtual void PostProcess() { }
     
     protected virtual void FindReferences() { }
 }

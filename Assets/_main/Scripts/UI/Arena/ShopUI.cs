@@ -26,7 +26,7 @@ public class ShopUI : BaseUI {
 
     void Start() {
         GameManager.Instance.Shop.onRefresh += UpdateHeroes;
-        GameManager.Instance.onLevelUp += UpdateRates;
+        GameManager.Instance.Level.OnLevelUp += UpdateRates;
     }
 
     void UpdateHeroes(HeroTrait[] traits) {

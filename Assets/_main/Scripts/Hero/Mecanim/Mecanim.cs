@@ -52,17 +52,14 @@ public abstract class Mecanim : MonoBehaviour {
         SetUp();
     }
 
-    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     public virtual void Idle() {
         ChangeState(State.Idle);
     }
 
-    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     public virtual void Run() {
         ChangeState(State.Run);
     }
 
-    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
     public virtual void Death() {
         ChangeState(State.Death);
     }
@@ -142,25 +139,5 @@ public abstract class Mecanim : MonoBehaviour {
 
     protected virtual void ModifyBodyParts() {
         
-    }
-    
-    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
-    void dev_DiveIn() {
-        Interact(Interaction.Dive, (paramDiveIn, true));
-    }
-    
-    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
-    void dev_DiveOut() {
-        Interact(Interaction.Dive, (paramDiveIn, false));
-    }
-    
-    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
-    void dev_Attack() {
-        Attack();
-    }
-
-    [Button, ShowIf("@UnityEngine.Application.isPlaying")]
-    void dev_Skill() {
-        UseSkill();
     }
 }

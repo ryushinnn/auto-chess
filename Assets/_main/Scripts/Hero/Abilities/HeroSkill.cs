@@ -16,30 +16,26 @@ public class HeroSkill : HeroAbility {
     [SerializeField, ReadOnly] bool isUsingSkill;
     [SerializeField, ReadOnly] float duration;
 
-    public override void Initialize(Hero hero) {
-        base.Initialize(hero);
+    public override void ResetAll() {
         processor = hero.Trait.id switch {
-            "Aatrox_Dark" => new SkillProcessor_Aatrox_Dark(hero),
-            "Aatrox_Light" => new SkillProcessor_Aatrox_Light(hero),
-            "Yasuo" => new SkillProcessor_Yasuo(hero),
-            "Zed" => new SkillProcessor_Zed(hero),
-            "Yone" => new SkillProcessor_Yone(hero),
-            "Akali" => new SkillProcessor_Akali(hero),
-            "Ashe" => new SkillProcessor_Ashe(hero),
-            "Caitlyn" => new SkillProcessor_Caitlyn(hero),
-            "Jinx" => new SkillProcessor_Jinx(hero),
-            "Irelia" => new SkillProcessor_Irelia(hero),
-            "Katarina" => new SkillProcessor_Katarina(hero),
-            "Malphite" => new SkillProcessor_Malphite(hero),
-            "MissFortune" => new SkillProcessor_MissFortune(hero),
-            "Morgana" => new SkillProcessor_Morgana(hero),
-            "Teemo" => new SkillProcessor_Teemo(hero),
-            "Tristana" => new SkillProcessor_Tristana(hero),
+            HeroId.Aatrox_Dark => new SkillProcessor_Aatrox_Dark(hero),
+            HeroId.Aatrox_Light => new SkillProcessor_Aatrox_Light(hero),
+            HeroId.Akali => new SkillProcessor_Akali(hero),
+            HeroId.Ashe => new SkillProcessor_Ashe(hero),
+            HeroId.Caitlyn => new SkillProcessor_Caitlyn(hero),
+            HeroId.Irelia => new SkillProcessor_Irelia(hero),
+            HeroId.Jinx => new SkillProcessor_Jinx(hero),
+            HeroId.Katarina => new SkillProcessor_Katarina(hero),
+            HeroId.Malphite => new SkillProcessor_Malphite(hero),
+            HeroId.MissFortune => new SkillProcessor_MissFortune(hero),
+            HeroId.Morgana => new SkillProcessor_Morgana(hero),
+            HeroId.Teemo => new SkillProcessor_Teemo(hero),
+            HeroId.Tristana => new SkillProcessor_Tristana(hero),
+            HeroId.Yasuo => new SkillProcessor_Yasuo(hero),
+            HeroId.Yone => new SkillProcessor_Yone(hero),
+            HeroId.Zed => new SkillProcessor_Zed(hero),
             _ => new SkillProcessor(hero),
         };
-    }
-
-    public override void ResetAll() {
         isUsingSkill = false;
     }
 

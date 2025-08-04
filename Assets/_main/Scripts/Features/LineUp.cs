@@ -18,10 +18,6 @@ public class LineUp : MonoBehaviour {
 
     int heroesOnMap;
     int maxHeroesOnMap;
-    
-    void Awake() {
-        Initialize();
-    }
 
     void Start() {
         heroesOnMap = 0;
@@ -29,7 +25,7 @@ public class LineUp : MonoBehaviour {
         ArenaUIManager.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
     }
 
-    void Initialize() {
+    public void Initialize() {
         var allRoles = ((Role[])Enum.GetValues(typeof(Role))).Where(x => x != 0).ToArray();
         var allRealms = ((Realm[])Enum.GetValues(typeof(Realm))).Where(x => x != 0).ToArray();
         foreach (var role in allRoles) {
@@ -47,9 +43,9 @@ public class LineUp : MonoBehaviour {
 
     public bool Add(HeroTrait trait) {
         // merge into rank A hero
-        if (MergeHeroes(trait, HeroRank.B, GameConfigs.NUMBER_OF_HEROES_TO_LEVEL_UP - 1)) {
+        if (MergeHeroes(trait, HeroRank.B, GameConfigs.NUMBER_OF_HEROES_TO_RANK_UP - 1)) {
             // merge into rank S hero
-            if (MergeHeroes(trait, HeroRank.A, GameConfigs.NUMBER_OF_HEROES_TO_LEVEL_UP)) {
+            if (MergeHeroes(trait, HeroRank.A, GameConfigs.NUMBER_OF_HEROES_TO_RANK_UP)) {
                 return true;
             }
 
@@ -60,7 +56,7 @@ public class LineUp : MonoBehaviour {
         if (availableDeckNode != null) {
             // create new hero
             var hero = Instantiate(heroPrefab);
-            hero.Initialize(trait, TeamSide.Ally);
+            hero.SetData(trait, HeroRank.B, TeamSide.Ally);
             heroes.Add(hero, availableDeckNode);
             hero.UpdatePosition(availableDeckNode);
             availableDeckNode.ChangeState(NodeState.Occupied);

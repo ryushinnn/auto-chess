@@ -13,10 +13,6 @@ public class Deck : Singleton<Deck> {
     const float LIMIT_X_LEFT = -8.4f;
     const float LIMIT_X_RIGHT = 7.1f;
     const float LIMIT_Z_UP = -6.6f;
-    
-    void Start() {
-        SpawnNodes();
-    }
 
     void LateUpdate() {
         for (int i = 0; i < SIZE; i++) {
@@ -24,7 +20,7 @@ public class Deck : Singleton<Deck> {
         }
     }
     
-    void SpawnNodes() {
+    public void SpawnNodes(Action<DeckNode[], float, float> onComplete) {
         nodes = new DeckNode[SIZE];
         for (int i = 0; i < SIZE; i++) {
             var worldPos = new Vector3((i - SIZE / 2) * nodeWidth, 0, 0) + nodeParent.position;
@@ -35,7 +31,7 @@ public class Deck : Singleton<Deck> {
             nodeVisual.transform.position = node.WorldPosition;
         }
         
-        MapVisual.Instance.SpawnSquareIndicators(nodes, nodeWidth, nodeHeight);
+        onComplete?.Invoke(nodes, nodeWidth, nodeHeight);
     }
 
     public DeckNode GetNearestNode(Vector3 position, Func<int, bool> condition = null) {

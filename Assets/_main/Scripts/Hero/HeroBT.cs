@@ -1,17 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-public class HeroBT : MonoBehaviour {
-    Hero hero;
+public class HeroBT {
     BTNode root;
-    SequenceNode mainLoop;
 
-    void Update() {
-        root?.Evaluate();
-    }
-
-    public void Initialize() {
-        hero ??= GetComponent<Hero>();
+    public HeroBT(Hero hero) {
         
         // root (>) -----> isAlive
         //         |-----> moveAndAction (>) -----> findTarget
@@ -19,7 +12,7 @@ public class HeroBT : MonoBehaviour {
         //                                  |-----> action (?) -----> attack
         //                                                    |-----> useSkill
         
-        mainLoop = new SequenceNode();
+        var mainLoop = new SequenceNode();
         var isAlive = new IsAlive(hero);
         var moveAndAction = new SequenceNode();
         mainLoop.AddChild(isAlive);
@@ -34,9 +27,11 @@ public class HeroBT : MonoBehaviour {
         var attack = new Attack(hero);
         action.AddChild(useSkill);
         action.AddChild(attack);
-    }
 
-    public void Switch(bool active) {
-        root = active ? mainLoop : null;
+        root = mainLoop;
+    }
+    
+    public void Evaluate() {
+        root.Evaluate();
     }
 }

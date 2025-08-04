@@ -14,8 +14,7 @@ public class Shop : MonoBehaviour {
     
     public void Refresh() {
         for (int i=0; i<SHOP_SLOTS_COUNT; i++) {
-            var levelConfig = GameConfigs.LEVEL_CONFIGS[GameManager.Instance.Level - 1];
-            var rep = GetRandomReputation(levelConfig.rates);
+            var rep = GetRandomReputation(GameManager.Instance.Level.LevelConfig.rates);
             var matchedHeroes = HeroTraitDB.Instance.FindAll(e => e.reputation == rep && !e.summoned);
             var randomHero = matchedHeroes[Random.Range(0, matchedHeroes.Count)];
             heroes[i] = randomHero;

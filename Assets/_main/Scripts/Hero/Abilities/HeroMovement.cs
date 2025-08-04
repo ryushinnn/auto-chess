@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using RExt.Extensions;
 using UnityEngine;
 
 public class HeroMovement : HeroAbility {
@@ -8,12 +9,12 @@ public class HeroMovement : HeroAbility {
 
     HeroRotation rotation;
     HeroAttributes attributes;
+    HeroStatusEffects statusEffects;
     
     Sequence moveSequence;
+    MapNode occupiedNode;
     MapNode currentDestination;
     MapNode currentTargetNode;
-    List<MapNode> path;
-    MapNode currentNode;
     MapNode nextNode;
     bool reachedDestination;
     
@@ -21,24 +22,30 @@ public class HeroMovement : HeroAbility {
         moveSequence?.Kill();
         currentDestination = null;
         hero.Mecanim.Idle();
+        occupiedNode = Map.Instance.GetNearestNode(hero.WorldPosition);
+        occupiedNode.ChangeState(NodeState.Occupied);
     }
 
     protected override void FindReferences() {
         rotation = hero.GetAbility<HeroRotation>();
         attributes = hero.GetAbility<HeroAttributes>();
+        statusEffects = hero.GetAbility<HeroStatusEffects>();
     }
     
     public void StartMove() {
-        var targetNode = hero.Target.GetNearestNode();
+        if (statusEffects.IsStun || statusEffects.IsAirborne) return;
+        
+        var targetNode = Map.Instance.GetNearestNode(hero.Target.WorldPosition);
         
         // if target not move, no need to calculate new destination
         if (targetNode == currentTargetNode) return;
         
         currentTargetNode = targetNode;
         // if target in range, no need to calculate new destination
-        if (nextNode != null && Map.Instance.CheckAdjacency(nextNode, currentTargetNode, hero.Trait.attackRange)) return;
+        if ((occupiedNode != null && Map.Instance.CheckAdjacency(occupiedNode, currentTargetNode, hero.Trait.attackRange))
+            || (nextNode != null && Map.Instance.CheckAdjacency(nextNode, currentTargetNode, hero.Trait.attackRange))) return;
 
-        var myNode = hero.GetNearestNode();
+        var myNode = Map.Instance.GetNearestNode(hero.WorldPosition);
         var destination = Map.Instance.GetNeighbors(currentTargetNode, hero.Trait.attackRange).Filter(x => x.IsEmpty()).GetNearestFrom(myNode)
                       ?? Map.Instance.GetNearestNode(currentTargetNode, x => x.IsEmpty());
         
@@ -46,57 +53,94 @@ public class HeroMovement : HeroAbility {
         if (destination == currentDestination) return;
 
         // update destination, calculate new path
+        if (occupiedNode != null) {
+            occupiedNode?.SetToEmpty();
+            occupiedNode = null;
+        }
         currentDestination?.SetToEmpty();
         currentDestination = destination;
         currentDestination.ChangeState(NodeState.Targeted);
         
         hero.Mecanim.Run();
-
         reachedDestination = false;
-        path = Map.Instance.FindPath(myNode, currentDestination);
+        var path = Map.Instance.FindPath(myNode, currentDestination);
         moveSequence?.Kill();
         moveSequence = DOTween.Sequence();
-        for (int i = 1; i < path.Count; i++) {
-            var node = path[i];
-            moveSequence.AppendCallback(() => {
-                nextNode = node;
-                rotation.Rotate(nextNode.WorldPosition - hero.transform.position);
-            })
-            .Append(hero.transform.DOMove(node.WorldPosition, 1/attributes.MovementSpeed).SetEase(Ease.Linear))
-            .AppendCallback(() => {
-                currentNode = node;
-                // check if target in range before reach destination, can early cancel move
-                if (currentNode != currentDestination && Map.Instance.CheckAdjacency(hero.Target.GetNearestNode(), currentNode, hero.Trait.attackRange)) {
-                    rotation.Rotate(hero.Target.transform.position - hero.transform.position);
-                    currentNode.ChangeState(NodeState.Occupied);
+        if (path.Count > 1) {
+            // path has at least 2 nodes, move self -> node 1 -> ... -> node N (ignore node 0)
+            for (int i = 1; i < path.Count; i++) {
+                var node = path[i];
+                moveSequence.AppendCallback(() => {
+                    nextNode = node;
+                    rotation.Rotate(nextNode.WorldPosition - hero.WorldPosition);
+                });
+
+                var dist = Vector3.Distance(node.WorldPosition, hero.WorldPosition);
+                var time = 1 / attributes.MovementSpeed * (dist / Map.Instance.GetAverageNodeDistance());
+                moveSequence.Append(hero.transform.DOMove(node.WorldPosition, time).SetEase(Ease.Linear))
+                .AppendCallback(() => {
+                    // check if target in range before reach destination, can early cancel move
+                    if (!Map.Instance.CheckAdjacency(Map.Instance.GetNearestNode(hero.Target.WorldPosition), node, hero.Trait.attackRange)
+                        || node == currentDestination) return;
+                    
+                    rotation.Rotate(hero.Target.WorldPosition - hero.WorldPosition);
+                    
                     // only reset it if it is targeted (by self)
                     if (currentDestination.State == NodeState.Targeted) {
                         currentDestination.SetToEmpty();
                     }
+                    occupiedNode = node;
+                    occupiedNode.ChangeState(NodeState.Occupied);
+                    currentDestination = null;
+                    nextNode = null;
+                    
                     StopMove();
                     reachedDestination = true;
-                }
-            });
+                });
+            }
+        }
+        else if (path.Count == 1) {
+            // path has only 1 node (destination). if the distance is far enough, move self -> node 0, else skip 
+            var node = path[0];
+            var dist = Vector3.Distance(node.WorldPosition, hero.WorldPosition);
+            if (dist > 0.01f) {
+                moveSequence.AppendCallback(() => {
+                    nextNode = node;
+                    rotation.Rotate(nextNode.WorldPosition - hero.WorldPosition);
+                });
+
+                var time = 1 / attributes.MovementSpeed * (dist / Map.Instance.GetAverageNodeDistance());
+                moveSequence.Append(hero.transform.DOMove(node.WorldPosition, time).SetEase(Ease.Linear));
+            }
         }
 
         moveSequence.AppendCallback(() => {
-            rotation.Rotate(hero.Target.transform.position - hero.transform.position);
-            currentDestination.ChangeState(NodeState.Occupied);
+            rotation.Rotate(hero.Target.WorldPosition - hero.WorldPosition);
+            
+            occupiedNode = currentDestination;
+            occupiedNode.ChangeState(NodeState.Occupied);
+            currentDestination = null;
+            nextNode = null;
+            
             StopMove();
             reachedDestination = true;
         });
     }
 
-    public void StopMove() {
+    public void StopMove(bool reset = false) {
         hero.Mecanim.Idle();
         moveSequence?.Kill();
+
+        if (reset) {
+            currentTargetNode = null;
+            currentDestination?.SetToEmpty();
+            currentDestination = null;
+            nextNode = null;
+        }
     }
 
-    void OnDrawGizmos() {
-        if (path != null) {
-            for (int i = 1; i < path.Count; i++) {
-                Gizmos.DrawLine(path[i].WorldPosition, path[i - 1].WorldPosition);
-            }
-        }
+    public void ReleaseOccupiedNode() {
+        occupiedNode?.SetToEmpty();
+        occupiedNode = null;
     }
 }

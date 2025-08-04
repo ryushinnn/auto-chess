@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BattleField : MonoBehaviour {
     [SerializeField] Hero heroPrefab;
@@ -14,11 +16,19 @@ public class BattleField : MonoBehaviour {
         { TeamSide.Enemy, new List<Hero>() }
     };
 
-    public Hero SpawnHero(HeroTrait trait, TeamSide side, MapNode node) {
-        var hero = Instantiate(heroPrefab);
-        hero.Initialize(trait, side);
-        node.ChangeState(NodeState.Occupied);
+    Queue<Hero> heroPool = new();
+
+    public void Initialize() {
+        GameManager.Instance.Stages.OnChangePhase += OnChangePhase;
+    }
+
+    public Hero SpawnHero(HeroTrait trait, HeroRank rank, TeamSide side, MapNode node) {
+        if (!heroPool.TryDequeue(out var hero)) {
+            hero = Instantiate(heroPrefab);
+        }
+        hero.Activate();
         hero.UpdatePosition(node,true);
+        hero.SetData(trait, rank, side);
         aliveHeroes[side].Add(hero);
         return hero;
     }
@@ -61,6 +71,45 @@ public class BattleField : MonoBehaviour {
     public void MarkHeroAsDead(Hero hero) {
         if (aliveHeroes[hero.Side].Remove(hero)) {
             deadHeroes[hero.Side].Add(hero);
+            
+            if (aliveHeroes[TeamSide.Ally].Count == 0) {
+                GameManager.Instance.Stages.EndBattlePhase(MatchResult.Lose);
+            }
+            else if (aliveHeroes[TeamSide.Enemy].Count == 0) {
+                GameManager.Instance.Stages.EndBattlePhase(MatchResult.Win);
+            }
+        }
+
+    }
+
+    void OnChangePhase(MatchPhase phase) {
+        switch (phase) {
+            case MatchPhase.Preparation:
+                foreach (var (_, heroes) in aliveHeroes) {
+                    DeactivateHeroes(heroes);
+                }
+                foreach (var (_, heroes) in deadHeroes) {
+                    DeactivateHeroes(heroes);
+                }
+                break;
+            
+            case MatchPhase.Battle:
+                var enemies = GameManager.Instance.Stages.GetEnemies();
+                foreach (var e in enemies) {
+                    var trait = HeroTraitDB.Instance.Find(e.heroId);
+                    var node = Map.Instance.GetNode(e.gridPosition);
+                    SpawnHero(trait, e.rank, TeamSide.Enemy, node);
+                }
+                break;
+        }
+    }
+
+    void DeactivateHeroes(List<Hero> heroes) {
+        for (int i = heroes.Count - 1; i >= 0; i--) {
+            var hero = heroes[i];
+            heroPool.Enqueue(hero);
+            hero.Deactivate();
+            heroes.RemoveAt(i);
         }
     }
 }

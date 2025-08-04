@@ -18,37 +18,22 @@ public class MapVisual : Singleton<MapVisual> {
     [SerializeField, ReadOnly] int mapColumn;
     [SerializeField, ReadOnly] int deckSize;
     HexCell[,] hexCells;
-    [SerializeField, ReadOnly] Indicator selectedCell;
+    [SerializeField, ReadOnly] Cell selectedCell;
     HexCell[] selectedCells;
     SquareCell[] squareCells;
-    Camera cam;
-    LayerMask layerMask;
-    float updateInterval;
-    float updateTimer;
     
-    Indicator highlightHexCell;
-    Indicator notAvailableHexCell;
-    Indicator highlightSquareCell;
-    Indicator notAvailableSquareCell;
-    
-    
-    
-    public int range;
-    public Direction direction;
-    public Hero hero;
-    
-    protected override void OnAwake() {
-        cam = Camera.main;
-        layerMask = LayerMask.GetMask("RaycastOnly");
-        updateInterval = 1 / updateRate;
-        updateTimer = 0;
-    }
-    
-    void Update() {
-        HandleHighlightCell();   
+    Cell highlightHexCell;
+    Cell notAvailableHexCell;
+    Cell highlightSquareCell;
+    Cell notAvailableSquareCell;
+
+    public void Initialize() {
+        Map.Instance.SpawnNodes(SpawnHexCells);
+        Deck.Instance.SpawnNodes(SpawnSquareCells);
+        GameManager.Instance.Stages.OnChangePhase += OnChangePhase;
     }
 
-    public void SpawnHexIndicators(MapNode[,] nodes, float width, float height) {
+    void SpawnHexCells(MapNode[,] nodes, float width, float height) {
         mapRow = nodes.GetLength(0);
         mapColumn = nodes.GetLength(1);
         hexCells = new HexCell[mapRow, mapColumn];
@@ -64,7 +49,7 @@ public class MapVisual : Singleton<MapVisual> {
         }
     }
 
-    public void SpawnSquareIndicators(DeckNode[] nodes, float width, float height) {
+    void SpawnSquareCells(DeckNode[] nodes, float width, float height) {
         deckSize = nodes.Length;
         squareCells = new SquareCell[deckSize];
         for (int i = 0; i < deckSize; i++) {
@@ -117,94 +102,6 @@ public class MapVisual : Singleton<MapVisual> {
             }
         }
     }
-    
-    void HandleHighlightCell() {
-        if (updateTimer > 0) {
-            updateTimer -= Time.deltaTime;
-            return;
-        }
-
-        updateTimer = updateInterval;
-        selectedCell?.SetHighlight(false);
-        selectedCell = null;
-        if (selectedCells != null) {
-            foreach (var cell in selectedCells) {
-                cell?.SetHighlight(false);
-            }
-        }
-        
-        if (Input.GetMouseButton(0)) {
-            // var ray = cam.ScreenPointToRay(Input.mousePosition);
-            // if (Physics.Raycast(ray, out var hit, 1000, layerMask)) {
-            //     var minDist = Mathf.Infinity;
-            //     for (int i = 0; i < hexCells.GetLength(0); i++) {
-            //         for (int j = 0; j < hexCells.GetLength(1); j++) {
-            //             var dist = Vector3.Distance(hexCells[i, j].transform.position, hit.point);
-            //             if (dist < minDist) {
-            //                 minDist = dist;
-            //                 selectedCell = hexCells[i, j];     
-            //             }
-            //         }
-            //     }
-            //     
-            //     for (int i=0; i<9; i++) {
-            //         var dist = Vector3.Distance(squareCells[i].transform.position, hit.point);
-            //         if (dist < minDist) {
-            //             minDist = dist;
-            //             selectedCell = squareCells[i];
-            //         }
-            //     }
-            //     
-            //     selectedCell?.SetHighlight(true);
-            //
-            //     if (selectedCell != null && selectedCell is HexCell hex) {
-            //         hero.transform.position = selectedCell.transform.position;
-            //         
-            //         if (selectNodeMethod == SelectNodeMethod.Adjacent) {
-            //             selectedCells = Map.Instance.GetCircle(hex.X, hex.Y, range).Select(GetHexIndicator).ToArray();
-            //         }
-            //         else if (selectNodeMethod == SelectNodeMethod.Line) {
-            //             selectedCells = Map.Instance.GetLine(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
-            //         }
-            //         else if (selectNodeMethod == SelectNodeMethod.Sector) {
-            //             selectedCells = Map.Instance.GetSector(hex.X, hex.Y, direction, range).Select(GetHexIndicator).ToArray();
-            //         }
-            //
-            //         if (selectedCells != null) {
-            //             foreach (var cell in selectedCells) {
-            //                 cell?.SetHighlight(true);
-            //             }
-            //         }
-            //     }
-            // }
-        }
-        else if (Input.GetMouseButton(1)) {
-            var ray = cam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit, 1000, layerMask)) {
-                Vector3 destination = default;
-                var minDist = Mathf.Infinity;
-                for (int i = 0; i < hexCells.GetLength(0); i++) {
-                    for (int j = 0; j < hexCells.GetLength(1); j++) {
-                        var dist = Vector3.Distance(hexCells[i, j].transform.position, hit.point);
-                        if (dist < minDist) {
-                            minDist = dist;
-                            destination = hexCells[i, j].transform.position;     
-                        }
-                    }
-                }
-
-                // hero.GetAbility<HeroMovement>().StartMove(destination);
-            }
-        }
-    }
-
-    HexCell GetHexIndicator(MapNode mapNode) {
-        if (mapNode == null || mapNode.X < 0 || mapNode.X >= mapRow || mapNode.Y < 0 || mapNode.Y >= mapColumn) {
-            return null;
-        }
-        
-        return hexCells[mapNode.X, mapNode.Y];
-    }
 
     [Button]
     void TurnOnLabels() {
@@ -232,5 +129,26 @@ public class MapVisual : Singleton<MapVisual> {
 
     public HexCell GetHexCell(int x, int y) {
         return hexCells[x, y];
+    }
+
+    void OnChangePhase(MatchPhase phase) {
+        switch (phase) {
+            case MatchPhase.Preparation:
+                for (int i=mapRow/2; i<mapRow; i++) {
+                    for (int j=0; j<mapColumn; j++) {
+                        hexCells[i, j].gameObject.SetActive(false);
+                    }
+                }
+                break;
+            
+            case MatchPhase.Battle:
+                for (int i=mapRow/2; i<mapRow; i++) {
+                    for (int j=0; j<mapColumn; j++) {
+                        hexCells[i, j].gameObject.SetActive(true);
+                    }
+                }
+                break;
+            
+        }
     }
 }

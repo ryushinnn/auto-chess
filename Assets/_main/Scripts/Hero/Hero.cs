@@ -8,12 +8,6 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum HeroState {
-    Preparation,
-    ReadyToFight,
-    InBattle
-}
-
 public enum HeroRank {
     B,
     A,
@@ -21,7 +15,10 @@ public enum HeroRank {
 }
 
 public class Hero : MonoBehaviour {
-    [SerializeField] public bool debug;
+    public Vector3 WorldPosition {
+        get => transform.position;
+        set => transform.position = value.ToZeroY();
+    }
     
     [SerializeField] Transform model;
     [SerializeField] Transform abilitiesContainer;
@@ -40,38 +37,46 @@ public class Hero : MonoBehaviour {
     [SerializeField, ReadOnly] HeroTrait trait;
     [SerializeField, ReadOnly] TeamSide side;
     [SerializeField, ReadOnly] HeroRank rank;
-    [SerializeField, ReadOnly] HeroState state;
     [SerializeField, ReadOnly] Hero target;
+    
+    bool initialized;
     
     Mecanim mecanim;
     List<HeroAbility> abilities = new();
     Dictionary<Type, HeroAbility> cachedAbilities = new();
     Tween snapTween;
 
-    public Vector2 dev_mapNode;
-    public Vector2 dev_targetNode;
-    public Vector2 dev_destinationNode;
-
     void Update() {
-        PreProcess();
         Process();
-        PostProcess();
     }
 
-    public void Initialize(HeroTrait trait, TeamSide side) {
+    public void Activate() {
+        gameObject.SetActive(true);
+
+        if (!initialized) {
+            FindAbilities();
+            FindComponents();
+            abilities.ForEach(x=>x.Initialize(this));
+            initialized = true;
+        }
+    }
+    
+    public void Deactivate() {
+        gameObject.SetActive(false);
+    }
+
+    public void SetData(HeroTrait trait, HeroRank rank, TeamSide side) {
         this.trait = trait;
         this.side = side;
-        rank = HeroRank.B;
+        this.rank = rank;
         name = $"({rank}){trait.id}";
         rankIcon.sprite = AssetDB.Instance.GetRankIcon(rank);
-        FindAbilities();
-        FindComponents();
         SetUpModel();
-        abilities.ForEach(x=>x.Initialize(this));
-        if (!name.Contains(HeroId._Dummy_)) {
-            bt.Initialize();
+        abilities.ForEach(x=>x.ResetAll());
+        bt = new HeroBT(this);
+        if (name.Contains(HeroId.D_u_m_m_y)) {
+            GetAbility<HeroMovement>().Disable();
         }
-        Switch(HeroState.Preparation);
     }
 
     public void Upgrade() {
@@ -79,25 +84,6 @@ public class Hero : MonoBehaviour {
         name = $"({rank}){trait.id}";
         rankIcon.sprite = AssetDB.Instance.GetRankIcon(rank);
         Debug.Log($"{trait.id} upgraded to {rank}");
-    }
-
-    public void Switch(HeroState state) {
-        this.state = state;
-        switch (this.state) {
-            case HeroState.Preparation:
-                bt.Switch(false);
-                picker.enabled = true;
-                break;
-            
-            case HeroState.ReadyToFight:
-                abilities.ForEach(x => x.ResetAll());
-                picker.enabled = false;
-                break;
-            
-            case HeroState.InBattle:
-                bt.Switch(true);
-                break;
-        }
     }
 
     public T GetAbility<T>() where T : HeroAbility {
@@ -110,7 +96,7 @@ public class Hero : MonoBehaviour {
     public void UpdatePosition(Node node, bool skipAnim = false) {
         snapTween?.Kill();
         if (skipAnim) {
-            transform.position = node.WorldPosition;
+            WorldPosition = node.WorldPosition;
         }
         else {
             snapTween = transform.DOMove(node.WorldPosition, 0.1f).SetEase(Ease.Linear);
@@ -120,7 +106,7 @@ public class Hero : MonoBehaviour {
     public void FindTarget() {
         target = GameManager.Instance.BattleField.GetNearestOpponent(this);
     }
-
+    
     void FindAbilities() {
         foreach (Transform child in abilitiesContainer) {
             if (child.TryGetComponent(out HeroAbility ab)) {
@@ -130,7 +116,6 @@ public class Hero : MonoBehaviour {
     }
     
     void FindComponents() {
-        bt = GetComponent<HeroBT>();
         picker = GetComponent<HeroPicker>();
     }
 
@@ -142,14 +127,6 @@ public class Hero : MonoBehaviour {
         }
         mecanim = Instantiate(trait.mecanim, model);
     }
-
-    void PreProcess() {
-        foreach (var ab in abilities) {
-            if (ab.IsActive) {
-                ab.PreProcess();
-            }
-        }
-    }
     
     void Process() {
         foreach (var ab in abilities) {
@@ -157,27 +134,7 @@ public class Hero : MonoBehaviour {
                 ab.Process();
             }
         }
-    }
-    
-    void PostProcess() {
-        foreach (var ab in abilities) {
-            if (ab.IsActive) {
-                ab.PostProcess();
-            }
-        }
-    }
-
-    public MapNode GetNearestNode() {
-        return Map.Instance.GetNearestNode(transform.position);
-    }
-
-    public void dev_Debug(object o) {
-        if (!debug) return;
-        Debug.Log(o);
-    }
-    
-    [Button]
-    void Dev_ChangeState(HeroState state) {
-        Switch(state);
+        
+        bt?.Evaluate();
     }
 }

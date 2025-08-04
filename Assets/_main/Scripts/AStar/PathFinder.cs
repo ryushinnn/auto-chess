@@ -33,7 +33,7 @@ public static class PathFinder {
             }
         }
 
-        return null;
+        return new List<MapNode>();
     }
 
     static int Heuristic(MapNode a, MapNode b) {

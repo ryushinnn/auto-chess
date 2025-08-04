@@ -15,24 +15,23 @@ public class Map : Singleton<Map> {
     MapNode[,] nodes;
     
     public const int SIZE = 8;
-    
-
-    void Start() {
-        SpawnNodes();
-    }
 
     void LateUpdate() {
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
                 var cell = MapVisual.Instance.GetHexCell(i, j);
                 var node = nodes[i, j];
-                cell.SetHighlight(node.State == NodeState.Occupied);
-                cell.SwitchFlag(node.State == NodeState.Targeted);
+                cell.SetNonEmpty(node.State == NodeState.Occupied);
+                cell.SetHighlight(node.State == NodeState.Targeted);
             }
         }
     }
+
+    public void Initialize() {
+        GameManager.Instance.Stages.OnChangePhase += OnPhaseChange;
+    }
     
-    void SpawnNodes() {
+    public void SpawnNodes(Action<MapNode[,], float, float> onComplete) {
         nodes = new MapNode[SIZE,SIZE];
         var rootOffset = new Vector3(nodeWidth/2, 0, nodeHeight/2 - nodeHeight/8);
         for (int i = 0; i < SIZE; i++) {
@@ -46,7 +45,7 @@ public class Map : Singleton<Map> {
             }
         }
 
-        MapVisual.Instance.SpawnHexIndicators(nodes, nodeWidth, nodeHeight);
+        onComplete?.Invoke(nodes, nodeWidth, nodeHeight);
     }
     
     public bool CheckAdjacency(MapNode target, MapNode origin, int radius) {
@@ -124,19 +123,14 @@ public class Map : Singleton<Map> {
         return GetNode(gridPos.x, gridPos.y);
     }
 
-    List<MapNode> testpath = new();
-    [Button]
-    void FindPath(int x1, int y1, int x2, int y2) {
-        testpath = this.FindPath(GetNode(x1, y1), GetNode(x2, y2));
+    void OnPhaseChange(MatchPhase phase) {
+        switch (phase) {
+            case MatchPhase.Transition:
+                ResetAll();
+                break;
+        }
     }
-
-    [Button]
-    void SetOwned(int x, int y) {
-        nodes[x, y].ChangeState(NodeState.Occupied);
-        MapVisual.Instance.MarkAsNonEmpty(nodes[x, y], true);
-    }
-
-    [Button]
+    
     void ResetAll() {
         for (int i=0; i<SIZE; i++) {
             for (int j=0; j<SIZE; j++) {
@@ -146,11 +140,8 @@ public class Map : Singleton<Map> {
         }
     }
 
-    void OnDrawGizmos() {
-        if (!Application.isPlaying || testpath == null) return;
-        for (int i = 1; i < testpath.Count; i++) {
-            Gizmos.DrawLine(testpath[i].WorldPosition, testpath[i - 1].WorldPosition);
-        }
+    public float GetAverageNodeDistance() {
+        return (nodeWidth + nodeHeight) / 2;
     }
 }
 

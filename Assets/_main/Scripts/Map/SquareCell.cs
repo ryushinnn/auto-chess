@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class SquareCell : Indicator {
+public class SquareCell : Cell {
     [SerializeField] TMP_Text dev_label;
     
     public int dev_Index { get; private set; }

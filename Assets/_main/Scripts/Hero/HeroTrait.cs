@@ -82,7 +82,7 @@ public class HeroTrait : ScriptableObject {
 }
 
 public static class HeroId {
-    public const string _Dummy_ = "_Dummy_";
+    public const string D_u_m_m_y = "D_u_m_m_y";
     public const string Aatrox_Dark = "Aatrox_Dark";
     public const string Aatrox_Light = "Aatrox_Light";
     public const string Akali = "Akali";

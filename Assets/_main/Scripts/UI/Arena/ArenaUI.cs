@@ -10,6 +10,9 @@ public class ArenaUI : BaseUI {
     [SerializeField] TMP_Text levelText;
     [SerializeField] TMP_Text xpText;
     [SerializeField] TMP_Text lineUpText;
+    [SerializeField] Image timeLeftImage;
+    [SerializeField] TMP_Text roundAndWaveText;
+    [SerializeField] TMP_Text timeLeftText;
 
     void Start() {
         shopButton.onClick.AddListener(SwitchShop);
@@ -28,6 +31,15 @@ public class ArenaUI : BaseUI {
     public void UpdateLineUpText(int current, int max) {
         lineUpText.text = $"{current}/{max}";
         lineUpText.color = current >= max ? Color.red : Color.white;
+    }
+
+    public void UpdateRoundAndWave(int round, int wave) {
+        roundAndWaveText.text = $"{round + 1}-{wave + 1}";
+    }
+
+    public void UpdateTimeLeft(float current, float total) {
+        timeLeftImage.fillAmount = current / total;
+        timeLeftText.text = $"{Mathf.CeilToInt(current)}";
     }
 
     void SwitchShop() {

@@ -602,7 +602,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -63.200012, y: 0}
+  m_AnchoredPosition: {x: -73, y: 0}
   m_SizeDelta: {x: 89.0903, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2531114396923503155
@@ -2157,7 +2157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -319.45483, y: 0}
+  m_AnchoredPosition: {x: -306, y: 0}
   m_SizeDelta: {x: -672.90967, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5678639163697972158
@@ -2856,3 +2856,6 @@ MonoBehaviour:
   levelText: {fileID: 7720455063769424536}
   xpText: {fileID: 1814553766108346768}
   lineUpText: {fileID: 1353880370401608970}
+  timeLeftImage: {fileID: 3156538144864864259}
+  roundAndWaveText: {fileID: 573097653667565697}
+  timeLeftText: {fileID: 5314209523553063837}

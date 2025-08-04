@@ -9,6 +9,8 @@ public class MoveToTarget : BTNode {
     
     public override NodeState Evaluate() {
         var movement = hero.GetAbility<HeroMovement>();
+        if (!movement.IsActive) return NodeState.Failure;
+        
         if (hero.Target == null) {
             movement.StopMove();
             State = NodeState.Failure;

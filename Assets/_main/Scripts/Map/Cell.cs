@@ -2,7 +2,7 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class Indicator : MonoBehaviour {
+public abstract class Cell : MonoBehaviour {
     [SerializeField] MeshRenderer meshRenderer;
     [SerializeField] Material normalMat;
     [SerializeField] Material highlightMat;

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
-  m_Name: _Dummy_
+  m_Name: D_u_m_m_y
   m_EditorClassIdentifier: 
-  id: _Dummy_
+  id: D_u_m_m_y
   name: 
   subName: 
   summoned: 0
