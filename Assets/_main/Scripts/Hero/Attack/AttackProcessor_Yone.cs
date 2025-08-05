@@ -32,7 +32,7 @@ public class AttackProcessor_Yone : AttackProcessor {
         base.Process(timer);
 
         if (trueTimer >= Timers[0] && atkExecuted == 0) {
-            if (hero.Target != null) {
+            if (((BattleHero)hero).Target != null) {
                 var sword = (YoneSword)customInt["sword"];
                 Damage dmg = default;
                 if (sword == YoneSword.Divine) {
@@ -43,7 +43,7 @@ public class AttackProcessor_Yone : AttackProcessor {
                         scaledValues: new[] { (1f, DamageType.Physical) });
                 }
                 
-                var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg);
+                var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(dmg);
                 var heal = outputDmg * attributes.LifeSteal;
                 if (sword == YoneSword.Devil) {
                     heal += outputDmg * Mathf.Lerp(DEVIL_VAMP_MIN, DEVIL_VAMP_MAX, attributes.HpLostPercentage);
@@ -54,10 +54,10 @@ public class AttackProcessor_Yone : AttackProcessor {
                 }
 
                 if (sword == YoneSword.Divine) {
-                    var currentStack = hero.Target.GetAbility<HeroMark>().GetMark(EFFECT_KEY, hero)?.stacks ?? 0;
+                    var currentStack = ((BattleHero)hero).Target.GetAbility<HeroMark>().GetMark(EFFECT_KEY, hero)?.stacks ?? 0;
                     var nextStacks = Mathf.Min(currentStack + 1, DIVINE_WEAKENING_MAX_STACK);
                     
-                    hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(
+                    ((BattleHero)hero).Target.GetAbility<HeroAttributes>().AddAttributeModifier(
                         AttributeModifierSet.Create(
                             hero,
                             EFFECT_KEY,

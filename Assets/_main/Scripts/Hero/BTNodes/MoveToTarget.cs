@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 
 public class MoveToTarget : BTNode {
-    Hero hero;
+    BattleHero hero;
     
-    public MoveToTarget(Hero hero) {
+    public MoveToTarget(BattleHero hero) {
         this.hero = hero;
     }
     
     public override NodeState Evaluate() {
         var movement = hero.GetAbility<HeroMovement>();
-        if (!movement.IsActive) return NodeState.Failure;
+        if (!hero.Trait.moveable) return NodeState.Failure;
         
         if (hero.Target == null) {
             movement.StopMove();

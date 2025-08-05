@@ -5,7 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Shop : MonoBehaviour {
-    public event Action<HeroTrait[]> onRefresh;
+    public event Action<HeroTrait[]> OnRefresh;
     
     [SerializeField, ReadOnly] HeroTrait[] heroes = new HeroTrait[SHOP_SLOTS_COUNT];
     [SerializeField, ReadOnly] bool lockAutoRefresh;
@@ -19,7 +19,7 @@ public class Shop : MonoBehaviour {
             var randomHero = matchedHeroes[Random.Range(0, matchedHeroes.Count)];
             heroes[i] = randomHero;
         }
-        onRefresh?.Invoke(heroes);
+        OnRefresh?.Invoke(heroes);
     }
 
     public void Purchase(HeroTrait hero, out bool success) {

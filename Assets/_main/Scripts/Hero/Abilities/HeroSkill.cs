@@ -58,7 +58,7 @@ public class HeroSkill : HeroAbility {
         
         isUsingSkill = true;
         timer = 0;
-        rotation.Rotate(hero.Target.transform.position - hero.transform.position);
+        rotation.Rotate(((BattleHero)hero).Target.transform.position - hero.transform.position);
         processor.Begin(out duration);
         hero.Mecanim.UseSkill();
         return true;

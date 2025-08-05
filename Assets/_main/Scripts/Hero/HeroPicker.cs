@@ -5,9 +5,8 @@ using RExt.Utils;
 using UnityEngine;
 
 public class HeroPicker : MonoBehaviour {
-    [SerializeField] LayerMask mapLayerMask;
-    
-    Hero hero;
+    LayerMask mapLayerMask;
+    LineUpHero hero;
     Tween tween;
     Node currentNode;
     Node nextNode;
@@ -22,12 +21,11 @@ public class HeroPicker : MonoBehaviour {
     const float DRAG_POS_Y = 1;
 
     void Awake() {
-        hero = GetComponent<Hero>();
+        hero = GetComponent<LineUpHero>();
+        mapLayerMask = 1 << MapVisual.Instance.Layer;
     }
 
     void OnMouseDown() {
-        if (hero.Side == TeamSide.Enemy) return;
-        
         tween?.Kill();
         tween = hero.Model.DOLocalMoveY(DRAG_POS_Y, 0.2f);
         var ray = Utils.MainCamera().ScreenPointToRay(Input.mousePosition);
@@ -42,8 +40,6 @@ public class HeroPicker : MonoBehaviour {
     }
 
     void OnMouseDrag() {
-        if (hero.Side == TeamSide.Enemy) return;
-        
         var ray = Utils.MainCamera().ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mapLayerMask) && hit.collider != null) {
             var point = hit.point.ToZeroY();
@@ -87,8 +83,6 @@ public class HeroPicker : MonoBehaviour {
     }
 
     void OnMouseUp() {
-        if (hero.Side == TeamSide.Enemy) return;
-        
         tween?.Kill();
         tween = hero.Model.DOLocalMoveY(0, 0.2f);
         if (nextNode == null) {

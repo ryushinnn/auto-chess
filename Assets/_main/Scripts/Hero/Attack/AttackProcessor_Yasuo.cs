@@ -17,18 +17,18 @@ public class AttackProcessor_Yasuo : AttackProcessor {
         base.Process(timer);
 
         if (trueTimer >= Timers[0] && atkExecuted == 0) {
-            if (hero.Target != null) {
+            if (((BattleHero)hero).Target != null) {
                 var baseDmg = attributes.GetDamage(DamageType.Physical);
                 float outputDmg;
                 if (count == COUNT_LIMIT) {
-                    outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] {
+                    outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(new[] {
                         baseDmg,
                         Damage.Create(baseDmg.value * DMG_MUL, DamageType.True, 0, baseDmg.crit),
                     });
                     count = 0;
                 }
                 else {
-                    outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(baseDmg);
+                    outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(baseDmg);
                     count++;
                 }
 

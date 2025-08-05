@@ -19,6 +19,7 @@ MonoBehaviour:
   realm: 3
   role: 33
   reputation: 3
+  moveable: 1
   mecanim: {fileID: 7410290684134340985, guid: acacc7ffae828af479be1b7552135b27, type: 3}
   thumbnail: {fileID: 21300000, guid: 5ec1fb7f84e0f56419f2c27e0ab827e3, type: 3}
   skillIcon: {fileID: 21300000, guid: 5d7cf54957d4e484ca4ad33ccc8bb377, type: 3}

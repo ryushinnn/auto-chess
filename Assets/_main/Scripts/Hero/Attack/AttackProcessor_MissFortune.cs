@@ -20,7 +20,7 @@ public class AttackProcessor_MissFortune : AttackProcessor {
         base.Process(timer);
 
         if (trueTimer >= Timers[0] && atkExecuted == 0) {
-            if (hero.Target != null) {
+            if (((BattleHero)hero).Target != null) {
                 var crit = attributes.Crit();
                 var phyDmg = attributes.GetDamage(DamageType.Physical, crit, scaledValues: new[] {
                     (PHYSICAL_DMG_MUL_0, DamageType.Physical),
@@ -30,7 +30,7 @@ public class AttackProcessor_MissFortune : AttackProcessor {
                     (PHYSICAL_DMG_MUL_1, DamageType.Physical),
                     (MAGICAL_DMG_MUL_1, DamageType.Magical)
                 });
-                var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] { phyDmg, magDmg });
+                var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(new[] { phyDmg, magDmg });
                 var heal = outputDmg * attributes.LifeSteal;
                 if (heal > 0) {
                     attributes.Heal(heal);

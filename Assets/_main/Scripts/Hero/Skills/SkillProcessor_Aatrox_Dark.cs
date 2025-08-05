@@ -43,14 +43,14 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
     }
 
     void LightSlash() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
             scaledValues: new[] { (DMG_MUL_0, DamageType.Physical) })
         );
         
-        if (hero.Target.GetAbility<HeroAttributes>().HpPercentage < HP_THRESHOLD) {
-            hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(
+        if (((BattleHero)hero).Target.GetAbility<HeroAttributes>().HpPercentage < HP_THRESHOLD) {
+            ((BattleHero)hero).Target.GetAbility<HeroAttributes>().AddAttributeModifier(
                 AttributeModifierSet.Create(
                     hero,
                     EFFECT_KEY,
@@ -61,19 +61,19 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
                 ));
         }
         
-        hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_0);
+        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_0);
     }
 
     void MediumSlash() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
         
-        if (hero.Target.GetAbility<HeroAttributes>().HpPercentage >= HP_THRESHOLD) {
-            hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+        if (((BattleHero)hero).Target.GetAbility<HeroAttributes>().HpPercentage >= HP_THRESHOLD) {
+            ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
                 scaledValues: new[] { (DMG_MUL_1, DamageType.Physical) })
             );
         }
         else {
-            hero.Target.GetAbility<HeroAttributes>().TakeDamage(
+            ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(
                 new[] {
                     Damage.Create(
                         attributes.PhysicalDamage * DMG_MUL_1,
@@ -86,23 +86,23 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
                         0
                     )
                 });
-            hero.Target.GetAbility<HeroAttributes>().TakeDamage(
+            ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(
                 new[] {
                     attributes.GetDamage(DamageType.Physical, false, scaledValues:new[]{(DMG_MUL_1, DamageType.Physical)}),
                     attributes.GetDamage(DamageType.True, false, scaledValues:new[]{(BONUS_TRUE_DMG_MUL, DamageType.Physical)})
                 });
         }
         
-        hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_1);
+        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_1);
     }
     
     void HeavySlash() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, attributes.Crit(),
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, attributes.Crit(),
             scaledValues: new[] { (DMG_MUL_2, DamageType.Physical) })
         );
         
-        hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_2);
+        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_2);
     }
 }

@@ -35,7 +35,7 @@ public class HeroMovement : HeroAbility {
     public void StartMove() {
         if (statusEffects.IsStun || statusEffects.IsAirborne) return;
         
-        var targetNode = Map.Instance.GetNearestNode(hero.Target.WorldPosition);
+        var targetNode = Map.Instance.GetNearestNode(((BattleHero)hero).Target.WorldPosition);
         
         // if target not move, no need to calculate new destination
         if (targetNode == currentTargetNode) return;
@@ -80,10 +80,10 @@ public class HeroMovement : HeroAbility {
                 moveSequence.Append(hero.transform.DOMove(node.WorldPosition, time).SetEase(Ease.Linear))
                 .AppendCallback(() => {
                     // check if target in range before reach destination, can early cancel move
-                    if (!Map.Instance.CheckAdjacency(Map.Instance.GetNearestNode(hero.Target.WorldPosition), node, hero.Trait.attackRange)
+                    if (!Map.Instance.CheckAdjacency(Map.Instance.GetNearestNode(((BattleHero)hero).Target.WorldPosition), node, hero.Trait.attackRange)
                         || node == currentDestination) return;
                     
-                    rotation.Rotate(hero.Target.WorldPosition - hero.WorldPosition);
+                    rotation.Rotate(((BattleHero)hero).Target.WorldPosition - hero.WorldPosition);
                     
                     // only reset it if it is targeted (by self)
                     if (currentDestination.State == NodeState.Targeted) {
@@ -115,7 +115,7 @@ public class HeroMovement : HeroAbility {
         }
 
         moveSequence.AppendCallback(() => {
-            rotation.Rotate(hero.Target.WorldPosition - hero.WorldPosition);
+            rotation.Rotate(((BattleHero)hero).Target.WorldPosition - hero.WorldPosition);
             
             occupiedNode = currentDestination;
             occupiedNode.ChangeState(NodeState.Occupied);

@@ -13,6 +13,7 @@ public class HeroTrait : ScriptableObject {
     [HideIf("summoned")] public Realm realm;
     [HideIf("summoned")] public Role role;
     [HideIf("summoned")] public Reputation reputation;
+    public bool moveable;
     
     [TitleGroup("Asset")]
     public Mecanim mecanim;

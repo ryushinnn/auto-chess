@@ -30,7 +30,7 @@ public class GameManager : Singleton<GameManager> {
         battleField.Initialize();
         // rounds.Initialize();
         
-        dev_Battle();
+        // dev_Battle();
     }
 
     void dev_spawn() {

@@ -41,7 +41,7 @@
     }
 
     void ShotLeft() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
 
         var crit = attributes.Crit();
         var phyDmg = attributes.GetDamage(DamageType.Physical, crit, scaledValues:
@@ -55,12 +55,12 @@
                 (L_MAGICAL_DMG_MUL_1, DamageType.Magical)
             });
         
-        var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] {phyDmg, magDmg});
+        var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(new[] {phyDmg, magDmg});
         attributes.Heal(outputDmg * VAMP_MUL);
     }
 
     void ShotRight() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
 
         var crit = attributes.Crit();
         var phyDmg = attributes.GetDamage(DamageType.Physical, crit, scaledValues:
@@ -73,9 +73,9 @@
                 (R_PHYSICAL_DMG_MUL_1, DamageType.Physical),
                 (R_MAGICAL_DMG_MUL_1, DamageType.Magical)
             });
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] {phyDmg, magDmg});
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(new[] {phyDmg, magDmg});
         
-        hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().AddAttributeModifier(
             AttributeModifierSet.Create(
                 hero,
                 EFFECT_KEY,

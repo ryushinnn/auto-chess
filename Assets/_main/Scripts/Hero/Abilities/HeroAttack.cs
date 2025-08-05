@@ -63,7 +63,7 @@ public class HeroAttack : HeroAbility {
 
         isAttacking = true;
         timer = 0;
-        rotation.Rotate(hero.Target.transform.position - hero.transform.position);
+        rotation.Rotate(((BattleHero)hero).Target.transform.position - hero.transform.position);
         currentAttackCooldown = 1 / attributes.AttackSpeed;
         processor.Begin(out duration);
         hero.Mecanim.Attack();

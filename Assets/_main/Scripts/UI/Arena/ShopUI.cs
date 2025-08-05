@@ -16,6 +16,8 @@ public class ShopUI : BaseUI {
     [SerializeField] Button lockButton;
     [SerializeField] TMP_Text unknownRateText, eliteRateText, legendaryRateText;
 
+    bool autoRefresh = true;
+
     void Awake() {
         refreshButton.onClick.AddListener(Refresh);
         lockButton.onClick.AddListener(Lock);
@@ -25,8 +27,16 @@ public class ShopUI : BaseUI {
     }
 
     void Start() {
-        GameManager.Instance.Shop.onRefresh += UpdateHeroes;
+        GameManager.Instance.Shop.OnRefresh += UpdateHeroes;
         GameManager.Instance.Level.OnLevelUp += UpdateRates;
+    }
+
+    public override void Open(params object[] args) {
+        base.Open(args);
+        if (autoRefresh) {
+            Refresh();
+            autoRefresh = false;
+        }
     }
 
     void UpdateHeroes(HeroTrait[] traits) {

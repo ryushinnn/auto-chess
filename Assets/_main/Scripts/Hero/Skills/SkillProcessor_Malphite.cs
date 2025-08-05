@@ -49,11 +49,11 @@ public class SkillProcessor_Malphite : SkillProcessor {
     }
 
     void Slam() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
             scaledValues: new[] { (DMG_MUL, DamageType.Physical) }));
         
-        hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_DURATION);
+        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_DURATION);
     }
 }

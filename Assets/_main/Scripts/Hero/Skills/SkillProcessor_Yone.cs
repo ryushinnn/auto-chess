@@ -62,28 +62,28 @@ public class SkillProcessor_Yone : SkillProcessor {
     }
 
     void Judge() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical,false,
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical,false,
             scaledValues:new[]{(DIVINE_DMG_MUL, DamageType.Physical)}));
-        hero.Target.GetAbility<HeroStatusEffects>().Airborne(DIVINE_AIRBORNE_TIME);
+        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(DIVINE_AIRBORNE_TIME);
         
-        if (!hero.Target.GetAbility<HeroAttributes>().IsAlive){
+        if (!((BattleHero)hero).Target.GetAbility<HeroAttributes>().IsAlive){
             attributes.RegenEnergy(DIVINE_REGEN_ENERGY);
         }
     }
 
     void LightSmite() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, attributes.Crit(),
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, attributes.Crit(),
             scaledValues: new[] { (DEVIL_DMG_MUL_0, DamageType.Physical) }));
     }
 
     void HeavySmite() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical,attributes.Crit(),
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical,attributes.Crit(),
             scaledValues: new[] { (DEVIL_DMG_MUL_1, DamageType.Physical) }));
     }
 }

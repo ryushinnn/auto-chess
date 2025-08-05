@@ -6,13 +6,14 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class LineUp : MonoBehaviour {
-    [SerializeField] Hero heroPrefab;
+    [SerializeField] LineUpHero heroPrefab;
 
     Dictionary<Role, int> roleNumbers = new();
     Dictionary<Realm, int> realmNumbers = new();
     HashSet<HeroTrait> uniqueTraits = new();
 
-    Dictionary<Hero,Node> heroes = new();
+    Dictionary<LineUpHero,Node> heroes = new();
+    Queue<LineUpHero> heroPool = new();
     
     public bool Full => heroesOnMap >= maxHeroesOnMap;
 
@@ -55,10 +56,13 @@ public class LineUp : MonoBehaviour {
         var availableDeckNode = Deck.Instance.GetLowestAvailableNode();
         if (availableDeckNode != null) {
             // create new hero
-            var hero = Instantiate(heroPrefab);
-            hero.SetData(trait, HeroRank.B, TeamSide.Ally);
+            if (!heroPool.TryDequeue(out var hero)) {
+                hero = Instantiate(heroPrefab);
+            }
+            hero.Activate();
+            hero.WorldPosition = availableDeckNode.WorldPosition;
+            hero.SetData(trait, HeroRank.B);
             heroes.Add(hero, availableDeckNode);
-            hero.UpdatePosition(availableDeckNode);
             availableDeckNode.ChangeState(NodeState.Occupied);
             RecalculateHeroesOnMap();
 
@@ -77,10 +81,11 @@ public class LineUp : MonoBehaviour {
         return false;
     }
 
-    public void Remove(Hero hero) {
+    public void Remove(LineUpHero hero) {
         heroes[hero].SetToEmpty();
         heroes.Remove(hero);
-        Destroy(hero.gameObject);
+        heroPool.Enqueue(hero);
+        hero.Deactivate();
     }
     
     public void RecalculateHeroesOnMap() {
@@ -92,7 +97,7 @@ public class LineUp : MonoBehaviour {
     }
 
     bool MergeHeroes(HeroTrait trait, HeroRank rank, int required) {
-        var duplicates = new List<Hero>();
+        var duplicates = new List<LineUpHero>();
         foreach (var (h, _) in heroes) {
             if (h.Trait == trait && h.Rank == rank) {
                 duplicates.Add(h);
@@ -108,7 +113,7 @@ public class LineUp : MonoBehaviour {
         return true;
     }
 
-    public Hero FindHeroOnNode(Node node) {
+    public LineUpHero FindHeroOnNode(Node node) {
         foreach (var (h, n) in heroes) {
             if (node == n) return h;
         }
@@ -116,11 +121,11 @@ public class LineUp : MonoBehaviour {
         return null;
     }
 
-    public Node FindNodeOfHero(Hero hero) {
+    public Node FindNodeOfHero(LineUpHero hero) {
         return heroes.GetValueOrDefault(hero);
     }
 
-    public void UpdateHeroNode(Hero hero, Node node) {
+    public void UpdateHeroNode(LineUpHero hero, Node node) {
         var oldNode = heroes[hero];
         if (oldNode != node) {
             oldNode.SetToEmpty();
@@ -131,7 +136,7 @@ public class LineUp : MonoBehaviour {
         hero.UpdatePosition(node);
     }
 
-    public void SwapHeroNodes(Hero heroA, Hero heroB) {
+    public void SwapHeroNodes(LineUpHero heroA, LineUpHero heroB) {
         (heroes[heroA], heroes[heroB]) = (heroes[heroB], heroes[heroA]);
         heroA.UpdatePosition(heroes[heroA]);
         heroB.UpdatePosition(heroes[heroB]);

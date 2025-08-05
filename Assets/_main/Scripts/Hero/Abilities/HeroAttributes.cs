@@ -544,7 +544,7 @@ public class HeroAttributes : HeroAbility {
         hero.Mecanim.InterruptSkill();
         canvas.enabled = false;
         hero.name = "(DEAD) " + hero.name;
-        GameManager.Instance.BattleField.MarkHeroAsDead(hero);
+        GameManager.Instance.BattleField.MarkHeroAsDead((BattleHero)hero);
     }
 
     [Button]

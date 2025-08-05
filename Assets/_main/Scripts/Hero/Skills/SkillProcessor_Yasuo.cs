@@ -38,27 +38,27 @@ public class SkillProcessor_Yasuo : SkillProcessor {
     }
 
     void BlowUp() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
 
-        hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_DURATION);
+        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_DURATION);
     }
 
     void Cut() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
 
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
             scaledValues:new[]{(DMG_MUL_0, DamageType.Physical)}));
     }
 
     void BonusCut() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
             scaledValues:new[]{(DMG_MUL_1, DamageType.Physical)}));
 
         var bleedDmg = attributes.GetDamage(DamageType.Physical, false,
             scaledValues: new[] { (DOT_DMG_MUL, DamageType.Physical) });
-        hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().AddDamageOverTime(
             DamageOverTime.Create(
                 DOT_KEY,
                 hero,

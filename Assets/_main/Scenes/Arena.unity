@@ -2874,11 +2874,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8421708935017806248, guid: 8f44c28ea92351c4fa71534a0fab7b02,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 120.6499
-      objectReference: {fileID: 0}
     - target: {fileID: 8433437308132529745, guid: 8f44c28ea92351c4fa71534a0fab7b02,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3283,7 +3278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fec9c2ba8de8423b903ef7304f551b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heroPrefab: {fileID: 276282976127478005, guid: 9b00a5bcaa357bd4e812117e914f0359,
+  heroPrefab: {fileID: 7982109656009204428, guid: c04caac4df9b99a4ab1379e41aa861bb,
     type: 3}
 --- !u!1001 &509387105
 PrefabInstance:
@@ -3570,7 +3565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e3f973493834c64b884c2bb3dfaf748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heroPrefab: {fileID: 276282976127478005, guid: 9b00a5bcaa357bd4e812117e914f0359,
+  heroPrefab: {fileID: 2182322735622098622, guid: 0b7d361eaf2a72f43a864d91949d8ef6,
     type: 3}
 --- !u!1 &880606345
 GameObject:
@@ -3948,7 +3943,7 @@ MonoBehaviour:
   squareParent: {fileID: 97593393}
   squareCell: {fileID: 8085342610786647693, guid: 8ae0000caf99ab14da17a4df0d3c1fb8,
     type: 3}
-  updateRate: 30
+  raycastTarget: {fileID: 880606345}
   mapRow: 0
   mapColumn: 0
   deckSize: 0

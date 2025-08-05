@@ -4,38 +4,38 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class BattleField : MonoBehaviour {
-    [SerializeField] Hero heroPrefab;
+    [SerializeField] BattleHero heroPrefab;
     
-    Dictionary<TeamSide, List<Hero>> aliveHeroes = new() {
-        { TeamSide.Ally, new List<Hero>() },
-        { TeamSide.Enemy, new List<Hero>() }
+    Dictionary<TeamSide, List<BattleHero>> aliveHeroes = new() {
+        { TeamSide.Ally, new List<BattleHero>() },
+        { TeamSide.Enemy, new List<BattleHero>() }
     };
     
-    Dictionary<TeamSide, List<Hero>> deadHeroes = new() {
-        { TeamSide.Ally, new List<Hero>() },
-        { TeamSide.Enemy, new List<Hero>() }
+    Dictionary<TeamSide, List<BattleHero>> deadHeroes = new() {
+        { TeamSide.Ally, new List<BattleHero>() },
+        { TeamSide.Enemy, new List<BattleHero>() }
     };
 
-    Queue<Hero> heroPool = new();
+    Queue<BattleHero> heroPool = new();
 
     public void Initialize() {
         GameManager.Instance.Stages.OnChangePhase += OnChangePhase;
     }
 
-    public Hero SpawnHero(HeroTrait trait, HeroRank rank, TeamSide side, MapNode node) {
+    public BattleHero SpawnHero(HeroTrait trait, HeroRank rank, TeamSide side, MapNode node) {
         if (!heroPool.TryDequeue(out var hero)) {
             hero = Instantiate(heroPrefab);
         }
         hero.Activate();
-        hero.UpdatePosition(node,true);
+        hero.WorldPosition = node.WorldPosition;
         hero.SetData(trait, rank, side);
         aliveHeroes[side].Add(hero);
         return hero;
     }
 
-    public Hero GetNearestOpponent(Hero hero) {
+    public BattleHero GetNearestOpponent(BattleHero hero) {
         var opponents = aliveHeroes[hero.Side == TeamSide.Ally ? TeamSide.Enemy : TeamSide.Ally];
-        Hero nearestHero = null;
+        BattleHero nearestHero = null;
         var minDist = Mathf.Infinity;
         foreach (var h in opponents) {
             var dist = Vector3.Distance(hero.transform.position, h.transform.position);
@@ -48,9 +48,9 @@ public class BattleField : MonoBehaviour {
         return nearestHero;
     }
     
-    public Hero GetFurthestOpponent(Hero hero) {
+    public BattleHero GetFurthestOpponent(BattleHero hero) {
         var opponents = aliveHeroes[hero.Side == TeamSide.Ally ? TeamSide.Enemy : TeamSide.Ally];
-        Hero furthestHero = null;
+        BattleHero furthestHero = null;
         var minDist = Mathf.NegativeInfinity;
         foreach (var h in opponents) {
             var dist = Vector3.Distance(hero.transform.position, h.transform.position);
@@ -63,12 +63,12 @@ public class BattleField : MonoBehaviour {
         return furthestHero;
     }
 
-    public Hero GetRandomOpponent(Hero hero) {
+    public BattleHero GetRandomOpponent(BattleHero hero) {
         var opponents = aliveHeroes[hero.Side == TeamSide.Ally ? TeamSide.Enemy : TeamSide.Ally];
         return opponents.Count == 0 ? null : opponents[Random.Range(0, opponents.Count)];
     }
 
-    public void MarkHeroAsDead(Hero hero) {
+    public void MarkHeroAsDead(BattleHero hero) {
         if (aliveHeroes[hero.Side].Remove(hero)) {
             deadHeroes[hero.Side].Add(hero);
             
@@ -104,7 +104,7 @@ public class BattleField : MonoBehaviour {
         }
     }
 
-    void DeactivateHeroes(List<Hero> heroes) {
+    void DeactivateHeroes(List<BattleHero> heroes) {
         for (int i = heroes.Count - 1; i >= 0; i--) {
             var hero = heroes[i];
             heroPool.Enqueue(hero);

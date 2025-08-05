@@ -19,10 +19,10 @@ public class SkillProcessor_Irelia : SkillProcessor {
     }
 
     void SummonDragon() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
 
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
             scaledValues: new[]{(DMG_MUL, DamageType.Physical)}));
-        hero.Target.GetAbility<HeroStatusEffects>().Airborne(AIRBRONE_TIME);
+        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBRONE_TIME);
     }
 }

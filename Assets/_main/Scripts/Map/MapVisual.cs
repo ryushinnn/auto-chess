@@ -8,11 +8,13 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class MapVisual : Singleton<MapVisual> {
+    public int Layer => raycastTarget.layer;
+    
     [SerializeField] Transform hexParent;
     [SerializeField] HexCell hexCell;
     [SerializeField] Transform squareParent;
     [SerializeField] SquareCell squareCell;
-    [SerializeField] float updateRate;
+    [SerializeField] GameObject raycastTarget;
 
     [SerializeField, ReadOnly] int mapRow;
     [SerializeField, ReadOnly] int mapColumn;

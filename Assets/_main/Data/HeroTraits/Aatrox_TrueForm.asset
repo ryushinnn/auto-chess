@@ -18,7 +18,8 @@ MonoBehaviour:
   summoned: 1
   realm: 0
   role: 0
-  price: -1
+  reputation: 0
+  moveable: 1
   mecanim: {fileID: 5429741766995380546, guid: f5f4ee1a0bc2be64c9e3036fa2d897ef, type: 3}
   thumbnail: {fileID: 21300000, guid: bf2083ebbc0fd174aa30586d9bf39fe5, type: 3}
   skillIcon: {fileID: 21300000, guid: f65ceabde1c832c408fa549f50561224, type: 3}
@@ -41,4 +42,5 @@ MonoBehaviour:
   attackRange: 1
   minDps: 269.1
   avgDps: 269.1
-  damageType: 1
+  physicalReduction: 50
+  magicalReduction: 50

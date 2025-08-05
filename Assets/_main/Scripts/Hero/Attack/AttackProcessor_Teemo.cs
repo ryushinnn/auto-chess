@@ -23,17 +23,17 @@ public class AttackProcessor_Teemo : AttackProcessor {
         base.Process(timer);
 
         if (trueTimer >= Timers[0] && atkExecuted == 0) {
-            if (hero.Target != null) {
-                var currentStacks = hero.Target.GetAbility<HeroMark>().GetMark(DOT_KEY, hero)?.stacks ?? 0;
+            if (((BattleHero)hero).Target != null) {
+                var currentStacks = ((BattleHero)hero).Target.GetAbility<HeroMark>().GetMark(DOT_KEY, hero)?.stacks ?? 0;
                 var nextStacks = Mathf.Min(currentStacks + 1, MAX_STACKS);
 
                 var igniteDmg = Damage.Create(
-                    nextStacks * Mathf.Min(attributes.MagicalDamage * DMG_MUL_LIMIT, hero.Target.GetAbility<HeroAttributes>().MaxHp * MAX_HP_DMG),
+                    nextStacks * Mathf.Min(attributes.MagicalDamage * DMG_MUL_LIMIT, ((BattleHero)hero).Target.GetAbility<HeroAttributes>().MaxHp * MAX_HP_DMG),
                     DamageType.True,
                     0
                 );
 
-                var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
+                var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(
                     new[] {
                         attributes.GetDamage(DamageType.Magical),
                         igniteDmg,
@@ -49,7 +49,7 @@ public class AttackProcessor_Teemo : AttackProcessor {
 
                 attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
 
-                hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
+                ((BattleHero)hero).Target.GetAbility<HeroAttributes>().AddDamageOverTime(
                     DamageOverTime.Create(
                         DOT_KEY,
                         hero,

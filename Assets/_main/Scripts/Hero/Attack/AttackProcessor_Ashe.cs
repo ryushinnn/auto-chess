@@ -8,8 +8,8 @@
         base.Process(timer);
 
         if (trueTimer >= Timers[0] && atkExecuted == 0) {
-            if (hero.Target != null) {
-                var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical));
+            if (((BattleHero)hero).Target != null) {
+                var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical));
                 var heal = outputDmg * attributes.LifeSteal;
                 if (heal > 0) {
                     attributes.Heal(heal);

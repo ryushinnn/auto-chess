@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
 public class UseSkill : BTNode {
-    Hero hero;
+    BattleHero hero;
     
-    public UseSkill(Hero hero) {
+    public UseSkill(BattleHero hero) {
         this.hero = hero;
     }
     

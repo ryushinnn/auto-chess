@@ -42,16 +42,16 @@ public class SkillProcessor_Ashe : SkillProcessor {
     }
 
     void ShotArrow() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
 
         var dmg = attributes.GetDamage(DamageType.Physical, attributes.Crit(),
             scaledValues: new[] { (DMG_MUL, DamageType.Physical) }, fixedValues: new[] { DMG_BASE });
-        var isNewTarget = !affectedTargets.Contains(hero.Target);
+        var isNewTarget = !affectedTargets.Contains(((BattleHero)hero).Target);
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, isNewTarget);
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(dmg, isNewTarget);
 
         if (isNewTarget) {
-            affectedTargets.Add(hero.Target);
+            affectedTargets.Add(((BattleHero)hero).Target);
         }
     }
 }

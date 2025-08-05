@@ -4,7 +4,7 @@ using UnityEngine;
 public class HeroBT {
     BTNode root;
 
-    public HeroBT(Hero hero) {
+    public HeroBT(BattleHero hero) {
         
         // root (>) -----> isAlive
         //         |-----> moveAndAction (>) -----> findTarget

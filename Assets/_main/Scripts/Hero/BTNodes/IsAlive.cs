@@ -1,7 +1,7 @@
 ﻿public class IsAlive : BTNode {
-    Hero hero;
+    BattleHero hero;
     
-    public IsAlive(Hero hero) {
+    public IsAlive(BattleHero hero) {
         this.hero = hero;
     }
     

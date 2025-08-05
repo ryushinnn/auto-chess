@@ -18,8 +18,8 @@ public class AttackProcessor_Aatrox_Dark : AttackProcessor {
         base.Process(timer);
 
         if (trueTimer >= Timers[0] && atkExecuted == 0) {
-            if (hero.Target != null) {
-                var targetAtb = hero.Target.GetAbility<HeroAttributes>();
+            if (((BattleHero)hero).Target != null) {
+                var targetAtb = ((BattleHero)hero).Target.GetAbility<HeroAttributes>();
                 var perc = Mathf.Lerp(MIN_DMG_MUL, MAX_DMG_MUL, targetAtb.HpLostPercentage);
                 var baseDmg = attributes.GetDamage(DamageType.Physical, false, scaledValues: new[] {
                     (perc, DamageType.Physical)
@@ -33,8 +33,8 @@ public class AttackProcessor_Aatrox_Dark : AttackProcessor {
             atkExecuted++;
         }
         else if (trueTimer >= Timers[1] && atkExecuted == 1) {
-            if (hero.Target != null) {
-                var targetAtb = hero.Target.GetAbility<HeroAttributes>();
+            if (((BattleHero)hero).Target != null) {
+                var targetAtb = ((BattleHero)hero).Target.GetAbility<HeroAttributes>();
                 var perc = Mathf.Lerp(MIN_DMG_MUL, MAX_DMG_MUL, targetAtb.HpLostPercentage);
                 var baseDmg = attributes.GetDamage(DamageType.Physical, true, scaledValues: new[] {
                     (perc, DamageType.Physical)

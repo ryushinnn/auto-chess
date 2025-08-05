@@ -37,7 +37,7 @@ public class SkillProcessor_Jinx : SkillProcessor {
     }
 
     void ShotRocket() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
 
         var type = Random.Range(0, 3);
         Damage dmg = default;
@@ -58,12 +58,12 @@ public class SkillProcessor_Jinx : SkillProcessor {
                 break;
         }
 
-        var isNewTarget = !affectedTargets.Contains(hero.Target);
+        var isNewTarget = !affectedTargets.Contains(((BattleHero)hero).Target);
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, isNewTarget);
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(dmg, isNewTarget);
 
         if (isNewTarget) {
-            affectedTargets.Add(hero.Target);
+            affectedTargets.Add(((BattleHero)hero).Target);
         }
     }
 }

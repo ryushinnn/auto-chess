@@ -37,17 +37,17 @@ public class SkillProcessor_Katarina : SkillProcessor {
     }
 
     void Cut() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
 
         var dmg = attributes.GetDamage(DamageType.Magical, attributes.Crit(),
             scaledValues: new[] { (DMG_MUL, DamageType.Physical) });
-        var isNewTarget = !affectedTargets.Contains(hero.Target);
+        var isNewTarget = !affectedTargets.Contains(((BattleHero)hero).Target);
         
-        hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg,isNewTarget);
+        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(dmg,isNewTarget);
 
         if (isNewTarget) {
-            hero.Target.GetAbility<HeroStatusEffects>().AntiHeal(ANTI_HEAL_DURATION);
-            affectedTargets.Add(hero.Target);
+            ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().AntiHeal(ANTI_HEAL_DURATION);
+            affectedTargets.Add(((BattleHero)hero).Target);
         }
     }
 }

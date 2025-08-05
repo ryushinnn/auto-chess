@@ -28,9 +28,9 @@ public class SkillProcessor_Zed : SkillProcessor {
     }
 
     void ThrowShurikens() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
 
-        aimedTarget = hero.Target;
+        aimedTarget = ((BattleHero)hero).Target;
         aimedTarget.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
             scaledValues: new[] { (DMG_MUL, DamageType.Physical) }));
     }

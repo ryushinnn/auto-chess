@@ -20,13 +20,13 @@
     }
 
     void ThrowBomb() {
-        if (hero.Target == null) return;
+        if (((BattleHero)hero).Target == null) return;
 
-        if (hero.Target.GetAbility<HeroAttributes>().Energy >= ENERGY_THRESHOLD) {
-            hero.Target.GetAbility<HeroStatusEffects>().Silent(SILENT_DURATION);
+        if (((BattleHero)hero).Target.GetAbility<HeroAttributes>().Energy >= ENERGY_THRESHOLD) {
+            ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Silent(SILENT_DURATION);
         }
         else {
-            hero.Target.GetAbility<HeroStatusEffects>().Stun(STUN_DURATION);
+            ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Stun(STUN_DURATION);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
 public class Attack : BTNode {
-    Hero hero;
+    BattleHero hero;
     
-    public Attack(Hero hero) {
+    public Attack(BattleHero hero) {
         this.hero = hero;
     }
 

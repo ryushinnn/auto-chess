@@ -1,7 +1,7 @@
 ﻿public class FindTarget : BTNode {
-    Hero hero;
+    BattleHero hero;
     
-    public FindTarget(Hero hero) {
+    public FindTarget(BattleHero hero) {
         this.hero = hero;
     }
     
