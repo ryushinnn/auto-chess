@@ -15,21 +15,6 @@ public class Map : Singleton<Map> {
     MapNode[,] nodes;
     
     public const int SIZE = 8;
-
-    void LateUpdate() {
-        for (int i=0; i<SIZE; i++) {
-            for (int j=0; j<SIZE; j++) {
-                var cell = MapVisual.Instance.GetHexCell(i, j);
-                var node = nodes[i, j];
-                cell.SetNonEmpty(node.State == NodeState.Occupied);
-                cell.SetHighlight(node.State == NodeState.Targeted);
-            }
-        }
-    }
-
-    public void Initialize() {
-        GameManager.Instance.Stages.OnChangePhase += OnPhaseChange;
-    }
     
     public void SpawnNodes(Action<MapNode[,], float, float> onComplete) {
         nodes = new MapNode[SIZE,SIZE];
@@ -123,25 +108,20 @@ public class Map : Singleton<Map> {
         return GetNode(gridPos.x, gridPos.y);
     }
 
-    void OnPhaseChange(MatchPhase phase) {
-        switch (phase) {
-            case MatchPhase.Transition:
-                ResetAll();
-                break;
-        }
-    }
-    
-    void ResetAll() {
-        for (int i=0; i<SIZE; i++) {
-            for (int j=0; j<SIZE; j++) {
-                nodes[i,j].SetToEmpty();
-                MapVisual.Instance.MarkAsNonEmpty(nodes[i,j],false);
-            }
-        }
-    }
-
     public float GetAverageNodeDistance() {
         return (nodeWidth + nodeHeight) / 2;
+    }
+    
+    public MapNode GetLowestAvailableNode() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (nodes[i, j].IsEmpty()) {
+                    return nodes[i, j];
+                }
+            }
+        }
+
+        return null;
     }
 }
 

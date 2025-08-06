@@ -17,7 +17,7 @@ public enum MatchResult {
     Lose,
 }
 
-public class Stages : MonoBehaviour {
+public class Progress : MonoBehaviour {
     public event Action<MatchPhase> OnChangePhase;
     public event Action<MatchResult> OnEndMatch;
     
@@ -38,8 +38,8 @@ public class Stages : MonoBehaviour {
     };
 
     void Awake() {
-        OnChangePhase += p => {
-            Debug.Log(p);
+        OnEndMatch = r => {
+            Debug.Log(r);
         };
     }
 
@@ -77,21 +77,27 @@ public class Stages : MonoBehaviour {
                             break;
                         }
                     }
+                    GameManager.Instance.Level.GainXp(GameConfigs.XP_GAIN_PER_MATCH);
                 }
 
                 ArenaUIManager.Instance.Arena.UpdateRoundAndWave(currentStage, currentMatch);
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
+                GameManager.Instance.BattleField.RemoveHeroes();
+                GameManager.Instance.LineUp.SwitchHeroesOnMap(true);
                 break;
             
             case MatchPhase.Transition:
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
+                GameManager.Instance.LineUp.FillHeroesOnMap();
                 break;
             
             case MatchPhase.Battle:
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
+                GameManager.Instance.LineUp.SwitchHeroesOnMap(false);
+                GameManager.Instance.BattleField.SpawnHeroes();
                 break;
             
             case MatchPhase.Summary:
@@ -114,5 +120,11 @@ public class Stages : MonoBehaviour {
         phase = MatchPhase.Summary;
         timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
         OnChangePhase?.Invoke(phase);
+    }
+
+    [Button]
+    void test() {
+        if (phase == MatchPhase.None) return;
+        timeLeft = 1;
     }
 }

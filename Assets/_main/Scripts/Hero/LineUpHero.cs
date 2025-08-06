@@ -21,13 +21,8 @@ public class LineUpHero : Hero {
         Debug.Log($"{trait.id} upgraded to {rank}");
     }
     
-    public void UpdatePosition(Node node, bool skipAnim = false) {
+    public void UpdatePosition(Node node) {
         snapTween?.Kill();
-        if (skipAnim) {
-            WorldPosition = node.WorldPosition;
-        }
-        else {
-            snapTween = transform.DOMove(node.WorldPosition, 0.1f).SetEase(Ease.Linear);
-        }
+        snapTween = transform.DOMove(node.WorldPosition, 0.1f).SetEase(Ease.Linear);
     }
 }

@@ -13,12 +13,6 @@ public class Deck : Singleton<Deck> {
     const float LIMIT_X_LEFT = -8.4f;
     const float LIMIT_X_RIGHT = 7.1f;
     const float LIMIT_Z_UP = -6.6f;
-
-    void LateUpdate() {
-        for (int i = 0; i < SIZE; i++) {
-            MapVisual.Instance.MarkAsNonEmpty(nodes[i], !nodes[i].IsEmpty());
-        }
-    }
     
     public void SpawnNodes(Action<DeckNode[], float, float> onComplete) {
         nodes = new DeckNode[SIZE];

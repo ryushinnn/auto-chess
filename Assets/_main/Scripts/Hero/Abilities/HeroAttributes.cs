@@ -63,6 +63,7 @@ public class HeroAttributes : HeroAbility {
 
     public override void ResetAll() {
         isAlive = true;
+        canvas.enabled = true;
         hp = maxHp = hero.Trait.maxHp;
         energy = 0;
         armor = hero.Trait.armor;
@@ -538,7 +539,6 @@ public class HeroAttributes : HeroAbility {
     void Die() {
         isAlive = false;
         movement.StopMove(true);
-        movement.ReleaseOccupiedNode();
         hero.Mecanim.Death();
         hero.Mecanim.InterruptAttack();
         hero.Mecanim.InterruptSkill();

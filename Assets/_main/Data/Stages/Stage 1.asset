@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3ef0f974f644ec384cf929bd0bafac9, type: 3}
+  m_Name: Stage 1
+  m_EditorClassIdentifier: 
+  matches:
+  - enemies:
+    - heroId: Ashe
+      rank: 0
+      gridPosition: {x: 7, y: 3}
+      items: []
+      powerScale: 1
+    rewards:
+    - type: coin
+      coins: 1
+      minCoins: 0
+      maxCoins: 0
+      reputation: 0
+      randomRewards: []
+  - enemies:
+    - heroId: Irelia
+      rank: 0
+      gridPosition: {x: 7, y: 3}
+      items: []
+      powerScale: 1
+    - heroId: Jinx
+      rank: 0
+      gridPosition: {x: 7, y: 4}
+      items: []
+      powerScale: 1
+    rewards:
+    - type: coin
+      coins: 2
+      minCoins: 0
+      maxCoins: 0
+      reputation: 0
+      randomRewards: []

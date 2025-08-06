@@ -4,7 +4,8 @@ public static class GameConfigs {
     public const int NUMBER_OF_HEROES_TO_RANK_UP = 3;
     public const float STATS_MUL_UPON_LV2 = 2;
     public const float STATS_MUL_UPON_LV3 = 5;
-    public const int XP_GAIN_PER_ROUND = 2;
+    public const int XP_GAIN_PER_MATCH = 2;
+    public const int XP_GAIN_PER_PURCHASE = 4;
     public static readonly LevelConfig[] LEVEL_CONFIGS = {
         new() {
             // level 1
@@ -120,9 +121,9 @@ public static class GameConfigs {
     };
 
     public static readonly Dictionary<MatchPhase, int> MATCH_PHASE_DURATIONS = new() {
-        { MatchPhase.Preparation, 5 },
+        { MatchPhase.Preparation, 999 },
         { MatchPhase.Transition, 2 },
-        { MatchPhase.Battle, 5 },
+        { MatchPhase.Battle, 30 },
         { MatchPhase.Summary, 2 },
     };
 }

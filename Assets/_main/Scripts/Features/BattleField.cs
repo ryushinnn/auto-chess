@@ -17,9 +17,25 @@ public class BattleField : MonoBehaviour {
     };
 
     Queue<BattleHero> heroPool = new();
-
-    public void Initialize() {
-        GameManager.Instance.Stages.OnChangePhase += OnChangePhase;
+    Dictionary<Hero, MapNode> occupiedNodes = new();
+    
+    public void SpawnHeroes() {
+        var enemies = GameManager.Instance.Progress.GetEnemies();
+        foreach (var e in enemies) {
+            var trait = HeroTraitDB.Instance.Find(e.heroId);
+            var node = Map.Instance.GetNode(e.gridPosition);
+            SpawnHero(trait, e.rank, TeamSide.Enemy, node);
+        }
+                
+        var allies = GameManager.Instance.LineUp.GetHeroOnMap();
+        if (allies.Count == 0) {
+            GameManager.Instance.Progress.EndBattlePhase(MatchResult.Lose);
+        }
+        else {
+            foreach (var (h,n) in allies) {
+                SpawnHero(h.Trait, h.Rank, TeamSide.Ally, n);
+            }
+        }
     }
 
     public BattleHero SpawnHero(HeroTrait trait, HeroRank rank, TeamSide side, MapNode node) {
@@ -30,6 +46,7 @@ public class BattleField : MonoBehaviour {
         hero.WorldPosition = node.WorldPosition;
         hero.SetData(trait, rank, side);
         aliveHeroes[side].Add(hero);
+        UpdateOccupiedNode(hero, node);
         return hero;
     }
 
@@ -71,45 +88,53 @@ public class BattleField : MonoBehaviour {
     public void MarkHeroAsDead(BattleHero hero) {
         if (aliveHeroes[hero.Side].Remove(hero)) {
             deadHeroes[hero.Side].Add(hero);
+            UpdateOccupiedNode(hero, null);
             
             if (aliveHeroes[TeamSide.Ally].Count == 0) {
-                GameManager.Instance.Stages.EndBattlePhase(MatchResult.Lose);
+                GameManager.Instance.Progress.EndBattlePhase(MatchResult.Lose);
             }
             else if (aliveHeroes[TeamSide.Enemy].Count == 0) {
-                GameManager.Instance.Stages.EndBattlePhase(MatchResult.Win);
+                GameManager.Instance.Progress.EndBattlePhase(MatchResult.Win);
             }
         }
 
     }
 
-    void OnChangePhase(MatchPhase phase) {
-        switch (phase) {
-            case MatchPhase.Preparation:
-                foreach (var (_, heroes) in aliveHeroes) {
-                    DeactivateHeroes(heroes);
-                }
-                foreach (var (_, heroes) in deadHeroes) {
-                    DeactivateHeroes(heroes);
-                }
-                break;
-            
-            case MatchPhase.Battle:
-                var enemies = GameManager.Instance.Stages.GetEnemies();
-                foreach (var e in enemies) {
-                    var trait = HeroTraitDB.Instance.Find(e.heroId);
-                    var node = Map.Instance.GetNode(e.gridPosition);
-                    SpawnHero(trait, e.rank, TeamSide.Enemy, node);
-                }
-                break;
+    public void UpdateOccupiedNode(BattleHero hero, MapNode node) {
+        if (node != null) {
+            node.ChangeState(NodeState.Occupied);
+            MapVisual.Instance.SetOccupied(node, true);
+            occupiedNodes.Add(hero, node);
+        }
+        else {
+            if (occupiedNodes.ContainsKey(hero)) {
+                occupiedNodes[hero].SetToEmpty();
+                MapVisual.Instance.SetOccupied(occupiedNodes[hero], false);
+                occupiedNodes.Remove(hero);
+            }
         }
     }
 
-    void DeactivateHeroes(List<BattleHero> heroes) {
-        for (int i = heroes.Count - 1; i >= 0; i--) {
-            var hero = heroes[i];
-            heroPool.Enqueue(hero);
-            hero.Deactivate();
-            heroes.RemoveAt(i);
+    public MapNode GetOccupiedNode(BattleHero hero) {
+        return occupiedNodes.GetValueOrDefault(hero);
+    }
+
+    public void RemoveHeroes() {
+        foreach (var (_, heroes) in aliveHeroes) {
+            foreach (var h in heroes) {
+                heroPool.Enqueue(h);
+                UpdateOccupiedNode(h, null);
+                h.Deactivate();
+            }
+            heroes.Clear();
+        }
+        
+        foreach (var (_, heroes) in deadHeroes) {
+            foreach (var h in heroes) {
+                heroPool.Enqueue(h);
+                h.Deactivate();
+            }
+            heroes.Clear();
         }
     }
 }

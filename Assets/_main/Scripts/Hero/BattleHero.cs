@@ -8,7 +8,18 @@ public class BattleHero : Hero {
     [SerializeField, ReadOnly] TeamSide side;
     [SerializeField, ReadOnly] BattleHero target;
     HeroBT bt;
-    
+
+    public override void Activate() {
+        gameObject.SetActive(true);
+
+        if (!initialized) {
+            FindAbilities();
+            abilities.ForEach(x=>x.Initialize(this));
+            initialized = true;
+            GameManager.Instance.Progress.OnChangePhase += OnChangePhase;
+        }
+    }
+
     public void SetData(HeroTrait trait, HeroRank rank, TeamSide side) {
         this.trait = trait;
         this.side = side;
@@ -27,5 +38,13 @@ public class BattleHero : Hero {
     protected override void Process() {
         base.Process();
         bt?.Evaluate();
+    }
+
+    void OnChangePhase(MatchPhase phase) {
+        switch (phase) {
+            case MatchPhase.Summary:
+                bt = null;
+                break;
+        }
     }
 }

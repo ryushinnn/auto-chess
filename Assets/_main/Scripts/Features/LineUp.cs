@@ -12,19 +12,13 @@ public class LineUp : MonoBehaviour {
     Dictionary<Realm, int> realmNumbers = new();
     HashSet<HeroTrait> uniqueTraits = new();
 
-    Dictionary<LineUpHero,Node> heroes = new();
+    Dictionary<LineUpHero, Node> heroes = new();
+    Dictionary<LineUpHero, MapNode> heroesOnMap = new();
     Queue<LineUpHero> heroPool = new();
     
-    public bool Full => heroesOnMap >= maxHeroesOnMap;
+    public bool Full => heroesOnMap.Count >= maxHeroesOnMap;
 
-    int heroesOnMap;
     int maxHeroesOnMap;
-
-    void Start() {
-        heroesOnMap = 0;
-        SetHeroesLimit(1);
-        ArenaUIManager.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
-    }
 
     public void Initialize() {
         var allRoles = ((Role[])Enum.GetValues(typeof(Role))).Where(x => x != 0).ToArray();
@@ -35,11 +29,13 @@ public class LineUp : MonoBehaviour {
         foreach (var realm in allRealms) {
             realmNumbers.Add(realm, 0);
         }
+        SetHeroesLimit(1);
+        ArenaUIManager.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
     }
 
     public void SetHeroesLimit(int value) {
         maxHeroesOnMap = value;
-        ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap, maxHeroesOnMap);
+        ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
     }
 
     public bool Add(HeroTrait trait) {
@@ -64,6 +60,7 @@ public class LineUp : MonoBehaviour {
             hero.SetData(trait, HeroRank.B);
             heroes.Add(hero, availableDeckNode);
             availableDeckNode.ChangeState(NodeState.Occupied);
+            MapVisual.Instance.SetOccupied(availableDeckNode, true);
             RecalculateHeroesOnMap();
 
             if (uniqueTraits.Add(hero.Trait)) {
@@ -82,18 +79,20 @@ public class LineUp : MonoBehaviour {
     }
 
     public void Remove(LineUpHero hero) {
-        heroes[hero].SetToEmpty();
+        var node = heroes[hero];
+        node.SetToEmpty();
+        MapVisual.Instance.SetOccupied(node, false);
         heroes.Remove(hero);
         heroPool.Enqueue(hero);
         hero.Deactivate();
     }
     
     public void RecalculateHeroesOnMap() {
-        heroesOnMap = 0;
-        foreach (var (_, node) in heroes) {
-            if (node is MapNode) heroesOnMap++;
+        heroesOnMap.Clear();
+        foreach (var (hero, node) in heroes) {
+            if (node is MapNode mn) heroesOnMap.Add(hero, mn);
         }
-        ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap, maxHeroesOnMap);
+        ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
     }
 
     bool MergeHeroes(HeroTrait trait, HeroRank rank, int required) {
@@ -129,7 +128,9 @@ public class LineUp : MonoBehaviour {
         var oldNode = heroes[hero];
         if (oldNode != node) {
             oldNode.SetToEmpty();
+            MapVisual.Instance.SetOccupied(oldNode, false);
             node.ChangeState(NodeState.Occupied);
+            MapVisual.Instance.SetOccupied(node, true);
             heroes[hero] = node;
         }
         
@@ -140,6 +141,44 @@ public class LineUp : MonoBehaviour {
         (heroes[heroA], heroes[heroB]) = (heroes[heroB], heroes[heroA]);
         heroA.UpdatePosition(heroes[heroA]);
         heroB.UpdatePosition(heroes[heroB]);
+    }
+
+    public Dictionary<LineUpHero, MapNode> GetHeroOnMap() {
+        return heroesOnMap;
+    }
+
+    public void SwitchHeroesOnMap(bool value) {
+        foreach (var (hero, node) in heroesOnMap) {
+            if (value) {
+                hero.Activate();
+                node.ChangeState(NodeState.Occupied);
+                MapVisual.Instance.SetOccupied(node, true);
+            }
+            else {
+                hero.Deactivate();
+                node.SetToEmpty();
+                MapVisual.Instance.SetOccupied(node, false);
+            }
+        }
+    }
+
+    public void FillHeroesOnMap() {
+        var heroesOnDeck = heroes.Where(x => x.Value is DeckNode)
+            .Select(x=>x.Key).ToList();
+        while (!Full && heroesOnDeck.Count > 0) {
+            var hero = heroesOnDeck[0];
+            var mapNode = Map.Instance.GetLowestAvailableNode();
+            heroes[hero].SetToEmpty();
+            MapVisual.Instance.SetOccupied(heroes[hero], false);
+            mapNode.ChangeState(NodeState.Occupied);
+            MapVisual.Instance.SetOccupied(mapNode, true);
+            heroes[hero] = mapNode;
+            hero.WorldPosition = mapNode.WorldPosition;
+            heroesOnMap.Add(hero, mapNode);
+            heroesOnDeck.Remove(hero);
+        }
+        
+        ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
     }
 
     [Button]

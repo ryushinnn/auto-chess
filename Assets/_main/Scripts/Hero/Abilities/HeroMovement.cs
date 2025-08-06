@@ -12,7 +12,6 @@ public class HeroMovement : HeroAbility {
     HeroStatusEffects statusEffects;
     
     Sequence moveSequence;
-    MapNode occupiedNode;
     MapNode currentDestination;
     MapNode currentTargetNode;
     MapNode nextNode;
@@ -22,8 +21,6 @@ public class HeroMovement : HeroAbility {
         moveSequence?.Kill();
         currentDestination = null;
         hero.Mecanim.Idle();
-        occupiedNode = Map.Instance.GetNearestNode(hero.WorldPosition);
-        occupiedNode.ChangeState(NodeState.Occupied);
     }
 
     protected override void FindReferences() {
@@ -42,6 +39,7 @@ public class HeroMovement : HeroAbility {
         
         currentTargetNode = targetNode;
         // if target in range, no need to calculate new destination
+        var occupiedNode = GameManager.Instance.BattleField.GetOccupiedNode((BattleHero)hero);
         if ((occupiedNode != null && Map.Instance.CheckAdjacency(occupiedNode, currentTargetNode, hero.Trait.attackRange))
             || (nextNode != null && Map.Instance.CheckAdjacency(nextNode, currentTargetNode, hero.Trait.attackRange))) return;
 
@@ -53,10 +51,7 @@ public class HeroMovement : HeroAbility {
         if (destination == currentDestination) return;
 
         // update destination, calculate new path
-        if (occupiedNode != null) {
-            occupiedNode?.SetToEmpty();
-            occupiedNode = null;
-        }
+        GameManager.Instance.BattleField.UpdateOccupiedNode((BattleHero)hero, null);
         currentDestination?.SetToEmpty();
         currentDestination = destination;
         currentDestination.ChangeState(NodeState.Targeted);
@@ -79,9 +74,11 @@ public class HeroMovement : HeroAbility {
                 var time = 1 / attributes.MovementSpeed * (dist / Map.Instance.GetAverageNodeDistance());
                 moveSequence.Append(hero.transform.DOMove(node.WorldPosition, time).SetEase(Ease.Linear))
                 .AppendCallback(() => {
-                    // check if target in range before reach destination, can early cancel move
-                    if (!Map.Instance.CheckAdjacency(Map.Instance.GetNearestNode(((BattleHero)hero).Target.WorldPosition), node, hero.Trait.attackRange)
-                        || node == currentDestination) return;
+                    // check if target in range BEFORE reach destination and standing on empty node, can early cancel move
+                    var targetInRange = Map.Instance.CheckAdjacency(Map.Instance.GetNearestNode(((BattleHero)hero).Target.WorldPosition), node, hero.Trait.attackRange);
+                    var isNotDestination = node != currentDestination;
+                    var standingOnEmpty = node.IsEmpty();
+                    if (!targetInRange || !isNotDestination || !standingOnEmpty) return;
                     
                     rotation.Rotate(((BattleHero)hero).Target.WorldPosition - hero.WorldPosition);
                     
@@ -89,8 +86,7 @@ public class HeroMovement : HeroAbility {
                     if (currentDestination.State == NodeState.Targeted) {
                         currentDestination.SetToEmpty();
                     }
-                    occupiedNode = node;
-                    occupiedNode.ChangeState(NodeState.Occupied);
+                    GameManager.Instance.BattleField.UpdateOccupiedNode((BattleHero)hero, node);
                     currentDestination = null;
                     nextNode = null;
                     
@@ -117,8 +113,7 @@ public class HeroMovement : HeroAbility {
         moveSequence.AppendCallback(() => {
             rotation.Rotate(((BattleHero)hero).Target.WorldPosition - hero.WorldPosition);
             
-            occupiedNode = currentDestination;
-            occupiedNode.ChangeState(NodeState.Occupied);
+            GameManager.Instance.BattleField.UpdateOccupiedNode((BattleHero)hero, currentDestination);
             currentDestination = null;
             nextNode = null;
             
@@ -137,10 +132,5 @@ public class HeroMovement : HeroAbility {
             currentDestination = null;
             nextNode = null;
         }
-    }
-
-    public void ReleaseOccupiedNode() {
-        occupiedNode?.SetToEmpty();
-        occupiedNode = null;
     }
 }

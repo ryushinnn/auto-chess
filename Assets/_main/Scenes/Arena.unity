@@ -3418,7 +3418,7 @@ GameObject:
   - component: {fileID: 640781488}
   - component: {fileID: 640781489}
   m_Layer: 0
-  m_Name: Stages
+  m_Name: Progress
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3451,7 +3451,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4636c670dff47e9906b41e4ece0db84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stages: []
+  stages:
+  - {fileID: 11400000, guid: 5fb88dd84a9c3ae429d94cc9815e1b7c, type: 2}
   phase: 0
 --- !u!1 &749995523
 GameObject:
@@ -3805,26 +3806,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPersistent: 0
-  myTeam:
-  - id: D_u_m_m_y
-    mapNode: {x: 0, y: 0}
-    items:
-    - {fileID: 11400000, guid: b538eec87a753f34a992d366a3cd4321, type: 2}
-  - id: Caitlyn
-    mapNode: {x: 0, y: 1}
-    items: []
-  - id: Yone
-    mapNode: {x: 0, y: 2}
-    items: []
-  enemyTeam:
-  - id: Ashe
-    mapNode: {x: 7, y: 7}
-    items: []
   shop: {fileID: 2122394115}
   lineUp: {fileID: 797194647}
   battleField: {fileID: 502237318}
   level: {fileID: 2091054113}
-  stages: {fileID: 640781489}
+  progress: {fileID: 640781489}
 --- !u!4 &1473852640
 Transform:
   m_ObjectHideFlags: 0
@@ -3947,7 +3933,6 @@ MonoBehaviour:
   mapRow: 0
   mapColumn: 0
   deckSize: 0
-  selectedCell: {fileID: 0}
 --- !u!1001 &1801000821
 PrefabInstance:
   m_ObjectHideFlags: 0

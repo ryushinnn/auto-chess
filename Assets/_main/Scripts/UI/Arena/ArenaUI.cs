@@ -7,6 +7,7 @@ public class ArenaUI : BaseUI {
     [SerializeField] Button lineUpButton;
     [SerializeField] Button inventoryButton;
     [SerializeField] Button shopButton;
+    [SerializeField] Button buyXpButton;
     [SerializeField] TMP_Text levelText;
     [SerializeField] TMP_Text xpText;
     [SerializeField] TMP_Text lineUpText;
@@ -18,6 +19,7 @@ public class ArenaUI : BaseUI {
         shopButton.onClick.AddListener(SwitchShop);
         lineUpButton.onClick.AddListener(OpenLineUp);
         inventoryButton.onClick.AddListener(OpenInventory);
+        buyXpButton.onClick.AddListener(BuyXp);
     }
 
     public void UpdateLevelText(int level) {
@@ -59,5 +61,9 @@ public class ArenaUI : BaseUI {
     void OpenInventory() {
         ArenaUIManager.Instance.LineUp.Close();
         ArenaUIManager.Instance.Inventory.Open();
+    }
+
+    void BuyXp() {
+        GameManager.Instance.Level.GainXp(GameConfigs.XP_GAIN_PER_PURCHASE);   
     }
 }

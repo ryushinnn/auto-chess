@@ -2853,6 +2853,7 @@ MonoBehaviour:
   lineUpButton: {fileID: 2100426810064739927}
   inventoryButton: {fileID: 7578067998162945537}
   shopButton: {fileID: 1432465102187533907}
+  buyXpButton: {fileID: 4498684046181012025}
   levelText: {fileID: 7720455063769424536}
   xpText: {fileID: 1814553766108346768}
   lineUpText: {fileID: 1353880370401608970}

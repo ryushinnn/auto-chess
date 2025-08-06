@@ -18,21 +18,17 @@ public class MapVisual : Singleton<MapVisual> {
 
     [SerializeField, ReadOnly] int mapRow;
     [SerializeField, ReadOnly] int mapColumn;
-    [SerializeField, ReadOnly] int deckSize;
     HexCell[,] hexCells;
-    [SerializeField, ReadOnly] Cell selectedCell;
-    HexCell[] selectedCells;
+    [SerializeField, ReadOnly] int deckSize;
     SquareCell[] squareCells;
     
-    Cell highlightHexCell;
-    Cell notAvailableHexCell;
-    Cell highlightSquareCell;
-    Cell notAvailableSquareCell;
+    Cell highlightCell;
+    Cell notAvailableCell;
 
     public void Initialize() {
         Map.Instance.SpawnNodes(SpawnHexCells);
         Deck.Instance.SpawnNodes(SpawnSquareCells);
-        GameManager.Instance.Stages.OnChangePhase += OnChangePhase;
+        GameManager.Instance.Progress.OnChangePhase += OnChangePhase;
     }
 
     void SpawnHexCells(MapNode[,] nodes, float width, float height) {
@@ -64,45 +60,53 @@ public class MapVisual : Singleton<MapVisual> {
         }
     }
 
-    public void MarkAsNonEmpty(Node node, bool nonEmpty) {
+    public void SetOccupied(Node node, bool occupied) {
         if (node is MapNode mNode) {
-            hexCells[mNode.X, mNode.Y].SetNonEmpty(nonEmpty);
+            hexCells[mNode.X, mNode.Y].SetOccupied(occupied);
         }
         else if (node is DeckNode dNode) {
-            squareCells[dNode.LinePosition].SetNonEmpty(nonEmpty);
+            squareCells[dNode.LinePosition].SetOccupied(occupied);
         }
     }
 
-    public void MarkAsNotAvailable(bool value, Node node = null) {
-        notAvailableHexCell?.SetNotAvailable(false);
-        notAvailableSquareCell?.SetNotAvailable(false);
-        
-        if (value) {
-            if (node is MapNode mNode) {
-                notAvailableHexCell = hexCells[mNode.X, mNode.Y];
-                notAvailableHexCell.SetNotAvailable(true);
-            }
-            else if (node is DeckNode dNode) {
-                notAvailableSquareCell = squareCells[dNode.LinePosition];
-                notAvailableSquareCell.SetNotAvailable(true);
-            }
+    public void SetNotAvailable(Node node) {
+        RemoveNotAvailable();
+        switch (node) {
+            case MapNode mn:
+                notAvailableCell = hexCells[mn.X, mn.Y];
+                notAvailableCell.SetNotAvailable(true);
+                break;
+            
+            case DeckNode dn:
+                notAvailableCell = squareCells[dn.LinePosition];
+                notAvailableCell.SetNotAvailable(true);
+                break;
         }
     }
 
-    public void Highlight(bool value, Node node = null) {
-        highlightHexCell?.SetHighlight(false);
-        highlightSquareCell?.SetHighlight(false);
+    public void RemoveNotAvailable() {
+        notAvailableCell?.SetNotAvailable(false);
+        notAvailableCell = null;
+    }
 
-        if (value) {
-            if (node is MapNode mNode) {
-                highlightHexCell = hexCells[mNode.X, mNode.Y];
-                highlightHexCell.SetHighlight(true);
-            }
-            else if (node is DeckNode dNode) {
-                highlightSquareCell = squareCells[dNode.LinePosition];
-                highlightSquareCell.SetHighlight(true);
-            }
+    public void SetHighlight(Node node) {
+        RemoveHighlight();
+        switch (node) {
+            case MapNode mn:
+                highlightCell = hexCells[mn.X, mn.Y];
+                highlightCell.SetHighlight(true);
+                break;
+            
+            case DeckNode dn:
+                highlightCell = squareCells[dn.LinePosition];
+                highlightCell.SetHighlight(true);
+                break;
         }
+    }
+
+    public void RemoveHighlight() {
+        highlightCell?.SetHighlight(false);
+        highlightCell = null;
     }
 
     [Button]
@@ -150,7 +154,6 @@ public class MapVisual : Singleton<MapVisual> {
                     }
                 }
                 break;
-            
         }
     }
 }
