@@ -19,6 +19,7 @@ public class Hero : MonoBehaviour {
     
     [SerializeField] protected Transform model;
     [SerializeField] protected Transform abilitiesContainer;
+    [SerializeField] protected Canvas canvas;
     [SerializeField] protected Image rankIcon;
 
     public HeroTrait Trait => trait;
@@ -83,5 +84,9 @@ public class Hero : MonoBehaviour {
                 ab.Process();
             }
         }
+    }
+
+    public virtual void SwitchCanvas(bool value) {
+        canvas.enabled = value;
     }
 }

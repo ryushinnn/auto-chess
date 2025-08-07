@@ -237,6 +237,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7206617159850802160}
   m_SourcePrefab: {fileID: 100100000, guid: 9b00a5bcaa357bd4e812117e914f0359, type: 3}
+--- !u!223 &3339387669540709292 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 1556335370846995868, guid: 9b00a5bcaa357bd4e812117e914f0359,
+    type: 3}
+  m_PrefabInstance: {fileID: 4309616787902506544}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3525859325498661817 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 801794401438645641, guid: 9b00a5bcaa357bd4e812117e914f0359,
@@ -269,6 +275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 5633822706829908791}
   abilitiesContainer: {fileID: 3525859325498661817}
+  canvas: {fileID: 3339387669540709292}
   rankIcon: {fileID: 7151941873719891831}
   trait: {fileID: 0}
   rank: 0

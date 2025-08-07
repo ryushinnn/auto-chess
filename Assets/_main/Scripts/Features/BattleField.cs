@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -45,6 +46,7 @@ public class BattleField : MonoBehaviour {
         hero.Activate();
         hero.WorldPosition = node.WorldPosition;
         hero.SetData(trait, rank, side);
+        hero.SwitchCanvas(false);
         aliveHeroes[side].Add(hero);
         UpdateOccupiedNode(hero, node);
         return hero;
@@ -119,15 +121,24 @@ public class BattleField : MonoBehaviour {
         return occupiedNodes.GetValueOrDefault(hero);
     }
 
-    public void SwitchHeroesBehaviour(bool value) {
+    public void ActivateHeroes() {
         foreach (var (_, heroes) in aliveHeroes) {
             foreach (var h in heroes) {
-                h.SwitchBehaviour(value);
+                h.SwitchBehaviour(true);
+                h.SwitchCanvas(true);
+            }
+        }
+    }
+
+    public void DeactivateHeroes() {
+        foreach (var (_, heroes) in aliveHeroes) {
+            foreach (var h in heroes) {
+                h.SwitchBehaviour(false);
             }
         }
         foreach (var (_, heroes) in deadHeroes) {
             foreach (var h in heroes) {
-                h.SwitchBehaviour(value);
+                h.SwitchBehaviour(false);
             }
         }
     }
@@ -156,5 +167,8 @@ public class BattleField : MonoBehaviour {
         foreach (var h in allies) {
             h.Mecanim.DiveOut();
         }
+        DOVirtual.DelayedCall(GameConfigs.PORTAL_CLOSE_DELAY, () => {
+            MapVisual.Instance.SwitchPortal(false);
+        });
     }
 }

@@ -128,6 +128,7 @@ public static class GameConfigs {
     };
 
     public const float SPAWN_ENEMIES_DELAY = 2f;
+    public const float PORTAL_CLOSE_DELAY = 1f;
 }
 
 public class LevelConfig {

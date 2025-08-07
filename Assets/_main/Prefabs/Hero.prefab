@@ -1307,7 +1307,6 @@ MonoBehaviour:
   isActive: 1
   healthBar: {fileID: 4616933226886558938}
   energyBar: {fileID: 6529644040993711803}
-  canvas: {fileID: 1556335370846995868}
   hpTextParent: {fileID: 8753971672558067024}
   isAlive: 0
   maxHp: 0
@@ -1651,11 +1650,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 8494226802168659207}
   abilitiesContainer: {fileID: 801794401438645641}
+  canvas: {fileID: 1556335370846995868}
   rankIcon: {fileID: 6381064795183771975}
   trait: {fileID: 11400000, guid: 3497b5ea78b8c9a4b9efb1fddb0d2fc3, type: 2}
-  side: 0
   rank: 0
-  target: {fileID: 0}
 --- !u!1 &7959870691934315770
 GameObject:
   m_ObjectHideFlags: 0

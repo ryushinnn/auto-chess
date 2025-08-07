@@ -15,7 +15,6 @@ public class HeroAttributes : HeroAbility {
     
     [SerializeField] ProgressBar healthBar;
     [SerializeField] ProgressBar energyBar;
-    [SerializeField] Canvas canvas;
     [SerializeField] Transform hpTextParent;
     
     public bool IsAlive => isAlive;
@@ -63,7 +62,6 @@ public class HeroAttributes : HeroAbility {
 
     public override void ResetAll() {
         isAlive = true;
-        canvas.enabled = true;
         hp = maxHp = hero.Trait.maxHp;
         energy = 0;
         armor = hero.Trait.armor;
@@ -79,6 +77,7 @@ public class HeroAttributes : HeroAbility {
         magicalPenetration = hero.Trait.magicalPenetration;
         lifeSteal = hero.Trait.lifeSteal;
         tenacity = hero.Trait.tenacity;
+        hero.SwitchCanvas(true);
         healthBar.UpdateAmount(1, true);
         energyBar.UpdateAmount(0, true);
     }
@@ -542,7 +541,7 @@ public class HeroAttributes : HeroAbility {
         hero.Mecanim.Death();
         hero.Mecanim.InterruptAttack();
         hero.Mecanim.InterruptSkill();
-        canvas.enabled = false;
+        hero.SwitchCanvas(false);
         hero.name = "(DEAD) " + hero.name;
         GameManager.Instance.BattleField.MarkHeroAsDead((BattleHero)hero);
     }

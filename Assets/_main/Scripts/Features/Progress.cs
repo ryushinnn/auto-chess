@@ -85,7 +85,7 @@ public class Progress : MonoBehaviour {
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
                 GameManager.Instance.BattleField.RemoveHeroes();
-                GameManager.Instance.LineUp.SwitchHeroesOnMap(true);
+                GameManager.Instance.LineUp.ShowHeroesOnMap();
                 MapVisual.Instance.SwitchHalfMap(false);
                 break;
             
@@ -95,7 +95,7 @@ public class Progress : MonoBehaviour {
                 GameManager.Instance.LineUp.FillHeroesOnMap();
                 GameManager.Instance.LineUp.PlayHeroesDiveInAnimation();
                 DOVirtual.DelayedCall(GameConfigs.SPAWN_ENEMIES_DELAY, () => {
-                    GameManager.Instance.LineUp.SwitchHeroesOnMap(false);
+                    GameManager.Instance.LineUp.HideHeroesOnMap();
                     GameManager.Instance.BattleField.SpawnHeroes();
                     GameManager.Instance.BattleField.PlayHeroesDiveOutAnimation();
                     MapVisual.Instance.SwitchHalfMap(true);
@@ -105,14 +105,14 @@ public class Progress : MonoBehaviour {
             case MatchPhase.Battle:
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
-                GameManager.Instance.BattleField.SwitchHeroesBehaviour(true);
+                GameManager.Instance.BattleField.ActivateHeroes();
                 break;
             
             case MatchPhase.Summary:
                 OnEndMatch?.Invoke(MatchResult.Lose);
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
-                GameManager.Instance.BattleField.SwitchHeroesBehaviour(false);
+                GameManager.Instance.BattleField.DeactivateHeroes();
                 break;
         }
         

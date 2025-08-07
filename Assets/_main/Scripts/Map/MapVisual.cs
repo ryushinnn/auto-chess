@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Pathfinding;
+using RExt.Extensions;
 using RExt.Patterns.Singleton;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class MapVisual : Singleton<MapVisual> {
     public int Layer => raycastTarget.layer;
+    public Vector3 PortalPosition => portal.transform.position.ToZeroY();
     
     [SerializeField] Transform hexParent;
     [SerializeField] HexCell hexCell;
     [SerializeField] Transform squareParent;
     [SerializeField] SquareCell squareCell;
     [SerializeField] GameObject raycastTarget;
+    [SerializeField] GameObject portal;
 
     [SerializeField, ReadOnly] int mapRow;
     [SerializeField, ReadOnly] int mapColumn;
@@ -24,10 +27,15 @@ public class MapVisual : Singleton<MapVisual> {
     
     Cell highlightCell;
     Cell notAvailableCell;
+    
+    Tween portalTween;
+    
+    const float PORTAL_ANIMATION_DURATION = 0.5f;
 
     public void Initialize() {
         Map.Instance.SpawnNodes(SpawnHexCells);
         Deck.Instance.SpawnNodes(SpawnSquareCells);
+        portal.SetActive(false);
     }
 
     void SpawnHexCells(MapNode[,] nodes, float width, float height) {
@@ -141,6 +149,20 @@ public class MapVisual : Singleton<MapVisual> {
             for (int j=0; j<mapColumn; j++) {
                 hexCells[i, j].gameObject.SetActive(value);
             }
+        }
+    }
+
+    public void SwitchPortal(bool value) {
+        portalTween?.Kill();
+        if (value) {
+            portal.SetActive(true);
+            portal.transform.SetUniformScale(0);
+            portalTween = portal.transform.DOScale(1, PORTAL_ANIMATION_DURATION);
+        }
+        else {
+            portalTween = portal.transform.DOScale(0, PORTAL_ANIMATION_DURATION).OnComplete(() => {
+                portal.SetActive(false);
+            });
         }
     }
 }

@@ -76,7 +76,8 @@ public abstract class Mecanim : MonoBehaviour {
     // for line up hero only
     public virtual void DiveIn() {
         Interact(Interaction.Dive, (paramDiveDirection, 0));
-        transform.DOMove(Vector3.zero, diveInTime).OnComplete(() => {
+        var portal = MapVisual.Instance.PortalPosition;
+        transform.DOMove(portal, diveInTime).OnComplete(() => {
             SwitchRenderer(false);
         });
     }
@@ -84,7 +85,7 @@ public abstract class Mecanim : MonoBehaviour {
     // for battle hero only
     public virtual void DiveOut() {
         Interact(Interaction.Dive, (paramDiveDirection, 1));
-        transform.position = Vector3.zero;
+        transform.position = MapVisual.Instance.PortalPosition;
         DOVirtual.DelayedCall(diveOutDelay, () => {
             transform.DOLocalMove(Vector3.zero, diveOutTime - diveOutDelay);
         });

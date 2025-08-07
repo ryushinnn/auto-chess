@@ -148,20 +148,20 @@ public class LineUp : MonoBehaviour {
         return heroesOnMap;
     }
 
-    public void SwitchHeroesOnMap(bool value) {
+    public void ShowHeroesOnMap() {
         foreach (var (hero, node) in heroesOnMap) {
-            if (value) {
-                hero.Activate();
-                node.ChangeState(NodeState.Occupied);
-                MapVisual.Instance.SetOccupied(node, true);
-                hero.Mecanim.SwitchRenderer(true);
-                hero.Mecanim.ResetPosition();
-            }
-            else {
-                hero.Deactivate();
-                node.SetToEmpty();
-                MapVisual.Instance.SetOccupied(node, false);
-            }
+            hero.Activate();
+            node.ChangeState(NodeState.Occupied);
+            MapVisual.Instance.SetOccupied(node, true);
+            hero.Mecanim.SwitchRenderer(true);
+            hero.Mecanim.ResetPosition();
+        }
+    }
+
+    public void HideHeroesOnMap() {
+        foreach (var (hero, node) in heroesOnMap) {
+            hero.Deactivate();
+            node.SetToEmpty();
         }
     }
 
@@ -185,9 +185,12 @@ public class LineUp : MonoBehaviour {
     }
 
     public void PlayHeroesDiveInAnimation() {
-        foreach (var (hero, _) in heroesOnMap) {
+        foreach (var (hero, node) in heroesOnMap) {
             hero.Mecanim.DiveIn();
+            hero.SwitchCanvas(false);
+            MapVisual.Instance.SetOccupied(node, false);
         }
+        MapVisual.Instance.SwitchPortal(true);
     }
 
     [Button]
