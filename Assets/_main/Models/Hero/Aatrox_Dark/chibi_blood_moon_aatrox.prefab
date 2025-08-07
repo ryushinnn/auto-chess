@@ -1111,18 +1111,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b3937d8540d4e27bb538f48d5ae0920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderer: {fileID: 6081420198824857202}
   defaultAttackFullTime: 2.167
   defaultAttackTime:
   - 0.9
   - 1
   skillFullTimes:
   - 5
+  diveInTime: 1.467
+  diveOutDelay: 0.557
+  diveOutTime: 2.533
   currentState: 0
   lastState: 0
   lastInteraction: 0
 --- !u!1 &5807728274907355069 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7559490521267118216, guid: 66e109960c0201845af0b5d0bd33280f,
+    type: 3}
+  m_PrefabInstance: {fileID: 4067179872917092149}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6081420198824857202 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7787865016882968903, guid: 66e109960c0201845af0b5d0bd33280f,
     type: 3}
   m_PrefabInstance: {fileID: 4067179872917092149}
   m_PrefabAsset: {fileID: 0}

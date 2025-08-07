@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using RExt.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -153,6 +154,8 @@ public class LineUp : MonoBehaviour {
                 hero.Activate();
                 node.ChangeState(NodeState.Occupied);
                 MapVisual.Instance.SetOccupied(node, true);
+                hero.Mecanim.SwitchRenderer(true);
+                hero.Mecanim.ResetPosition();
             }
             else {
                 hero.Deactivate();
@@ -179,6 +182,12 @@ public class LineUp : MonoBehaviour {
         }
         
         ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
+    }
+
+    public void PlayHeroesDiveInAnimation() {
+        foreach (var (hero, _) in heroesOnMap) {
+            hero.Mecanim.DiveIn();
+        }
     }
 
     [Button]

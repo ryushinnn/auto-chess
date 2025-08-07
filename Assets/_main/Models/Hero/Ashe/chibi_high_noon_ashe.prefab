@@ -1309,11 +1309,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff2675ed2b24308b057c69c635df9c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderer: {fileID: 8615066889924927405}
   defaultAttackFullTime: 1
   defaultAttackTime:
   - 0.2
   skillFullTimes:
   - 3
+  diveInTime: 1.333
+  diveOutDelay: 0.374
+  diveOutTime: 2.2
   currentState: 0
   lastState: 0
   lastInteraction: 0
+--- !u!1 &8615066889924927405 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7787865016882968903, guid: 2a0159ac09998054a88411d906fbe396,
+    type: 3}
+  m_PrefabInstance: {fileID: 1989131199673820906}
+  m_PrefabAsset: {fileID: 0}

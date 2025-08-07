@@ -119,6 +119,19 @@ public class BattleField : MonoBehaviour {
         return occupiedNodes.GetValueOrDefault(hero);
     }
 
+    public void SwitchHeroesBehaviour(bool value) {
+        foreach (var (_, heroes) in aliveHeroes) {
+            foreach (var h in heroes) {
+                h.SwitchBehaviour(value);
+            }
+        }
+        foreach (var (_, heroes) in deadHeroes) {
+            foreach (var h in heroes) {
+                h.SwitchBehaviour(value);
+            }
+        }
+    }
+
     public void RemoveHeroes() {
         foreach (var (_, heroes) in aliveHeroes) {
             foreach (var h in heroes) {
@@ -135,6 +148,13 @@ public class BattleField : MonoBehaviour {
                 h.Deactivate();
             }
             heroes.Clear();
+        }
+    }
+
+    public void PlayHeroesDiveOutAnimation() {
+        var allies = aliveHeroes[TeamSide.Ally];
+        foreach (var h in allies) {
+            h.Mecanim.DiveOut();
         }
     }
 }

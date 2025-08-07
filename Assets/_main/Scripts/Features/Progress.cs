@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using RExt.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -85,25 +86,33 @@ public class Progress : MonoBehaviour {
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
                 GameManager.Instance.BattleField.RemoveHeroes();
                 GameManager.Instance.LineUp.SwitchHeroesOnMap(true);
+                MapVisual.Instance.SwitchHalfMap(false);
                 break;
             
             case MatchPhase.Transition:
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
                 GameManager.Instance.LineUp.FillHeroesOnMap();
+                GameManager.Instance.LineUp.PlayHeroesDiveInAnimation();
+                DOVirtual.DelayedCall(GameConfigs.SPAWN_ENEMIES_DELAY, () => {
+                    GameManager.Instance.LineUp.SwitchHeroesOnMap(false);
+                    GameManager.Instance.BattleField.SpawnHeroes();
+                    GameManager.Instance.BattleField.PlayHeroesDiveOutAnimation();
+                    MapVisual.Instance.SwitchHalfMap(true);
+                });
                 break;
             
             case MatchPhase.Battle:
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
-                GameManager.Instance.LineUp.SwitchHeroesOnMap(false);
-                GameManager.Instance.BattleField.SpawnHeroes();
+                GameManager.Instance.BattleField.SwitchHeroesBehaviour(true);
                 break;
             
             case MatchPhase.Summary:
                 OnEndMatch?.Invoke(MatchResult.Lose);
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
+                GameManager.Instance.BattleField.SwitchHeroesBehaviour(false);
                 break;
         }
         

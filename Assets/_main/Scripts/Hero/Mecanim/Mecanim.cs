@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using RExt.Utils;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -26,15 +27,19 @@ public abstract class Mecanim : MonoBehaviour {
     protected readonly int paramRunIn = Animator.StringToHash("run_in");
     protected readonly int paramInteract = Animator.StringToHash("interact");
     protected readonly int paramInteraction = Animator.StringToHash("interaction");
-    protected readonly int paramDiveIn = Animator.StringToHash("dive_in");
+    protected readonly int paramDiveDirection = Animator.StringToHash("dive_direction");
     protected readonly int paramSkill= Animator.StringToHash("skill");
     protected readonly int paramAttackIn = Animator.StringToHash("attack_in");
     protected readonly int paramAttackOut = Animator.StringToHash("attack_out");
     protected readonly int paramAttackMultiplier = Animator.StringToHash("attack_multiplier");
 
+    [SerializeField] protected GameObject renderer;
     [SerializeField] protected float defaultAttackFullTime;
     [SerializeField] protected float[] defaultAttackTime;
     [SerializeField] protected float[] skillFullTimes;
+    [SerializeField] protected float diveInTime;
+    [SerializeField] protected float diveOutDelay;
+    [SerializeField] protected float diveOutTime;
     [SerializeField, ReadOnly] protected State currentState = State.None;
     [SerializeField, ReadOnly] protected State lastState = State.None;
     [SerializeField, ReadOnly] protected Interaction lastInteraction = Interaction.None;
@@ -59,13 +64,30 @@ public abstract class Mecanim : MonoBehaviour {
     public virtual void Run() {
         ChangeState(State.Run);
     }
-
+    
     public virtual void Death() {
         ChangeState(State.Death);
     }
 
     public virtual void DoNothing() {
         Interact(Interaction.None);
+    }
+
+    // for line up hero only
+    public virtual void DiveIn() {
+        Interact(Interaction.Dive, (paramDiveDirection, 0));
+        transform.DOMove(Vector3.zero, diveInTime).OnComplete(() => {
+            SwitchRenderer(false);
+        });
+    }
+
+    // for battle hero only
+    public virtual void DiveOut() {
+        Interact(Interaction.Dive, (paramDiveDirection, 1));
+        transform.position = Vector3.zero;
+        DOVirtual.DelayedCall(diveOutDelay, () => {
+            transform.DOLocalMove(Vector3.zero, diveOutTime - diveOutDelay);
+        });
     }
 
     public virtual void Attack() {
@@ -139,5 +161,18 @@ public abstract class Mecanim : MonoBehaviour {
 
     protected virtual void ModifyBodyParts() {
         
+    }
+    
+    public virtual void SwitchRenderer(bool value) {
+        renderer.SetActive(value);
+    }
+
+    public void ResetPosition() {
+        transform.localPosition = Vector3.zero;
+    }
+
+    [Button]
+    void quick() {
+        renderer = transform.GetChild(0).gameObject;
     }
 }

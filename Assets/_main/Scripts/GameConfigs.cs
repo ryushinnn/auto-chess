@@ -122,10 +122,12 @@ public static class GameConfigs {
 
     public static readonly Dictionary<MatchPhase, int> MATCH_PHASE_DURATIONS = new() {
         { MatchPhase.Preparation, 999 },
-        { MatchPhase.Transition, 2 },
+        { MatchPhase.Transition, 5 },
         { MatchPhase.Battle, 30 },
         { MatchPhase.Summary, 2 },
     };
+
+    public const float SPAWN_ENEMIES_DELAY = 2f;
 }
 
 public class LevelConfig {

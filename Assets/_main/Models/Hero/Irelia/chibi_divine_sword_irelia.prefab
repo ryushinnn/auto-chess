@@ -998,6 +998,12 @@ PrefabInstance:
       addedObject: {fileID: 5323738974827984503}
   m_SourcePrefab: {fileID: -8037938140082288066, guid: aef59025cfc1f7c4c92063348f8d38da,
     type: 3}
+--- !u!1 &162188904652273709 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7787865016882968903, guid: aef59025cfc1f7c4c92063348f8d38da,
+    type: 3}
+  m_PrefabInstance: {fileID: 7950040864297763178}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &845254150837121212 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7345030283220808150, guid: aef59025cfc1f7c4c92063348f8d38da,
@@ -1128,11 +1134,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1aa033cb736426ba3e03740721b6bbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderer: {fileID: 162188904652273709}
   defaultAttackFullTime: 1.3
   defaultAttackTime:
   - 0.2
   skillFullTimes:
   - 4.8
+  diveInTime: 1.733
+  diveOutDelay: 0.176
+  diveOutTime: 2.2
   currentState: 0
   lastState: 0
   lastInteraction: 0

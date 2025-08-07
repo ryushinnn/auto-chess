@@ -28,7 +28,6 @@ public class MapVisual : Singleton<MapVisual> {
     public void Initialize() {
         Map.Instance.SpawnNodes(SpawnHexCells);
         Deck.Instance.SpawnNodes(SpawnSquareCells);
-        GameManager.Instance.Progress.OnChangePhase += OnChangePhase;
     }
 
     void SpawnHexCells(MapNode[,] nodes, float width, float height) {
@@ -137,23 +136,11 @@ public class MapVisual : Singleton<MapVisual> {
         return hexCells[x, y];
     }
 
-    void OnChangePhase(MatchPhase phase) {
-        switch (phase) {
-            case MatchPhase.Preparation:
-                for (int i=mapRow/2; i<mapRow; i++) {
-                    for (int j=0; j<mapColumn; j++) {
-                        hexCells[i, j].gameObject.SetActive(false);
-                    }
-                }
-                break;
-            
-            case MatchPhase.Battle:
-                for (int i=mapRow/2; i<mapRow; i++) {
-                    for (int j=0; j<mapColumn; j++) {
-                        hexCells[i, j].gameObject.SetActive(true);
-                    }
-                }
-                break;
+    public void SwitchHalfMap(bool value) {
+        for (int i=mapRow/2; i<mapRow; i++) {
+            for (int j=0; j<mapColumn; j++) {
+                hexCells[i, j].gameObject.SetActive(value);
+            }
         }
     }
 }
