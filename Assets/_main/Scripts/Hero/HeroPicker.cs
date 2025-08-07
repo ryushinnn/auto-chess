@@ -1,35 +1,60 @@
 ﻿using System;
+using System.Collections;
 using DG.Tweening;
 using RExt.Extensions;
 using RExt.Utils;
 using UnityEngine;
 
 public class HeroPicker : MonoBehaviour {
+    [SerializeField] LineUpHero hero;
+    
     LayerMask mapLayerMask;
-    LineUpHero hero;
     Tween tween;
     Node currentNode;
     Node nextNode;
     Vector3 offset;
-    bool draggable;
-
-    Vector3 originPos;
-    float mouseDownTime;
-    bool dragged;
-
-    const float DRAG_THRESHOLD = 0.1f;
-    const float HOLD_DURATION_THRESHOLD = 0.5f;
+    bool pickable;
+    bool isPicking;
+    Coroutine holdCoroutine;
+    
+    const float HOLD_TIME_THRESHOLD = 0.1f;
     const float DRAG_POS_Y = 1;
 
     void Awake() {
-        hero = GetComponent<LineUpHero>();
         mapLayerMask = 1 << MapVisual.Instance.Layer;
-        draggable = true;
+        pickable = true;
         GameManager.Instance.Progress.OnChangePhase += OnChangePhase;
     }
 
     void OnMouseDown() {
-        if (!draggable) return;
+        if (!pickable) return;
+        holdCoroutine = StartCoroutine(DoPick());
+    }
+
+    void OnMouseDrag() {
+        if (!pickable || !isPicking) return;
+        HandlePicking();
+    }
+
+    void OnMouseUp() {
+        if (!pickable) return;
+        
+        if (holdCoroutine != null) StopCoroutine(holdCoroutine);
+        if (isPicking) {
+            EndPicking();
+        }
+        else {
+            ArenaUIManager.Instance.HeroInfo.Open(hero);
+        }
+    }
+
+    IEnumerator DoPick() {
+        yield return BetterWaitForSeconds.WaitRealtime(HOLD_TIME_THRESHOLD);
+        StartPicking();
+    }
+
+    void StartPicking() {
+        isPicking = true;
         
         tween?.Kill();
         tween = hero.Model.DOLocalMoveY(DRAG_POS_Y, 0.2f);
@@ -38,15 +63,9 @@ public class HeroPicker : MonoBehaviour {
             offset = new Vector3(hero.transform.position.x - hit.point.x, 0, hero.transform.position.z - hit.point.z);
         }
         currentNode = GameManager.Instance.LineUp.FindNodeOfHero(hero);
-        
-        dragged = false;
-        originPos = hero.transform.position;
-        mouseDownTime = Time.unscaledTime;
     }
 
-    void OnMouseDrag() {
-        if (!draggable) return;
-        
+    void HandlePicking() {
         var ray = Utils.MainCamera().ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mapLayerMask) && hit.collider != null) {
             var point = hit.point.ToZeroY();
@@ -91,14 +110,10 @@ public class HeroPicker : MonoBehaviour {
             MapVisual.Instance.RemoveNotAvailable();
             nextNode = null;
         }
-        
-        if ((hero.transform.position - originPos).sqrMagnitude > DRAG_THRESHOLD * DRAG_THRESHOLD) {
-            dragged = true;
-        }
     }
 
-    void OnMouseUp() {
-        if (!draggable) return;
+    void EndPicking() {
+        isPicking = false;
         
         tween?.Kill();
         tween = hero.Model.DOLocalMoveY(0, 0.2f);
@@ -164,13 +179,9 @@ public class HeroPicker : MonoBehaviour {
                 }
             }
         }
-
-        if (!dragged && Time.unscaledTime - mouseDownTime < HOLD_DURATION_THRESHOLD) {
-            ArenaUIManager.Instance.HeroInfo.Open(hero);
-        }
     }
 
     void OnChangePhase(MatchPhase phase) {
-        draggable = (phase == MatchPhase.Preparation);
+        pickable = (phase == MatchPhase.Preparation);
     }
 }
