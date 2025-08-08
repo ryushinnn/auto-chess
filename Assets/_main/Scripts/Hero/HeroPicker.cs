@@ -150,6 +150,7 @@ public class HeroPicker : MonoBehaviour {
                 // valid, swap
                 else {
                     GameManager.Instance.LineUp.SwapHeroNodes(hero, other);
+                    GameManager.Instance.LineUp.RecalculateHeroesOnMap();
                 }
             }
         }
@@ -185,6 +186,7 @@ public class HeroPicker : MonoBehaviour {
                 // valid, swap
                 else {
                     GameManager.Instance.LineUp.SwapHeroNodes(hero, other);
+                    GameManager.Instance.LineUp.RecalculateHeroesOnMap();
                 }
             }
         }
