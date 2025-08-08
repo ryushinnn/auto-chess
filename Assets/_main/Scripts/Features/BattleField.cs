@@ -36,6 +36,11 @@ public class BattleField : MonoBehaviour {
         else {
             foreach (var (h,n) in allies) {
                 var hero = SpawnHero(h.Trait, h.Rank, TeamSide.Ally, n);
+                var items = h.GetAbility<HeroInventory>().Get();
+                var inventory = hero.GetAbility<HeroInventory>();
+                foreach (var item in items) {
+                    inventory.Add(item);
+                }
                 hero.GetAbility<HeroRotation>().Rotate(Vector3.forward, true);
             }
         }

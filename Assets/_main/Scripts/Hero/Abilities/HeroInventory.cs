@@ -21,6 +21,13 @@ public class HeroInventory : HeroAbility {
         foreach (var i in itemIcons) {
             i.enabled = false;
         }
+    }
+
+    public override void ResetAll() {
+        itemSlots.Clear();
+        foreach (var icon in itemIcons) {
+            icon.enabled = false;
+        }
         ui.anchoredPosition = new Vector2(ui.anchoredPosition.x, UI_HEIGHT_NO_ITEM);
     }
 
@@ -28,11 +35,13 @@ public class HeroInventory : HeroAbility {
         attributes = hero.GetAbility<HeroAttributes>();
     }
 
-    public void Add(Item item) {
-        if (itemSlots.Count == CAPACITY) return;
+    public bool Add(Item item) {
+        if (itemSlots.Count == CAPACITY && (item.IsForgedItem() || itemSlots[^1].item.IsForgedItem())) {
+            return false;
+        }
 
         ItemSlot slot;
-        if (item.IsCompleteItem() || itemSlots.Count == 0 || itemSlots[^1].item.IsCompleteItem()) {
+        if (item.IsForgedItem() || itemSlots.Count == 0 || itemSlots[^1].item.IsForgedItem()) {
             slot = new ItemSlot(item);
         }
         else {
@@ -52,8 +61,8 @@ public class HeroInventory : HeroAbility {
         }
         itemSlots.Add(slot);
         itemSlots.Sort((a, b) => {
-            if (a.item.IsCompleteItem() && !b.item.IsCompleteItem()) return -1;
-            if (!a.item.IsCompleteItem() && b.item.IsCompleteItem()) return 1;
+            if (a.item.IsForgedItem() && !b.item.IsForgedItem()) return -1;
+            if (!a.item.IsForgedItem() && b.item.IsForgedItem()) return 1;
             return 0;
         });
         for (int i = 0; i < itemIcons.Length; i++) {
@@ -66,6 +75,7 @@ public class HeroInventory : HeroAbility {
             itemIcons[i].sprite = itemSlots[i].item.icon;
         }
         ui.anchoredPosition = new Vector2(ui.anchoredPosition.x, itemSlots.Count > 0 ? UI_HEIGHT_WITH_ITEM : UI_HEIGHT_NO_ITEM);
+        return true;
     }
 
     public Item[] Get() {

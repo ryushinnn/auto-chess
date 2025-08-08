@@ -188,6 +188,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hero_LineUp
       objectReference: {fileID: 0}
+    - target: {fileID: 7033077526733261554, guid: 9b00a5bcaa357bd4e812117e914f0359,
+        type: 3}
+      propertyPath: m_Layer
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 7615904604595437019, guid: 9b00a5bcaa357bd4e812117e914f0359,
         type: 3}
       propertyPath: m_AnchorMax.y

@@ -9,7 +9,7 @@ public class Item : ScriptableObject {
     public Item[] ingredients;
     public AttributeModifier[] modifiers;
 
-    public bool IsCompleteItem() {
+    public bool IsForgedItem() {
         return ingredients != null && ingredients.Length == 2;
     }
 }

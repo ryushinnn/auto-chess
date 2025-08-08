@@ -70,6 +70,8 @@ public class LineUp : MonoBehaviour {
                     roleNumbers[role]++;
                 }
                 realmNumbers[hero.Trait.realm]++;
+                ArenaUIManager.Instance.Inventory.Close();
+                ArenaUIManager.Instance.LineUp.Open();
                 ArenaUIManager.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
             }
             
@@ -151,6 +153,7 @@ public class LineUp : MonoBehaviour {
     public void ShowHeroesOnMap() {
         foreach (var (hero, node) in heroesOnMap) {
             hero.Activate();
+            hero.SwitchCanvas(true);
             node.ChangeState(NodeState.Occupied);
             MapVisual.Instance.SetOccupied(node, true);
             hero.Mecanim.SetRendererVisibility(true);
