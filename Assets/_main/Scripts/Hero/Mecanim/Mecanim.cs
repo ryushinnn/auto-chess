@@ -38,7 +38,7 @@ public abstract class Mecanim : MonoBehaviour {
     [SerializeField] protected float[] defaultAttackTime;
     [SerializeField] protected float[] skillFullTimes;
     [SerializeField] protected float diveInTime;
-    [SerializeField] protected float diveOutDelay;
+    [SerializeField] Vector2 diveOutTimeRange;
     [SerializeField] protected float diveOutTime;
     [SerializeField, ReadOnly] protected State currentState = State.None;
     [SerializeField, ReadOnly] protected State lastState = State.None;
@@ -86,8 +86,10 @@ public abstract class Mecanim : MonoBehaviour {
     public virtual void DiveOut() {
         Interact(Interaction.Dive, (paramDiveDirection, 1));
         transform.position = MapVisual.Instance.PortalPosition;
-        DOVirtual.DelayedCall(diveOutDelay, () => {
-            transform.DOLocalMove(Vector3.zero, diveOutTime - diveOutDelay);
+        var delay = diveOutTime * diveOutTimeRange.x;
+        var duration = diveOutTime * (diveOutTimeRange.y - diveOutTimeRange.x);
+        DOVirtual.DelayedCall(delay, () => {
+            transform.DOLocalMove(Vector3.zero, duration);
         });
     }
 

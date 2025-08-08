@@ -20,7 +20,6 @@ public class HeroMovement : HeroAbility {
     public override void ResetAll() {
         moveSequence?.Kill();
         currentDestination = null;
-        hero.Mecanim.Idle();
     }
 
     protected override void FindReferences() {
@@ -40,8 +39,11 @@ public class HeroMovement : HeroAbility {
         currentTargetNode = targetNode;
         // if target in range, no need to calculate new destination
         var occupiedNode = GameManager.Instance.BattleField.GetOccupiedNode((BattleHero)hero);
-        if ((occupiedNode != null && Map.Instance.CheckAdjacency(occupiedNode, currentTargetNode, hero.Trait.attackRange))
-            || (nextNode != null && Map.Instance.CheckAdjacency(nextNode, currentTargetNode, hero.Trait.attackRange))) return;
+        if ((occupiedNode != null && Map.Instance.CheckAdjacency(occupiedNode, currentTargetNode, hero.Trait.attackRange))) {
+            if (!reachedDestination) reachedDestination = true;
+            return;
+        }
+        if (nextNode != null && Map.Instance.CheckAdjacency(nextNode, currentTargetNode, hero.Trait.attackRange)) return;
 
         var myNode = Map.Instance.GetNearestNode(hero.WorldPosition);
         var destination = Map.Instance.GetNeighbors(currentTargetNode, hero.Trait.attackRange).Filter(x => x.IsEmpty()).GetNearestFrom(myNode)

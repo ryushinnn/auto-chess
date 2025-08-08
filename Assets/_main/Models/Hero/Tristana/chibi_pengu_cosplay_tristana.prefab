@@ -1202,7 +1202,7 @@ MonoBehaviour:
   skillFullTimes:
   - 2.2
   diveInTime: 1.1
-  diveOutDelay: 0.31
+  diveOutTimeRange: {x: 0.13, y: 0.66}
   diveOutTime: 2.067
   currentState: 0
   lastState: 0

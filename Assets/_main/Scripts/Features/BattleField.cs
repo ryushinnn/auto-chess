@@ -25,7 +25,8 @@ public class BattleField : MonoBehaviour {
         foreach (var e in enemies) {
             var trait = HeroTraitDB.Instance.Find(e.heroId);
             var node = Map.Instance.GetNode(e.gridPosition);
-            SpawnHero(trait, e.rank, TeamSide.Enemy, node);
+            var hero = SpawnHero(trait, e.rank, TeamSide.Enemy, node);
+            hero.GetAbility<HeroRotation>().Rotate(-Vector3.forward, true);
         }
                 
         var allies = GameManager.Instance.LineUp.GetHeroOnMap();
@@ -34,7 +35,8 @@ public class BattleField : MonoBehaviour {
         }
         else {
             foreach (var (h,n) in allies) {
-                SpawnHero(h.Trait, h.Rank, TeamSide.Ally, n);
+                var hero = SpawnHero(h.Trait, h.Rank, TeamSide.Ally, n);
+                hero.GetAbility<HeroRotation>().Rotate(Vector3.forward, true);
             }
         }
     }

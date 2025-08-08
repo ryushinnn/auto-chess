@@ -218,6 +218,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8494226802168659207, guid: 9b00a5bcaa357bd4e812117e914f0359,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8494226802168659207, guid: 9b00a5bcaa357bd4e812117e914f0359,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8494226802168659207, guid: 9b00a5bcaa357bd4e812117e914f0359,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 276282976127478005, guid: 9b00a5bcaa357bd4e812117e914f0359, type: 3}
     m_RemovedGameObjects:

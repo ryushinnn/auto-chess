@@ -49,7 +49,7 @@ public class Progress : MonoBehaviour {
         
         //test
         if (Input.GetKeyDown(KeyCode.Space)) {
-            if (phase == MatchPhase.Preparation) {
+            if (phase == MatchPhase.Preparation || phase == MatchPhase.Battle) {
                 timeLeft = 1;
             }
         }
@@ -135,5 +135,6 @@ public class Progress : MonoBehaviour {
         OnEndMatch?.Invoke(result);
         phase = MatchPhase.Summary;
         timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
+        GameManager.Instance.BattleField.DeactivateHeroes();
     }
 }

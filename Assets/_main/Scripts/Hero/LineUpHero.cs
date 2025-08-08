@@ -17,10 +17,11 @@ public class LineUpHero : Hero {
     public void SetData(HeroTrait trait, HeroRank rank) {
         this.trait = trait;
         this.rank = rank;
-        name = $"({rank}){trait.id}";
+        name = $"[LineUp]({rank}){trait.id}";
         rankIcon.sprite = AssetDB.Instance.GetRankIcon(rank);
         SetUpModel();
         abilities.ForEach(x=>x.ResetAll());
+        mecanim.Idle();
     }
     
     public void Upgrade() {

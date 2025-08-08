@@ -17,6 +17,7 @@ public class BattleHero : Hero {
         rankIcon.sprite = AssetDB.Instance.GetRankIcon(rank);
         SetUpModel();
         abilities.ForEach(x=>x.ResetAll());
+        mecanim.Idle();
     }
     
     public void FindTarget() {
@@ -30,5 +31,10 @@ public class BattleHero : Hero {
     protected override void Process() {
         base.Process();
         bt?.Evaluate();
+    }
+
+    [Button]
+    void checkBt() {
+        Debug.Log(bt != null);
     }
 }
