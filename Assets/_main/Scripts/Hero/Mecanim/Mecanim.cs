@@ -78,7 +78,7 @@ public abstract class Mecanim : MonoBehaviour {
         Interact(Interaction.Dive, (paramDiveDirection, 0));
         var portal = MapVisual.Instance.PortalPosition;
         transform.DOMove(portal, diveInTime).OnComplete(() => {
-            SwitchRenderer(false);
+            SetRendererVisibility(false);
         });
     }
 
@@ -164,7 +164,7 @@ public abstract class Mecanim : MonoBehaviour {
         
     }
     
-    public virtual void SwitchRenderer(bool value) {
+    public virtual void SetRendererVisibility(bool value) {
         renderer.SetActive(value);
     }
 

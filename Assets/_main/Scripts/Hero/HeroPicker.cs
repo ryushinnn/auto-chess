@@ -6,8 +6,7 @@ using RExt.Utils;
 using UnityEngine;
 
 public class HeroPicker : MonoBehaviour {
-    [SerializeField] LineUpHero hero;
-    
+    LineUpHero hero;
     LayerMask mapLayerMask;
     Tween tween;
     Node currentNode;
@@ -20,10 +19,20 @@ public class HeroPicker : MonoBehaviour {
     const float HOLD_TIME_THRESHOLD = 0.1f;
     const float DRAG_POS_Y = 1;
 
-    void Awake() {
-        mapLayerMask = 1 << MapVisual.Instance.Layer;
-        pickable = true;
-        GameManager.Instance.Progress.OnChangePhase += OnChangePhase;
+    public void Initialize(LineUpHero hero, LayerMask mapLayerMask, bool pickable) {
+        this.hero = hero;
+        this.mapLayerMask = mapLayerMask;
+        this.pickable = pickable;
+    }
+
+    public void SwitchPickable(bool value) {
+        pickable = value;
+        if (!pickable) {
+            if (holdCoroutine != null) StopCoroutine(holdCoroutine);
+            if (isPicking) {
+                InterruptPicking();
+            }
+        }
     }
 
     void OnMouseDown() {
@@ -181,7 +190,13 @@ public class HeroPicker : MonoBehaviour {
         }
     }
 
-    void OnChangePhase(MatchPhase phase) {
-        pickable = (phase == MatchPhase.Preparation);
+    void InterruptPicking() {
+        isPicking = false;
+        
+        tween?.Kill();
+        hero.Model.localPosition = Vector3.zero;
+        MapVisual.Instance.RemoveHighlight();
+        MapVisual.Instance.RemoveNotAvailable();
+        hero.WorldPosition = currentNode.WorldPosition;
     }
 }

@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c92797996edde4d45b1f38b683a49f47, type: 3}
   m_Name: _atkspd
   m_EditorClassIdentifier: 
-  name: mui ten set
+  name: "Ti\u1EC5n"
   icon: {fileID: 21300000, guid: 2f645061b9dcfa84886a3b003c6dfa35, type: 3}
   ingredients: []
   modifiers:
   - key: atkspd
-    owner: {fileID: 0}
     id: <will be auto generated>
+    owner: {fileID: 0}
+    effectKey: 
     value: 0.1
     type: 1
-    duration: 0
     stacks: 0
+    duration: 0
     permanent: 0

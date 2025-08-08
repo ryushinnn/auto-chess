@@ -279,6 +279,7 @@ MonoBehaviour:
   rankIcon: {fileID: 7151941873719891831}
   trait: {fileID: 0}
   rank: 0
+  picker: {fileID: 7206617159850802160}
 --- !u!114 &7206617159850802160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,7 +292,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aecacceecca049118c148bd9cfc646d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hero: {fileID: 2182322735622098622}
 --- !u!114 &7151941873719891831 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6381064795183771975, guid: 9b00a5bcaa357bd4e812117e914f0359,

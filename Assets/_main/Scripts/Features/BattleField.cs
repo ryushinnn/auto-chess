@@ -124,7 +124,7 @@ public class BattleField : MonoBehaviour {
     public void ActivateHeroes() {
         foreach (var (_, heroes) in aliveHeroes) {
             foreach (var h in heroes) {
-                h.SwitchBehaviour(true);
+                h.SetBehaviour(new HeroBT(h));
                 h.SwitchCanvas(true);
             }
         }
@@ -133,12 +133,12 @@ public class BattleField : MonoBehaviour {
     public void DeactivateHeroes() {
         foreach (var (_, heroes) in aliveHeroes) {
             foreach (var h in heroes) {
-                h.SwitchBehaviour(false);
+                h.SetBehaviour(null);
             }
         }
         foreach (var (_, heroes) in deadHeroes) {
             foreach (var h in heroes) {
-                h.SwitchBehaviour(false);
+                h.SetBehaviour(null);
             }
         }
     }

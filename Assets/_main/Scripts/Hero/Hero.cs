@@ -30,24 +30,25 @@ public class Hero : MonoBehaviour {
     [SerializeField, ReadOnly] protected HeroTrait trait;
     [SerializeField, ReadOnly] protected HeroRank rank;
     
-    protected bool initialized;
-    
     protected Mecanim mecanim;
     protected List<HeroAbility> abilities = new();
     protected Dictionary<Type, HeroAbility> cachedAbilities = new();
 
+    void Awake() {
+        Initialize();
+    }
+
     void Update() {
         Process();
+    }
+    
+    protected virtual void Initialize() {
+        FindAbilities();
+        abilities.ForEach(x=>x.Initialize(this));
     }
 
     public virtual void Activate() {
         gameObject.SetActive(true);
-
-        if (!initialized) {
-            FindAbilities();
-            abilities.ForEach(x=>x.Initialize(this));
-            initialized = true;
-        }
     }
     
     public virtual void Deactivate() {

@@ -144,7 +144,7 @@ public class MapVisual : Singleton<MapVisual> {
         return hexCells[x, y];
     }
 
-    public void SwitchHalfMap(bool value) {
+    public void SetHalfMapVisibility(bool value) {
         for (int i=mapRow/2; i<mapRow; i++) {
             for (int j=0; j<mapColumn; j++) {
                 hexCells[i, j].gameObject.SetActive(value);

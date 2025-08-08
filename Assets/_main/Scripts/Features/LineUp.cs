@@ -153,7 +153,7 @@ public class LineUp : MonoBehaviour {
             hero.Activate();
             node.ChangeState(NodeState.Occupied);
             MapVisual.Instance.SetOccupied(node, true);
-            hero.Mecanim.SwitchRenderer(true);
+            hero.Mecanim.SetRendererVisibility(true);
             hero.Mecanim.ResetPosition();
         }
     }
@@ -162,6 +162,12 @@ public class LineUp : MonoBehaviour {
         foreach (var (hero, node) in heroesOnMap) {
             hero.Deactivate();
             node.SetToEmpty();
+        }
+    }
+
+    public void SetHeroesPickable(bool value) {
+        foreach (var hero in heroes.Keys) {
+            hero.SwitchPickable(value);
         }
     }
 

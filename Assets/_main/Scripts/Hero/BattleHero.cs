@@ -23,8 +23,8 @@ public class BattleHero : Hero {
         target = GameManager.Instance.BattleField.GetNearestOpponent(this);
     }
 
-    public void SwitchBehaviour(bool value) {
-        bt = value ? new HeroBT(this) : null;
+    public void SetBehaviour(HeroBT bt) {
+        this.bt = bt;
     }
 
     protected override void Process() {
