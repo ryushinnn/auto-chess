@@ -13,4 +13,12 @@ public class ItemDB : ScriptableObjectSingleton<ItemDB> {
                 || (x.ingredients[0] == ingredient1 && x.ingredients[1] == ingredient0
             ));
     }
+
+    public Item GetRandomRawItem() {
+        return rawItems[Random.Range(0, rawItems.Length)];
+    }
+    
+    public Item GetRandomForgedItem() {
+        return forgedItems[Random.Range(0, forgedItems.Length)];
+    }
 }

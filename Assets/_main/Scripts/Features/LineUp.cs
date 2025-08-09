@@ -5,6 +5,7 @@ using DG.Tweening;
 using RExt.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LineUp : MonoBehaviour {
     [SerializeField] LineUpHero heroPrefab;
@@ -32,6 +33,10 @@ public class LineUp : MonoBehaviour {
         }
         SetHeroesLimit(1);
         ArenaUIManager.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
+        
+        var matchedHeroes = HeroTraitDB.Instance.FindAll(e => e.reputation == Reputation.Unknown && !e.summoned);
+        var initHero = matchedHeroes[Random.Range(0, matchedHeroes.Count)];
+        Add(initHero);
     }
 
     public void SetHeroesLimit(int value) {

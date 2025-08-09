@@ -162,6 +162,7 @@ public class HeroPicker : MonoBehaviour {
             // case 1: move map -> map (not self)
             else if (currentNode is MapNode && nextNode.IsEmpty()) {
                 GameManager.Instance.LineUp.UpdateHeroNode(hero, nextNode);
+                GameManager.Instance.LineUp.RecalculateHeroesOnMap();
             }
             // case 2: move deck -> map
             else if (currentNode is DeckNode && nextNode.IsEmpty()) {

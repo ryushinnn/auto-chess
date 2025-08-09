@@ -40,7 +40,7 @@ public class ArenaUI : BaseUI {
         lineUpText.color = current >= max ? Color.red : Color.white;
     }
 
-    public void UpdateRoundAndWave(int round, int wave) {
+    public void UpdateStageAndMatch(int round, int wave) {
         roundAndWaveText.text = $"{round + 1}-{wave + 1}";
     }
 

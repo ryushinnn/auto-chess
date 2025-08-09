@@ -60,6 +60,9 @@ public class HeroAttributes : HeroAbility {
     [SerializeField, ReadOnly] List<DamageOverTime> damageOverTimes = new();
     [SerializeField, ReadOnly] List<HealOverTime> healOverTimes = new();
 
+    float hpScale;
+    float damageScale;
+
     public override void ResetAll() {
         isAlive = true;
         hp = maxHp = hero.Trait.maxHp;
@@ -80,6 +83,8 @@ public class HeroAttributes : HeroAbility {
         hero.SwitchCanvas(true);
         healthBar.UpdateAmount(1, true);
         energyBar.UpdateAmount(0, true);
+        hpScale = 1;
+        damageScale = 1;
     }
 
     public override void Process() {
@@ -94,6 +99,15 @@ public class HeroAttributes : HeroAbility {
         attack = hero.GetAbility<HeroAttack>();
         mark = hero.GetAbility<HeroMark>();
         skill = hero.GetAbility<HeroSkill>();
+    }
+
+    public void SetPowerScales(float hpScale, float damageScale) {
+        this.hpScale = hpScale;
+        this.damageScale = damageScale;
+        maxHp *= this.hpScale;
+        hp = maxHp;
+        physicalDamage *= this.damageScale;
+        magicalDamage *= this.damageScale;
     }
 
     public float TakeDamage(Damage damage, bool regenEnergy = true) {
@@ -433,7 +447,7 @@ public class HeroAttributes : HeroAbility {
         switch (key) {
             case AttributeModifierKey.MaxHp:
                 var lastMaxHp = maxHp;
-                maxHp = hero.Trait.maxHp;
+                maxHp = hero.Trait.maxHp * hpScale;
                 modifiers?.ForEach(x => {
                     maxHp += (x.type == AttributeModifier.Type.FixedValue ? x.value : maxHp * x.value);
                 });
@@ -447,14 +461,14 @@ public class HeroAttributes : HeroAbility {
                 break;
             
             case AttributeModifierKey.PhysicalDamage:
-                physicalDamage = hero.Trait.physicalDamage;
+                physicalDamage = hero.Trait.physicalDamage * damageScale;
                 modifiers?.ForEach(x => {
                     physicalDamage = Mathf.Max(physicalDamage + (x.type == AttributeModifier.Type.FixedValue ? x.value : physicalDamage * x.value), HeroTrait.MIN_DAMAGE);
                 });
                 break;
             
             case AttributeModifierKey.MagicalDamage:
-                magicalDamage = hero.Trait.magicalDamage;
+                magicalDamage = hero.Trait.magicalDamage * damageScale;
                 modifiers?.ForEach(x => {
                     magicalDamage = Mathf.Max(magicalDamage + (x.type == AttributeModifier.Type.FixedValue ? x.value : magicalDamage * x.value), HeroTrait.MIN_DAMAGE);
                 });

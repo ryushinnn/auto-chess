@@ -26,6 +26,7 @@ public class BattleField : MonoBehaviour {
             var trait = HeroTraitDB.Instance.Find(e.heroId);
             var node = Map.Instance.GetNode(e.gridPosition);
             var hero = SpawnHero(trait, e.rank, TeamSide.Enemy, node);
+            hero.GetAbility<HeroAttributes>().SetPowerScales(e.hpScale, e.damageScale);
             hero.GetAbility<HeroRotation>().Rotate(-Vector3.forward, true);
         }
                 

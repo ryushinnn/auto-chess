@@ -13,8 +13,11 @@ public class Shop : MonoBehaviour {
     
     const int SHOP_SLOTS_COUNT = 5;
     
-    public void Refresh() {
-        if (GameManager.Instance.Inventory.Coins < GameConfigs.REFRESH_COST) return;
+    public void Refresh(bool free) {
+        if (!free) {
+            if (GameManager.Instance.Inventory.Coins < GameConfigs.REFRESH_COST) return;
+            GameManager.Instance.Inventory.SpendCoins(GameConfigs.REFRESH_COST);
+        }
         
         for (int i=0; i<SHOP_SLOTS_COUNT; i++) {
             var rep = GetRandomReputation(GameManager.Instance.Level.LevelConfig.rates);
@@ -33,7 +36,11 @@ public class Shop : MonoBehaviour {
             heroes[i] = randomHero;
         }
         OnRefresh?.Invoke(heroes);
-        GameManager.Instance.Inventory.SpendCoins(GameConfigs.REFRESH_COST);
+    }
+
+    public void AutoRefresh() {
+        if (lockAutoRefresh) return;
+        Refresh(true);
     }
 
     public bool Purchase(HeroTrait hero) {

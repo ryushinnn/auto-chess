@@ -11,6 +11,7 @@ public class Stage : ScriptableObject {
 public class Match {
     [TableList] public Enemy[] enemies;
     [TableList] public Reward[] rewards;
+    [TableList] public Reward[] winRewards;
 }
 
 [Serializable]
@@ -19,7 +20,8 @@ public class Enemy {
     [VerticalGroup("Id")] public HeroRank rank;
     [VerticalGroup("Detail")] public Vector2Int gridPosition;
     [VerticalGroup("Detail")] public Item[] items;
-    [VerticalGroup("Detail")] public float powerScale = 1;
+    [VerticalGroup("Detail")] public float hpScale = 1;
+    [VerticalGroup("Detail")] public float damageScale = 1;
 }
 
 public class RewardType {
