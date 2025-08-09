@@ -27,7 +27,7 @@ MonoBehaviour:
     stacks: 0
     duration: 0
     permanent: 0
-  - key: atkspd
+  - key: atk_spd
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 

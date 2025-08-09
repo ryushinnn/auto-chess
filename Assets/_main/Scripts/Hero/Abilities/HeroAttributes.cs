@@ -31,7 +31,7 @@ public class HeroAttributes : HeroAbility {
     public float MovementSpeed => movementSpeed;
     public float CriticalChance => criticalChance;
     public float CriticalDamage => criticalDamage;
-    public float EnergyRegenEfficient => energyRegenEfficient;
+    public float EnergyRegenEfficiency => energyRegenEfficiency;
     public float PhysicalPenetration => physicalPenetration;
     public float MagicalPenetration => magicalPenetration;
     public float LifeSteal => lifeSteal;
@@ -49,7 +49,7 @@ public class HeroAttributes : HeroAbility {
     [SerializeField, ReadOnly] float movementSpeed;
     [SerializeField, ReadOnly] float criticalChance;
     [SerializeField, ReadOnly] float criticalDamage;
-    [SerializeField, ReadOnly] float energyRegenEfficient;
+    [SerializeField, ReadOnly] float energyRegenEfficiency;
     [SerializeField, ReadOnly] float physicalPenetration;
     [SerializeField, ReadOnly] float magicalPenetration;
     [SerializeField, ReadOnly] float lifeSteal;
@@ -70,13 +70,13 @@ public class HeroAttributes : HeroAbility {
         physicalDamage = hero.Trait.physicalDamage;
         magicalDamage = hero.Trait.magicalDamage;
         movementSpeed = hero.Trait.movementSpeed;
-        criticalChance = hero.Trait.criticalChance;
-        criticalDamage = hero.Trait.criticalDamage;
-        energyRegenEfficient = hero.Trait.energyRegenEfficient;
-        physicalPenetration = hero.Trait.physicalPenetration;
-        magicalPenetration = hero.Trait.magicalPenetration;
-        lifeSteal = hero.Trait.lifeSteal;
-        tenacity = hero.Trait.tenacity;
+        criticalChance = HeroTrait.BASE_CRITICAL_CHANCE;
+        criticalDamage = HeroTrait.BASE_CRITICAL_DAMAGE;
+        energyRegenEfficiency = HeroTrait.BASE_ENERGY_REGEN_EFFICIENCY;
+        physicalPenetration = HeroTrait.BASE_PENETRATION;
+        magicalPenetration = HeroTrait.BASE_PENETRATION;
+        lifeSteal = HeroTrait.BASE_LIFE_STEAL;
+        tenacity = HeroTrait.BASE_TENACITY;
         hero.SwitchCanvas(true);
         healthBar.UpdateAmount(1, true);
         energyBar.UpdateAmount(0, true);
@@ -171,7 +171,7 @@ public class HeroAttributes : HeroAbility {
     public void RegenEnergy(float amount) {
         if (!isAlive || skill.IsUsingSkill) return;
         
-        amount *= energyRegenEfficient;
+        amount *= energyRegenEfficiency;
         energy = Mathf.Min(energy + amount, HeroTrait.MAX_ENERGY);
         energyBar.UpdateAmount(energy / HeroTrait.MAX_ENERGY);
     }
@@ -484,7 +484,7 @@ public class HeroAttributes : HeroAbility {
                 break;
             
             case AttributeModifierKey.CriticalChance:
-                criticalChance = hero.Trait.criticalChance;
+                criticalChance = HeroTrait.BASE_CRITICAL_CHANCE;
                 modifiers?.ForEach(x => {
                     criticalChance += (x.type == AttributeModifier.Type.FixedValue ? x.value : criticalChance * x.value);
                 });
@@ -492,42 +492,42 @@ public class HeroAttributes : HeroAbility {
                 break;
             
             case AttributeModifierKey.CriticalDamage:
-                criticalDamage = hero.Trait.criticalDamage;
+                criticalDamage = HeroTrait.BASE_CRITICAL_DAMAGE;
                 modifiers?.ForEach(x => {
                     criticalDamage += (x.type == AttributeModifier.Type.FixedValue ? x.value : criticalDamage * x.value);
                 });
                 break;
             
             case AttributeModifierKey.EnergyRegenEfficient:
-                energyRegenEfficient = hero.Trait.energyRegenEfficient;
+                energyRegenEfficiency = HeroTrait.BASE_ENERGY_REGEN_EFFICIENCY;
                 modifiers?.ForEach(x => {
-                    energyRegenEfficient += (x.type == AttributeModifier.Type.FixedValue ? x.value : energyRegenEfficient * x.value);
+                    energyRegenEfficiency += (x.type == AttributeModifier.Type.FixedValue ? x.value : energyRegenEfficiency * x.value);
                 });
                 break;
             
             case AttributeModifierKey.PhysicalPenetration:
-                physicalPenetration = hero.Trait.physicalPenetration;
+                physicalPenetration = HeroTrait.BASE_PENETRATION;
                 modifiers?.ForEach(x => {
                     physicalPenetration = Mathf.Min(physicalPenetration + (x.type == AttributeModifier.Type.FixedValue ? x.value : physicalPenetration * x.value), HeroTrait.MAX_PENETRATION);
                 });
                 break;
             
             case AttributeModifierKey.MagicalPenetration:
-                magicalPenetration = hero.Trait.magicalPenetration;
+                magicalPenetration = HeroTrait.BASE_PENETRATION;
                 modifiers?.ForEach(x => {
                     magicalPenetration = Mathf.Min(magicalPenetration + (x.type == AttributeModifier.Type.FixedValue ? x.value : magicalPenetration * x.value), HeroTrait.MAX_PENETRATION);
                 });
                 break;
             
             case AttributeModifierKey.LifeSteal:
-                lifeSteal = hero.Trait.lifeSteal;
+                lifeSteal = HeroTrait.BASE_LIFE_STEAL;
                 modifiers?.ForEach(x => {
                     lifeSteal = Mathf.Min(lifeSteal + (x.type == AttributeModifier.Type.FixedValue ? x.value : lifeSteal * x.value), HeroTrait.MAX_LIFE_STEAL);
                 });
                 break;
             
             case AttributeModifierKey.Tenacity:
-                tenacity = hero.Trait.tenacity;
+                tenacity = HeroTrait.BASE_TENACITY;
                 modifiers?.ForEach(x => {
                     tenacity = Mathf.Min(tenacity + (x.type == AttributeModifier.Type.FixedValue ? x.value : tenacity * x.value), HeroTrait.MAX_TENACITY);
                 });

@@ -18,7 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f9c09f8d99180754180d156bc02072f7, type: 2}
   - {fileID: 11400000, guid: ad54fd8c2cb306649848b9dbc8143993, type: 2}
   modifiers:
-  - key: mdmg
+  - key: m_dmg
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 
@@ -27,7 +27,7 @@ MonoBehaviour:
     stacks: 0
     duration: 0
     permanent: 0
-  - key: pdmg
+  - key: p_dmg
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 
@@ -36,7 +36,7 @@ MonoBehaviour:
     stacks: 0
     duration: 0
     permanent: 0
-  - key: ppen
+  - key: m_pen
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 
@@ -45,7 +45,7 @@ MonoBehaviour:
     stacks: 0
     duration: 0
     permanent: 0
-  - key: mpen
+  - key: p_pen
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 

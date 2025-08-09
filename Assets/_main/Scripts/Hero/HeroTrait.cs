@@ -28,25 +28,22 @@ public class HeroTrait : ScriptableObject {
     public float resistance;
     public float attackSpeed;
     public float movementSpeed;
-    public float criticalChance;
-    public float criticalDamage;
-    public float energyRegenEfficient;
-    
-    [TitleGroup("Advanced")]
-    public float physicalPenetration;
-    public float magicalPenetration;
-    public float lifeSteal;
-    public float tenacity;
 
     [TitleGroup("Unmodifiable")]
     public float energyRegenPerAttack;
     public float energyRegenPerHit;
     public int attackRange;
-    
+
     [TitleGroup("Contants & Limits")]
+    public const float BASE_CRITICAL_CHANCE = 0.15f;
+    public const float BASE_CRITICAL_DAMAGE = 1.5f;
+    public const float BASE_ENERGY_REGEN_EFFICIENCY = 1;
+    public const float BASE_PENETRATION = 0;
+    public const float BASE_LIFE_STEAL = 0;
+    public const float BASE_TENACITY = 0;
     public const float MAX_ENERGY = 100;
     public const float DAMAGE_REDUCTION_CONSTANT = 100;
-    public const float MAX_CRITICAL_CHANCE = 0.99f;
+    public const float MAX_CRITICAL_CHANCE = 1;
     public const float MAX_PENETRATION = 0.7f;
     public const float MAX_LIFE_STEAL = 1;
     public const float MAX_TENACITY = 0.5f;
@@ -58,15 +55,13 @@ public class HeroTrait : ScriptableObject {
     public const float MIN_MOVEMENT_SPEED = 0.1f;
 
     [TitleGroup("Calculated Result")]
-    [SerializeField, ReadOnly] float minDps;
-    [SerializeField, ReadOnly] float avgDps;
+    [SerializeField, ReadOnly] float dps;
     [SerializeField, ReadOnly, LabelText("Physical Reduction (%)")] float physicalReduction;
     [SerializeField, ReadOnly, LabelText("Magical Reduction (%)")] float magicalReduction;
 
     void OnValidate() {
         var outputDamage = physicalDamage + magicalDamage;
-        minDps = outputDamage * attackSpeed;
-        avgDps = minDps * (1 + criticalChance * (criticalDamage - 1));
+        dps = outputDamage * attackSpeed;
         physicalReduction = 100 * (1 - DAMAGE_REDUCTION_CONSTANT / (DAMAGE_REDUCTION_CONSTANT + armor));
         magicalReduction = 100 * (1 - DAMAGE_REDUCTION_CONSTANT / (DAMAGE_REDUCTION_CONSTANT + resistance));
         

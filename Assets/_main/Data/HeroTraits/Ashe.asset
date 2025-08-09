@@ -24,23 +24,15 @@ MonoBehaviour:
   thumbnail: {fileID: 21300000, guid: 9ba403ddfe45c2d4babebcf1c076d982, type: 3}
   skillIcon: {fileID: 21300000, guid: d1b1c52c80ee4b647b5e0e3d681247bd, type: 3}
   maxHp: 19800
-  physicalDamage: 5000
+  physicalDamage: 144
   magicalDamage: 0
   armor: 16
   resistance: 15
   attackSpeed: 0.48
   movementSpeed: 1.8
-  criticalChance: 0.2
-  criticalDamage: 2
-  energyRegenEfficient: 1
-  physicalPenetration: 0
-  magicalPenetration: 0
-  lifeSteal: 0
-  tenacity: 0
   energyRegenPerAttack: 15
   energyRegenPerHit: 4
   attackRange: 2
-  minDps: 2400
-  avgDps: 2880
+  dps: 69.119995
   physicalReduction: 13.793103
   magicalReduction: 13.043478

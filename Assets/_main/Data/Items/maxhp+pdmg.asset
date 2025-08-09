@@ -18,7 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 165a9a6ab51005b4281c529c52ae906b, type: 2}
   - {fileID: 11400000, guid: ad54fd8c2cb306649848b9dbc8143993, type: 2}
   modifiers:
-  - key: maxhp
+  - key: max_hp
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 
@@ -27,7 +27,7 @@ MonoBehaviour:
     stacks: 0
     duration: 0
     permanent: 0
-  - key: pdmg
+  - key: p_dmg
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 
@@ -36,7 +36,7 @@ MonoBehaviour:
     stacks: 0
     duration: 0
     permanent: 0
-  - key: lifesteal
+  - key: life_steal
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 

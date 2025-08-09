@@ -45,7 +45,7 @@ public class InventoryUI : BaseUI {
                     pickingItem.transform.position = pos;
                 }, () => {
                     pickingItem.gameObject.SetActive(false);
-                    GameManager.Instance.Inventory.Equip(i);
+                    GameManager.Instance.Inventory.EquipItem(i);
                 });
             index++;
         }

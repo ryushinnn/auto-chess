@@ -5,18 +5,18 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public static class AttributeModifierKey {
-    public const string MaxHp = "maxhp";
-    public const string PhysicalDamage = "pdmg";
-    public const string MagicalDamage = "mdmg";
+    public const string MaxHp = "max_hp";
+    public const string PhysicalDamage = "p_dmg";
+    public const string MagicalDamage = "m_dmg";
     public const string Armor = "armor";
     public const string Resistance = "resistance";
-    public const string AttackSpeed = "atkspd";
-    public const string CriticalChance = "crit";
-    public const string CriticalDamage = "cdmg";
-    public const string EnergyRegenEfficient = "energy";
-    public const string PhysicalPenetration = "ppen";
-    public const string MagicalPenetration = "mpen";
-    public const string LifeSteal = "lifesteal";
+    public const string AttackSpeed = "atk_spd";
+    public const string CriticalChance = "crit_chance";
+    public const string CriticalDamage = "crit_dmg";
+    public const string EnergyRegenEfficient = "energy_regen_eff";
+    public const string PhysicalPenetration = "p_pen";
+    public const string MagicalPenetration = "m_pen";
+    public const string LifeSteal = "life_steal";
     public const string Tenacity = "tenacity";
 }
 

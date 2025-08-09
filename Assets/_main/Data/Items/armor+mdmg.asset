@@ -27,7 +27,7 @@ MonoBehaviour:
     stacks: 0
     duration: 0
     permanent: 0
-  - key: mdmg
+  - key: m_dmg
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 

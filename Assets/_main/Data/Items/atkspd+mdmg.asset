@@ -18,7 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8d105db34d57d72429a7dafadd916efe, type: 2}
   - {fileID: 11400000, guid: f9c09f8d99180754180d156bc02072f7, type: 2}
   modifiers:
-  - key: atkspd
+  - key: atk_spd
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 
@@ -27,7 +27,7 @@ MonoBehaviour:
     stacks: 0
     duration: 0
     permanent: 0
-  - key: mdmg
+  - key: m_dmg
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 

@@ -18,7 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3cd54e7cb751d8a4da294938648ca728, type: 2}
   - {fileID: 11400000, guid: 3cd54e7cb751d8a4da294938648ca728, type: 2}
   modifiers:
-  - key: energy
+  - key: energy_regen_eff
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 

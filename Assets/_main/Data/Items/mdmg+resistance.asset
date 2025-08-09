@@ -18,7 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f9c09f8d99180754180d156bc02072f7, type: 2}
   - {fileID: 11400000, guid: 57517d6f12e382740bc5b1d059e3c196, type: 2}
   modifiers:
-  - key: mdmg
+  - key: m_dmg
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 

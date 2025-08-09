@@ -16,7 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 3eecef8f5d3e10949bf62e7ee479a06a, type: 3}
   ingredients: []
   modifiers:
-  - key: maxhp
+  - key: max_hp
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 

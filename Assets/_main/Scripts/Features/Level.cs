@@ -14,16 +14,19 @@ public class Level : MonoBehaviour {
         xp = 0;
         LevelConfig = GameConfigs.LEVEL_CONFIGS[0];
         ArenaUIManager.Instance.Arena.UpdateLevelText(1);
-        ArenaUIManager.Instance.Arena.UpdateXpText(0, LevelConfig.xpToNextLevel);
+        ArenaUIManager.Instance.Arena.UpdateXpText(0, LevelConfig.xpToNextLevel, false);
     }
     
     [Button]
-    public void GainXp(int amount) {
+    public bool GainXp(int amount) {
+        if (MaxLevel()) return false;
+        
         xp += amount;
-        ArenaUIManager.Instance.Arena.UpdateXpText(xp, LevelConfig.xpToNextLevel);
-        while (xp >= LevelConfig.xpToNextLevel && level < GameConfigs.LEVEL_CONFIGS.Length) {
+        ArenaUIManager.Instance.Arena.UpdateXpText(xp, LevelConfig.xpToNextLevel, false);
+        while (xp >= LevelConfig.xpToNextLevel && !MaxLevel()) {
             LevelUp();
         }
+        return true;
     }
     
     void LevelUp() {
@@ -31,8 +34,18 @@ public class Level : MonoBehaviour {
         xp -= LevelConfig.xpToNextLevel;
         LevelConfig = GameConfigs.LEVEL_CONFIGS[level - 1];
         ArenaUIManager.Instance.Arena.UpdateLevelText(level);
-        ArenaUIManager.Instance.Arena.UpdateXpText(xp, LevelConfig.xpToNextLevel);
+        ArenaUIManager.Instance.Arena.UpdateXpText(xp, LevelConfig.xpToNextLevel, MaxLevel());
         GameManager.Instance.LineUp.SetHeroesLimit(LevelConfig.maxHeroesOnMap);
         OnLevelUp?.Invoke(level);
+    }
+
+    bool MaxLevel() {
+        return level == GameConfigs.LEVEL_CONFIGS.Length;
+    }
+
+    [Button]
+    void dev_nextLevel() {
+        if (MaxLevel()) return;
+        GainXp(LevelConfig.xpToNextLevel - xp);
     }
 }

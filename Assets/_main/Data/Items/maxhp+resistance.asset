@@ -18,7 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 165a9a6ab51005b4281c529c52ae906b, type: 2}
   - {fileID: 11400000, guid: 57517d6f12e382740bc5b1d059e3c196, type: 2}
   modifiers:
-  - key: maxhp
+  - key: max_hp
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 

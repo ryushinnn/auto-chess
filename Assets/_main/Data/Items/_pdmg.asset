@@ -16,7 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 090406de3d8fba848a82982668443374, type: 3}
   ingredients: []
   modifiers:
-  - key: pdmg
+  - key: p_dmg
     id: <will be auto generated>
     owner: {fileID: 0}
     effectKey: 

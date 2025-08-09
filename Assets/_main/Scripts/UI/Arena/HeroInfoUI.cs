@@ -107,7 +107,7 @@ public class HeroInfoUI : BaseUI {
         armorText.text = $"{(int)attributes.Armor}";
         resistanceText.text = $"{(int)attributes.Resistance}";
         attackSpeedText.text = $"{(int)(attributes.AttackSpeed*100)}%";
-        energyRegenEfficientText.text = $"{(int)(attributes.EnergyRegenEfficient*100)}%";
+        energyRegenEfficientText.text = $"{(int)(attributes.EnergyRegenEfficiency*100)}%";
         physicalPenetrationText.text = $"{(int)attributes.PhysicalPenetration}";
         magicalPenetrationText.text = $"{(int)attributes.MagicalPenetration}";
         criticalChanceText.text = $"{(int)(attributes.CriticalChance*100)}%";

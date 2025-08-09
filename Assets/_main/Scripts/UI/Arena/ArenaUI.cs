@@ -7,6 +7,7 @@ public class ArenaUI : BaseUI {
     [SerializeField] Button lineUpButton;
     [SerializeField] Button inventoryButton;
     [SerializeField] Button shopButton;
+    [SerializeField] TMP_Text coinsText;
     [SerializeField] Button buyXpButton;
     [SerializeField] TMP_Text levelText;
     [SerializeField] TMP_Text xpText;
@@ -21,13 +22,17 @@ public class ArenaUI : BaseUI {
         inventoryButton.onClick.AddListener(OpenInventory);
         buyXpButton.onClick.AddListener(BuyXp);
     }
+    
+    public void UpdateCoinsText(int coins) {
+        coinsText.text = $"{coins}<sprite name=coin>";
+    }
 
     public void UpdateLevelText(int level) {
         levelText.text = $"Lv.{level}";
     }
 
-    public void UpdateXpText(int current, int next) {
-        xpText.text = $"{current}/{next}";
+    public void UpdateXpText(int current, int next, bool maxLevel) {
+        xpText.text = maxLevel ? "MAX" : $"{current}/{next}";
     }
     
     public void UpdateLineUpText(int current, int max) {
@@ -64,6 +69,9 @@ public class ArenaUI : BaseUI {
     }
 
     void BuyXp() {
-        GameManager.Instance.Level.GainXp(GameConfigs.XP_GAIN_PER_PURCHASE);   
+        if (GameManager.Instance.Inventory.Coins < GameConfigs.XP_GAIN_PER_PURCHASE) return;
+        if (GameManager.Instance.Level.GainXp(GameConfigs.XP_GAIN_PER_PURCHASE)) {
+            GameManager.Instance.Inventory.SpendCoins(GameConfigs.XP_GAIN_PER_PURCHASE);
+        }
     }
 }
