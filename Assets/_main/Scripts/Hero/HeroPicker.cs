@@ -53,7 +53,7 @@ public class HeroPicker : MonoBehaviour {
             EndPicking();
         }
         else {
-            ArenaUIManager.Instance.HeroInfo.Open(hero);
+            UIManager_Arena.Instance.HeroInfo.Open(hero);
         }
     }
 

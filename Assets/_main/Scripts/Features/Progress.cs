@@ -61,7 +61,7 @@ public class Progress : MonoBehaviour {
         
         if (timeLeft > 0) {
             timeLeft -= Time.deltaTime;
-            ArenaUIManager.Instance.Arena.UpdateTimeLeft(timeLeft, totalTime);
+            UIManager_Arena.Instance.Arena.UpdateTimeLeft(timeLeft, totalTime);
         }
         else {
             ChangePhase();
@@ -87,7 +87,7 @@ public class Progress : MonoBehaviour {
 
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
-                ArenaUIManager.Instance.Arena.UpdateStageAndMatch(currentStage, currentMatch);
+                UIManager_Arena.Instance.Arena.UpdateStageAndMatch(currentStage, currentMatch);
                 GameManager.Instance.BattleField.RemoveHeroes();
                 GameManager.Instance.LineUp.ShowHeroesOnMap();
                 GameManager.Instance.LineUp.SetHeroesPickable(true);

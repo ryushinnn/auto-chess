@@ -13,8 +13,8 @@ public class Level : MonoBehaviour {
         level = 1;
         xp = 0;
         LevelConfig = GameConfigs.LEVEL_CONFIGS[0];
-        ArenaUIManager.Instance.Arena.UpdateLevelText(1);
-        ArenaUIManager.Instance.Arena.UpdateXpText(0, LevelConfig.xpToNextLevel, false);
+        UIManager_Arena.Instance.Arena.UpdateLevelText(1);
+        UIManager_Arena.Instance.Arena.UpdateXpText(0, LevelConfig.xpToNextLevel, false);
     }
     
     [Button]
@@ -22,7 +22,7 @@ public class Level : MonoBehaviour {
         if (MaxLevel()) return false;
         
         xp += amount;
-        ArenaUIManager.Instance.Arena.UpdateXpText(xp, LevelConfig.xpToNextLevel, false);
+        UIManager_Arena.Instance.Arena.UpdateXpText(xp, LevelConfig.xpToNextLevel, false);
         while (xp >= LevelConfig.xpToNextLevel && !MaxLevel()) {
             LevelUp();
         }
@@ -33,8 +33,8 @@ public class Level : MonoBehaviour {
         level++;
         xp -= LevelConfig.xpToNextLevel;
         LevelConfig = GameConfigs.LEVEL_CONFIGS[level - 1];
-        ArenaUIManager.Instance.Arena.UpdateLevelText(level);
-        ArenaUIManager.Instance.Arena.UpdateXpText(xp, LevelConfig.xpToNextLevel, MaxLevel());
+        UIManager_Arena.Instance.Arena.UpdateLevelText(level);
+        UIManager_Arena.Instance.Arena.UpdateXpText(xp, LevelConfig.xpToNextLevel, MaxLevel());
         GameManager.Instance.LineUp.SetHeroesLimit(LevelConfig.maxHeroesOnMap);
         OnLevelUp?.Invoke(level);
     }

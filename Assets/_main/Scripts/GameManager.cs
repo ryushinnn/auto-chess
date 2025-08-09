@@ -24,6 +24,9 @@ public class GameManager : Singleton<GameManager> {
         level.Initialize();
         lineUp.Initialize();
         inventory.Initialize();
+    }
+
+    public void StartGame() {
         progress.Initialize();
     }
 }

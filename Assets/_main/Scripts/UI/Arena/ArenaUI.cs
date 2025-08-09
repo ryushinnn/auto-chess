@@ -50,22 +50,22 @@ public class ArenaUI : BaseUI {
     }
 
     void SwitchShop() {
-        if (ArenaUIManager.Instance.Shop.gameObject.activeSelf) {
-            ArenaUIManager.Instance.Shop.Close();
+        if (UIManager_Arena.Instance.Shop.gameObject.activeSelf) {
+            UIManager_Arena.Instance.Shop.Close();
         }
         else {
-            ArenaUIManager.Instance.Shop.Open();
+            UIManager_Arena.Instance.Shop.Open();
         }
     }
 
     void OpenLineUp() {
-        ArenaUIManager.Instance.LineUp.Open();
-        ArenaUIManager.Instance.Inventory.Close();
+        UIManager_Arena.Instance.LineUp.Open();
+        UIManager_Arena.Instance.Inventory.Close();
     }
 
     void OpenInventory() {
-        ArenaUIManager.Instance.LineUp.Close();
-        ArenaUIManager.Instance.Inventory.Open();
+        UIManager_Arena.Instance.LineUp.Close();
+        UIManager_Arena.Instance.Inventory.Open();
     }
 
     void BuyXp() {

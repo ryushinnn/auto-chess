@@ -32,16 +32,12 @@ public class LineUp : MonoBehaviour {
             realmNumbers.Add(realm, 0);
         }
         SetHeroesLimit(1);
-        ArenaUIManager.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
-        
-        var matchedHeroes = HeroTraitDB.Instance.FindAll(e => e.reputation == Reputation.Unknown && !e.summoned);
-        var initHero = matchedHeroes[Random.Range(0, matchedHeroes.Count)];
-        Add(initHero);
+        UIManager_Arena.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
     }
 
     public void SetHeroesLimit(int value) {
         maxHeroesOnMap = value;
-        ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
+        UIManager_Arena.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
     }
 
     public bool Add(HeroTrait trait) {
@@ -75,9 +71,9 @@ public class LineUp : MonoBehaviour {
                     roleNumbers[role]++;
                 }
                 realmNumbers[hero.Trait.realm]++;
-                ArenaUIManager.Instance.Inventory.Close();
-                ArenaUIManager.Instance.LineUp.Open();
-                ArenaUIManager.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
+                UIManager_Arena.Instance.Inventory.Close();
+                UIManager_Arena.Instance.LineUp.Open();
+                UIManager_Arena.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
             }
             
             return true;
@@ -100,7 +96,7 @@ public class LineUp : MonoBehaviour {
         foreach (var (hero, node) in heroes) {
             if (node is MapNode mn) heroesOnMap.Add(hero, mn);
         }
-        ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
+        UIManager_Arena.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
     }
 
     bool MergeHeroes(HeroTrait trait, HeroRank rank, int required) {
@@ -195,7 +191,7 @@ public class LineUp : MonoBehaviour {
             heroesOnDeck.Remove(hero);
         }
         
-        ArenaUIManager.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
+        UIManager_Arena.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
     }
 
     public void PlayHeroesDiveInAnimation() {
