@@ -111,7 +111,7 @@ public class LineUp : MonoBehaviour {
         for (int i = required - 1; i >= 1; i--) {
             Remove(duplicates[i]);
         }
-        duplicates[0].Upgrade();
+        duplicates[0].Evolve();
         RecalculateHeroesOnMap();
         return true;
     }

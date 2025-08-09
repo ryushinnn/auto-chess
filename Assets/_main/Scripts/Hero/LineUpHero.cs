@@ -24,11 +24,11 @@ public class LineUpHero : Hero {
         mecanim.Idle();
     }
     
-    public void Upgrade() {
+    public void Evolve() {
         rank = rank.Next();
         name = $"({rank}){trait.id}";
         rankIcon.sprite = AssetDB.Instance.GetRankIcon(rank);
-        Debug.Log($"{trait.id} upgraded to {rank}");
+        GetAbility<HeroAttributes>().ResetAll();
     }
     
     public void UpdatePosition(Node node) {

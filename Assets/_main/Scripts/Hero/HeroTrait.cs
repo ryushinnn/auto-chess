@@ -34,6 +34,9 @@ public class HeroTrait : ScriptableObject {
     public float energyRegenPerHit;
     public int attackRange;
 
+    [TitleGroup("Evolution")]
+    public Evolution[] evolutions;
+
     [TitleGroup("Contants & Limits")]
     public const float BASE_CRITICAL_CHANCE = 0.15f;
     public const float BASE_CRITICAL_DAMAGE = 1.5f;
@@ -75,6 +78,12 @@ public class HeroTrait : ScriptableObject {
     public string DisplayName() {
         return name + (subName.IsValid() ? "\n" + subName : "");
     }
+}
+
+[Serializable]
+public class Evolution {
+    public HeroRank rank;
+    public AttributeModifier[] modifiers;
 }
 
 public static class HeroId {

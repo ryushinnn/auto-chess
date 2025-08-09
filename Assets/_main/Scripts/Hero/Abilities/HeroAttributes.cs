@@ -85,6 +85,22 @@ public class HeroAttributes : HeroAbility {
         energyBar.UpdateAmount(0, true);
         hpScale = 1;
         damageScale = 1;
+        modifierSets.Clear();
+        modifierGroups.Clear();
+        damageOverTimes.Clear();
+        healOverTimes.Clear();
+
+        var evolutions = hero.Trait.evolutions.Find(x => x.rank == hero.Rank);
+        if (evolutions != null) {
+            foreach (var m in evolutions.modifiers) {
+                var modifier = AttributeModifier.Create(m);
+                modifier.owner = hero;
+                modifier.duration = Mathf.Infinity;
+                modifier.stacks = 1;
+                modifier.permanent = true;
+                AddAttributeModifier(modifier);
+            }
+        }
     }
 
     public override void Process() {
@@ -558,29 +574,6 @@ public class HeroAttributes : HeroAbility {
         hero.SwitchCanvas(false);
         hero.name = "(DEAD) " + hero.name;
         GameManager.Instance.BattleField.MarkHeroAsDead((BattleHero)hero);
-    }
-
-    [Button]
-    void dev_addAttSet() {
-        AddAttributeModifier(AttributeModifierSet.Create(
-            hero,
-            "test_effect",
-            10,
-            new [] {
-                (AttributeModifierKey.Armor, 0.3f, AttributeModifier.Type.Percentage),
-                (AttributeModifierKey.Resistance, 0.3f, AttributeModifier.Type.Percentage),
-            }));
-    }
-
-    [Button]
-    void dev_addAtt() {
-        AddAttributeModifier(AttributeModifier.Create(
-            hero,
-            AttributeModifierKey.Armor,
-            10,
-            AttributeModifier.Type.FixedValue,
-            10
-        ));
     }
 }
 

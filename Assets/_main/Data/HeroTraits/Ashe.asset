@@ -33,6 +33,65 @@ MonoBehaviour:
   energyRegenPerAttack: 15
   energyRegenPerHit: 4
   attackRange: 2
+  evolutions:
+  - rank: 1
+    modifiers:
+    - key: max_hp
+      id: <will be auto generated>
+      owner: {fileID: 0}
+      effectKey: 
+      value: 0.8
+      type: 1
+      stacks: 0
+      duration: 0
+      permanent: 0
+    - key: p_dmg
+      id: <will be auto generated>
+      owner: {fileID: 0}
+      effectKey: 
+      value: 0.8
+      type: 1
+      stacks: 0
+      duration: 0
+      permanent: 0
+    - key: atk_spd
+      id: <will be auto generated>
+      owner: {fileID: 0}
+      effectKey: 
+      value: 0.2
+      type: 1
+      stacks: 0
+      duration: 0
+      permanent: 0
+  - rank: 2
+    modifiers:
+    - key: max_hp
+      id: <will be auto generated>
+      owner: {fileID: 0}
+      effectKey: 
+      value: 3.5
+      type: 1
+      stacks: 0
+      duration: 0
+      permanent: 0
+    - key: p_dmg
+      id: <will be auto generated>
+      owner: {fileID: 0}
+      effectKey: 
+      value: 3.5
+      type: 1
+      stacks: 0
+      duration: 0
+      permanent: 0
+    - key: atk_spd
+      id: <will be auto generated>
+      owner: {fileID: 0}
+      effectKey: 
+      value: 0.5
+      type: 1
+      stacks: 0
+      duration: 0
+      permanent: 0
   dps: 69.119995
   physicalReduction: 13.793103
   magicalReduction: 13.043478

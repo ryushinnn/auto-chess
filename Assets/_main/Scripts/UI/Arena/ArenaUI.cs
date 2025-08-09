@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,14 +16,22 @@ public class ArenaUI : BaseUI {
     [SerializeField] Image timeLeftImage;
     [SerializeField] TMP_Text roundAndWaveText;
     [SerializeField] TMP_Text timeLeftText;
+    [SerializeField] DOTweenAnimation[] animations;
 
-    void Start() {
+    void Awake() {
         shopButton.onClick.AddListener(SwitchShop);
         lineUpButton.onClick.AddListener(OpenLineUp);
         inventoryButton.onClick.AddListener(OpenInventory);
         buyXpButton.onClick.AddListener(BuyXp);
     }
-    
+
+    public override void Open(params object[] args) {
+        base.Open(args);
+        foreach (var anim in animations) {
+            anim.DOPlay();
+        }
+    }
+
     public void UpdateCoinsText(int coins) {
         coinsText.text = $"{coins}<sprite name=coin>";
     }
