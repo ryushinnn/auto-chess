@@ -11,10 +11,8 @@ public class SkillProcessor_Ashe : SkillProcessor {
     const int MAX_ARROW_SET = 20;
     const float DMG_BASE = 5;
     const float DMG_MUL = 0.2f;
-    const int TOTAL_TIME = 2000; //ms
+    const float TOTAL_TIME = 2;
     const float RADIUS = 2;
-    
-    List<Hero> affectedTargets = new();
     
     public SkillProcessor_Ashe(Hero hero) : base(hero) {
         AnimationLength = 3;
@@ -38,9 +36,7 @@ public class SkillProcessor_Ashe : SkillProcessor {
         var dmg = attributes.GetDamage(DamageType.Physical, false,
             scaledValues: new[] { (DMG_MUL, DamageType.Physical) }, fixedValues: new[] { DMG_BASE });
         var set = Random.Range(MIN_ARROW_SET, MAX_ARROW_SET + 1);
-        dotArea.SetData((BattleHero)hero, dmg, set, (TOTAL_TIME / set).ToSeconds(), true, RADIUS,
-            (_) => {
-                
-            });
+        var vfx = VfxPool.Instance.GetVfx("ashe_skill");
+        dotArea.SetData((BattleHero)hero, dmg, set, TOTAL_TIME / set, true, RADIUS, vfx);
     }
 }

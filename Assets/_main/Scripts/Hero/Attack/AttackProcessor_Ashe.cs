@@ -9,12 +9,15 @@
 
         if (trueTimer >= Timers[0] && atkExecuted == 0) {
             if (((BattleHero)hero).Target != null) {
-                var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical));
-                var heal = outputDmg * attributes.LifeSteal;
-                if (heal > 0) {
-                    attributes.Heal(heal);
-                }
-                attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
+                var arrow = VfxPool.Instance.GetVfx<Projectile>("ashe_attack");
+                arrow.SetData((BattleHero)hero, ((BattleHero)hero).Target, () => {
+                    var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical));
+                    var heal = outputDmg * attributes.LifeSteal;
+                    if (heal > 0) {
+                        attributes.Heal(heal);
+                    }
+                    attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
+                });
             }
             atkExecuted++;
         }

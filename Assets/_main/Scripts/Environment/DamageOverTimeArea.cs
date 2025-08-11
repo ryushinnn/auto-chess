@@ -13,6 +13,7 @@ public class DamageOverTimeArea : MonoBehaviour {
     float interval;
     bool canCrit;
     float radius;
+    Vfx vfx;
     Action<List<BattleHero>> onStrike;
 
     float critChance;
@@ -22,7 +23,7 @@ public class DamageOverTimeArea : MonoBehaviour {
     Collider[] hits = new Collider[10];
     
     public void SetData(BattleHero dealer, Damage damage, int strikes, float interval, bool canCrit, float radius,
-        Action<List<BattleHero>> onStrike = null) {
+        Vfx vfx = null, Action<List<BattleHero>> onStrike = null) {
         
         this.dealer = dealer;
         this.damage = damage;
@@ -30,12 +31,17 @@ public class DamageOverTimeArea : MonoBehaviour {
         timer = this.interval = interval;
         this.canCrit = canCrit;
         this.radius = radius;
+        this.vfx = vfx;
         this.onStrike = onStrike;
         
         if (this.canCrit) {
             var att = dealer.GetAbility<HeroAttributes>();
             critChance = att.CriticalChance;
             critDamage = att.CriticalDamage;
+        }
+
+        if (this.vfx) {
+            this.vfx.transform.position = transform.position;
         }
 
         graphic.localScale = new Vector3(radius * 2, radius * 2, 1);
@@ -49,6 +55,9 @@ public class DamageOverTimeArea : MonoBehaviour {
         else {
             Strike();
             if (--strikes == 0) {
+                if (vfx) {
+                    VfxPool.Instance.DestroyVfx(vfx);
+                }
                 Destroy(gameObject);
             }
             else {

@@ -16,7 +16,7 @@ public class HeroPicker : MonoBehaviour {
     bool isPicking;
     Coroutine holdCoroutine;
     
-    const float HOLD_TIME_THRESHOLD = 0.1f;
+    const float HOLD_TIME_THRESHOLD = 0.5f;
     const float DRAG_POS_Y = 1;
 
     public void Initialize(LineUpHero hero, LayerMask mapLayerMask, bool pickable) {
