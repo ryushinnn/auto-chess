@@ -116,7 +116,7 @@ public class Mark {
     public bool permanent;
     public bool autoRemove;
     
-    public static Mark Create(string key, Hero owner, int stacks, float duration, bool autoRemove = true) {
+    public static Mark Create(string key, Hero owner, int stacks, float duration, bool autoRemove) {
         return new Mark {
             id = Guid.NewGuid().ToString(),
             key = key,

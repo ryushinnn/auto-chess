@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class SkillProcessor_Malphite : SkillProcessor {
     const string EFFECT_KEY = "malphite_unstoppable";
@@ -34,6 +35,11 @@ public class SkillProcessor_Malphite : SkillProcessor {
     void Strengthen() {
         if (!attributes.IsAlive) return;
         
+        var vfx = VfxPool.Instance.GetVfx<ScalableVfx>("malphite_skill");
+        var bone = hero.Mecanim.GetComponent<BodyParts>().GetBone("chest");
+        vfx.SetScale(hero.Model.localScale);
+        vfx.GetComponent<PositionBind>().SetTarget(bone, -1.44f);
+        
         attributes.AddAttributeModifier(
             AttributeModifierSet.Create(
                 hero,
@@ -44,6 +50,9 @@ public class SkillProcessor_Malphite : SkillProcessor {
                     (AttributeModifierKey.Resistance, DEFENSE_MUL, AttributeModifier.Type.Percentage),
                     (AttributeModifierKey.AttackSpeed, ATK_SPEED_REDUCE_MUL, AttributeModifier.Type.Percentage),
                     (AttributeModifierKey.Tenacity, HeroTrait.MAX_TENACITY, AttributeModifier.Type.FixedValue),
+                },
+                onRemove: () => {
+                    VfxPool.Instance.DestroyVfx(vfx);
                 }
             ));
     }

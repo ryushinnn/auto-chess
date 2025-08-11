@@ -939,6 +939,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8675854382877303105}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &7901910932909093514 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1571731774356624331, guid: a25c47734ffd71a49b4a6adaa291f162,
+    type: 3}
+  m_PrefabInstance: {fileID: 8675854382877303105}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8135190556697416837 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8610650294513748540, guid: a25c47734ffd71a49b4a6adaa291f162,
@@ -991,6 +997,9 @@ MonoBehaviour:
   - enableAtStart: 0
     name: punch
     obj: {fileID: 3962814144794981219}
+  bones:
+  - name: chest
+    obj: {fileID: 7901910932909093514}
 --- !u!114 &839416973429899732
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using RExt.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class BodyParts : MonoBehaviour {
     [SerializeField, TableList(ShowIndexLabels = true)] BodyPart[] parts;
+    [SerializeField, TableList(ShowIndexLabels = true)] Bone[] bones;
 
     Dictionary<string, GameObject> dic = new();
     Dictionary<string, Coroutine> coroutines = new();
@@ -41,6 +43,10 @@ public class BodyParts : MonoBehaviour {
             part.SetActive(data.Item2);
         }
     }
+
+    public Transform GetBone(string name) {
+        return bones.Find(x => x.name == name).obj;
+    }
 }
 
 [Serializable]
@@ -48,4 +54,10 @@ public class BodyPart {
     public bool enableAtStart;
     public string name;
     public GameObject obj;
+}
+
+[Serializable]
+public class Bone {
+    public string name;
+    public Transform obj;
 }

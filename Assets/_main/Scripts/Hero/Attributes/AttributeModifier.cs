@@ -102,8 +102,9 @@ public class AttributeModifierSet {
     [VerticalGroup("Effect")] public int stacks;
     [VerticalGroup("Effect")] public float duration;
     [HideInInspector] public Mark mark;
+    public Action onRemove;
 
-    public static AttributeModifierSet Create(Hero owner, string effectKey, float duration, (string key, float value, AttributeModifier.Type type)[] modifiers, int stacks = 1, bool createMark = true) {
+    public static AttributeModifierSet Create(Hero owner, string effectKey, float duration, (string key, float value, AttributeModifier.Type type)[] modifiers, int stacks = 1, bool createMark = true, Action onRemove = null) {
         var set = new AttributeModifierSet {
             effectKey = effectKey,
             id = Guid.NewGuid().ToString(),
@@ -119,7 +120,8 @@ public class AttributeModifierSet {
                     duration,
                     false
                 )
-                : null
+                : null,
+            onRemove = onRemove
         };
 
         for (int i = 0; i < modifiers.Length; i++) {

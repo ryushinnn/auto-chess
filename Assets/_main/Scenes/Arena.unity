@@ -1438,6 +1438,7 @@ MonoBehaviour:
   vfxPrefabs:
   - {fileID: 1590871686444004, guid: 47300c41f32cd7d4c9e04199ca63a08a, type: 3}
   - {fileID: 1192357162941054, guid: 7bf54c1c67169f340bb59db9310468a1, type: 3}
+  - {fileID: 1337227094590760, guid: f73b6c8e2189dc44ab4aa5951660149e, type: 3}
 --- !u!1 &1615821149
 GameObject:
   m_ObjectHideFlags: 0

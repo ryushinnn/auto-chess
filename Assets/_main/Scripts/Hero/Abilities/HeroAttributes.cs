@@ -350,6 +350,7 @@ public class HeroAttributes : HeroAbility {
                 if (modifierSets[i].mark != null) {
                     mark.RemoveMark(modifierSets[i].mark);
                 }
+                modifierSets[i].onRemove?.Invoke();
                 modifierSets.RemoveAt(i);
             }
         }
