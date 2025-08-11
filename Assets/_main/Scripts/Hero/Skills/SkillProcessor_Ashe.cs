@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RExt.Extensions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,6 +12,7 @@ public class SkillProcessor_Ashe : SkillProcessor {
     const float DMG_BASE = 5;
     const float DMG_MUL = 0.2f;
     const int TOTAL_TIME = 2000; //ms
+    const float RADIUS = 2;
     
     List<Hero> affectedTargets = new();
     
@@ -31,27 +33,14 @@ public class SkillProcessor_Ashe : SkillProcessor {
     }
 
     async void ShotArrows() {
-        affectedTargets.Clear();
-        var set = Random.Range(MIN_ARROW_SET, MAX_ARROW_SET + 1);
-        var timePerSet = TOTAL_TIME / set;
-        ShotArrow();
-        for (int i=1; i<set; i++) {
-            await Task.Delay(timePerSet);
-            ShotArrow();
-        }
-    }
-
-    void ShotArrow() {
-        if (((BattleHero)hero).Target == null) return;
-
-        var dmg = attributes.GetDamage(DamageType.Physical, attributes.Crit(),
+        var dotArea = GameObject.Instantiate(PrefabDB.Instance.DotArea);
+        dotArea.transform.position = ((BattleHero)hero).Target.WorldPosition;
+        var dmg = attributes.GetDamage(DamageType.Physical, false,
             scaledValues: new[] { (DMG_MUL, DamageType.Physical) }, fixedValues: new[] { DMG_BASE });
-        var isNewTarget = !affectedTargets.Contains(((BattleHero)hero).Target);
-        
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(dmg, isNewTarget);
-
-        if (isNewTarget) {
-            affectedTargets.Add(((BattleHero)hero).Target);
-        }
+        var set = Random.Range(MIN_ARROW_SET, MAX_ARROW_SET + 1);
+        dotArea.SetData((BattleHero)hero, dmg, set, (TOTAL_TIME / set).ToSeconds(), true, RADIUS,
+            (_) => {
+                
+            });
     }
 }

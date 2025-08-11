@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using RExt.Extensions;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class LineUpHero : Hero {
@@ -22,13 +23,16 @@ public class LineUpHero : Hero {
         SetUpModel();
         abilities.ForEach(x=>x.ResetAll());
         mecanim.Idle();
+        model.SetUniformScale(GameConfigs.HEROES_SCALE[this.rank]);
     }
     
+    [Button]
     public void Evolve() {
         rank = rank.Next();
-        name = $"({rank}){trait.id}";
+        name = $"[LineUp]({rank}){trait.id}";
         rankIcon.sprite = AssetDB.Instance.GetRankIcon(rank);
         GetAbility<HeroAttributes>().ResetAll();
+        model.SetUniformScale(GameConfigs.HEROES_SCALE[rank]);
     }
     
     public void UpdatePosition(Node node) {

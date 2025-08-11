@@ -1320,7 +1320,7 @@ MonoBehaviour:
   movementSpeed: 0
   criticalChance: 0
   criticalDamage: 0
-  energyRegenEfficient: 0
+  energyRegenEfficiency: 0
   physicalPenetration: 0
   magicalPenetration: 0
   lifeSteal: 0
@@ -1590,7 +1590,7 @@ GameObject:
   - component: {fileID: 5818875195950071551}
   - component: {fileID: 8657020387718133434}
   - component: {fileID: 276282976127478005}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Hero
   m_TagString: Untagged
   m_Icon: {fileID: 0}

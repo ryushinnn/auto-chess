@@ -127,6 +127,12 @@ public static class GameConfigs {
 
     public const float SPAWN_ENEMIES_DELAY = 2f;
     public const float PORTAL_CLOSE_DELAY = 1f;
+    
+    public static readonly Dictionary<HeroRank,float> HEROES_SCALE = new() {
+        { HeroRank.B, 1 },
+        { HeroRank.A, 1.15f },
+        { HeroRank.S, 1.4f },
+    };
 }
 
 public class LevelConfig {

@@ -107,8 +107,8 @@ MonoBehaviour:
       reputation: 0
       randomRewards: []
   - enemies:
-    - heroId: Teemo
-      rank: 0
+    - heroId: Ashe
+      rank: 2
       gridPosition: {x: 5, y: 4}
       items: []
       hpScale: 3

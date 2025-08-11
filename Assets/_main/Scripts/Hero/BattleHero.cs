@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using RExt.Extensions;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class BattleHero : Hero {
@@ -18,6 +19,7 @@ public class BattleHero : Hero {
         SetUpModel();
         abilities.ForEach(x=>x.ResetAll());
         mecanim.Idle();
+        model.SetUniformScale(GameConfigs.HEROES_SCALE[this.rank]);
     }
     
     public void FindTarget() {

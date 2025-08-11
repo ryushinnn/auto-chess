@@ -14,8 +14,10 @@ public class StarterPackUI : BaseUI {
     void Awake() {
         foreach (var offer in offers) {
             offer.SetOnRefresh(() => {
-                selectedOffer?.MarkAsSelected(false);
-                selectedOffer = null;
+                if (selectedOffer == offer) {
+                    selectedOffer.MarkAsSelected(false);
+                    selectedOffer = null;
+                }
                 Refresh(offer);
             });
             Refresh(offer);
