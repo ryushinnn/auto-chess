@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using Pathfinding;
 using RExt.Extensions;
 using RExt.Patterns.Singleton;
 using Sirenix.OdinInspector;
