@@ -318,6 +318,50 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 8179070356312480860}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &142944190
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 142944191}
+  - component: {fileID: 142944192}
+  m_Layer: 0
+  m_Name: Destinies
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &142944191
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142944190}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1473852640}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &142944192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142944190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8583534132334ec6b3759eecc8dd1078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &290188743
 GameObject:
   m_ObjectHideFlags: 0
@@ -1365,6 +1409,7 @@ MonoBehaviour:
   isPersistent: 0
   shop: {fileID: 2122394115}
   lineUp: {fileID: 797194647}
+  destinies: {fileID: 142944192}
   inventory: {fileID: 1947817720}
   battleField: {fileID: 502237318}
   level: {fileID: 2091054113}
@@ -1384,6 +1429,7 @@ Transform:
   m_Children:
   - {fileID: 2122394114}
   - {fileID: 797194646}
+  - {fileID: 142944191}
   - {fileID: 1947817721}
   - {fileID: 502237317}
   - {fileID: 2091054112}
@@ -2047,7 +2093,7 @@ MonoBehaviour:
   isPersistent: 0
   arena: {fileID: 579307335}
   shop: {fileID: 139722201}
-  lineUp: {fileID: 589269853}
+  destinies: {fileID: 589269853}
   inventory: {fileID: 508749970}
   heroInfo: {fileID: 69563324}
   starterPack: {fileID: 8199536913969704646}
@@ -3832,7 +3878,7 @@ PrefabInstance:
     - target: {fileID: 3300884471349796683, guid: 14513e071b5f3b24eb7b291dc4585697,
         type: 3}
       propertyPath: m_Name
-      value: LineUp
+      value: Destinies
       objectReference: {fileID: 0}
     - target: {fileID: 3328582930934885492, guid: 14513e071b5f3b24eb7b291dc4585697,
         type: 3}

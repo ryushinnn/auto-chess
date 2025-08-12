@@ -115,6 +115,7 @@ public class Progress : MonoBehaviour {
             case MatchPhase.Battle:
                 phase = nextPhase;
                 timeLeft = totalTime = GameConfigs.MATCH_PHASE_DURATIONS[phase];
+                GameManager.Instance.Destinies.Activate();
                 GameManager.Instance.BattleField.ActivateHeroes();
                 break;
             

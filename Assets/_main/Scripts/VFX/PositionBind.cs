@@ -2,8 +2,8 @@
 using UnityEngine;
 
 public class PositionBind : MonoBehaviour {
+    [SerializeField] float offsetY;
     Transform target;
-    float offsetY;
     
     public void SetTarget(Transform target, float offsetY = 0) {
         this.target = target;

@@ -5,14 +5,14 @@ using UnityEngine;
 public class UIManager_Arena : Singleton<UIManager_Arena> {
     public ArenaUI Arena => arena;
     public ShopUI Shop => shop;
-    public LineUpUI LineUp => lineUp;
+    public DestiniesUI Destinies => destinies;
     public InventoryUI Inventory => inventory;
     public HeroInfoUI HeroInfo => heroInfo;
     public StarterPackUI StarterPack => starterPack;
     
     [SerializeField] ArenaUI arena;
     [SerializeField] ShopUI shop;
-    [SerializeField] LineUpUI lineUp;
+    [SerializeField] DestiniesUI destinies;
     [SerializeField] InventoryUI inventory;
     [SerializeField] HeroInfoUI heroInfo;
     [SerializeField] StarterPackUI starterPack;
@@ -20,7 +20,7 @@ public class UIManager_Arena : Singleton<UIManager_Arena> {
     void Start() {
         arena.Close();
         shop.Close();
-        lineUp.Close();
+        destinies.Close();
         inventory.Close();
         heroInfo.Close();
         starterPack.Open();

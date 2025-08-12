@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LineUp_Destiny : MonoBehaviour {
+public class Destinies_Destiny : MonoBehaviour {
     [SerializeField] Image iconImage;
     [SerializeField] TMP_Text nameText;
     [SerializeField] TMP_Text currentNumberText;
@@ -14,25 +14,25 @@ public class LineUp_Destiny : MonoBehaviour {
     
     bool empty;
 
-    public void Initialize(RoleConfig config, int current) {
+    public void SetData(Role role, int current) {
         empty = false;
-        iconImage.sprite = AssetDB.Instance.GetRoleIcon(config.role).value;
-        Initialize(config.stages, current);
-        nameText.text = config.role.ToName();
+        iconImage.sprite = AssetDB.Instance.GetRoleIcon(role).value;
+        SetData(GameConfigs.ROLE_CONFIGS[role], current);
+        nameText.text = role.ToName();
     }
 
-    public void Initialize(RealmConfig config, int current) {
+    public void SetData(Realm realm, int current) {
         empty = false;
-        iconImage.sprite = AssetDB.Instance.GetRealmIcon(config.realm).value;
-        Initialize(config.stages, current);
-        nameText.text = config.realm.ToName();
+        iconImage.sprite = AssetDB.Instance.GetRealmIcon(realm).value;
+        SetData(GameConfigs.REALM_CONFIGS[realm], current);
+        nameText.text = realm.ToName();
     }
     
     public void MarkAsEmpty() {
         empty = true;
     }
 
-    void Initialize(int[] stages, int current) {
+    void SetData(int[] stages, int current) {
         var unlockAtLeastOne = false;
         for (int i = 0; i < stageTexts.Length; i++) {
             if (i >= stages.Length) {
@@ -69,21 +69,5 @@ public class LineUp_Destiny : MonoBehaviour {
         currentNumberText.text = current.ToString();
         iconImage.color = unlockAtLeastOne ? Color.white : Color.gray;
         nameText.color = unlockAtLeastOne ? Color.white : Color.gray;
-    }
-
-    [Button]
-    void dev_testRole(int current) {
-        Initialize(new RoleConfig {
-            role = Role.Cultist,
-            stages = new[] { 2, 4, 6 }
-        },current);
-    }
-    
-    [Button]
-    void dev_testRealm(int current) {
-        Initialize(new RealmConfig {
-            realm = Realm.Mecha,
-            stages = new[] { 2, 4, 6,8 }
-        },current);
     }
 }

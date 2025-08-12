@@ -57,11 +57,13 @@ public class HeroAttributes : HeroAbility {
     [SerializeField, ReadOnly] float magicalPenetration;
     [SerializeField, ReadOnly] float lifeSteal;
     [SerializeField, ReadOnly] float tenacity;
-
+    
     [SerializeField, ReadOnly, TableList] List<AttributeModifierSet> modifierSets = new();
     [SerializeField, ReadOnly, TableList] List<AttributeModifierGroup> modifierGroups = new();
     [SerializeField, ReadOnly] List<DamageOverTime> damageOverTimes = new();
     [SerializeField, ReadOnly] List<HealOverTime> healOverTimes = new();
+
+    public event Action OnDeath;
 
     float hpScale;
     float damageScale;
@@ -86,26 +88,38 @@ public class HeroAttributes : HeroAbility {
         magicalPenetration = HeroTrait.BASE_PENETRATION;
         lifeSteal = HeroTrait.BASE_LIFE_STEAL;
         tenacity = HeroTrait.BASE_TENACITY;
+        
         hero.SwitchCanvas(true);
         healthBar.UpdateAmount(1, true);
         energyBar.UpdateAmount(0, true);
+        
         hpScale = 1;
         damageScale = 1;
         isDrainingEnergy = false;
+        
         modifierSets.Clear();
         modifierGroups.Clear();
         damageOverTimes.Clear();
         healOverTimes.Clear();
 
-        var evolutions = hero.Trait.evolutions.Find(x => x.rank == hero.Rank);
-        if (evolutions != null) {
-            foreach (var m in evolutions.modifiers) {
-                var modifier = AttributeModifier.Create(m);
-                modifier.owner = hero;
-                modifier.duration = Mathf.Infinity;
-                modifier.stacks = 1;
-                modifier.permanent = true;
-                AddAttributeModifier(modifier);
+        OnDeath = null;
+
+        if (hero.Trait.evolutions != null) {
+            var evolution = hero.Trait.evolutions.Find(x => x.rank == hero.Rank);
+            if (evolution != null) {
+                var modifiers = new (string, float, AttributeModifier.Type)[evolution.modifiers.Length];
+                for (int i = 0; i < evolution.modifiers.Length; i++) {
+                    var m = evolution.modifiers[i];
+                    modifiers[i] = (m.key, m.value, m.type);
+                }
+    
+                var modifiersSet = AttributeModifierSet.Create(
+                    hero, 
+                    $"[EVOLUTION_{evolution.rank}]", 
+                    modifiers,
+                    createMark: false);
+
+                AddAttributeModifier(modifiersSet);
             }
         }
         
@@ -297,16 +311,6 @@ public class HeroAttributes : HeroAbility {
         
         return Damage.Create(value, outputType, pen, crit);
     }
-
-    public void AddAttributeModifier(AttributeModifier modifier) {
-        var group = modifierGroups.Find(x => x.key == modifier.key);
-        if (group == null) {
-            group = new AttributeModifierGroup(modifier.key);
-            modifierGroups.Add(group);
-        }
-        group.modifiers.Add(modifier);
-        RecalculateAttributes(modifier.key);
-    }
     
     public void AddAttributeModifier(AttributeModifierSet modifierSet) {
         var existSet = modifierSets.Find(x => x.SameAs(modifierSet));
@@ -329,8 +333,18 @@ public class HeroAttributes : HeroAbility {
             mark.AddMark(modifierSet.mark);
         }
     }
+    
+    void AddAttributeModifier(AttributeModifier modifier) {
+        var group = modifierGroups.Find(x => x.key == modifier.key);
+        if (group == null) {
+            group = new AttributeModifierGroup(modifier.key);
+            modifierGroups.Add(group);
+        }
+        group.modifiers.Add(modifier);
+        RecalculateAttributes(modifier.key);
+    }
 
-    public void RemoveAttributeModifier(AttributeModifier modifier) {
+    void RemoveAttributeModifier(AttributeModifier modifier) {
         for (int i = modifierGroups.Count - 1; i >= 0; i--) {
             var key = modifierGroups[i].key;
             if (modifierGroups[i].modifiers.Contains(modifier)) {
@@ -344,25 +358,11 @@ public class HeroAttributes : HeroAbility {
         }
     }
     
-    public void RemoveAttributeModifier(string effectKey) {
-        for (int i = modifierSets.Count - 1; i >= 0; i--) {
-            if (modifierSets[i].effectKey == effectKey) {
-                foreach (var m in modifierSets[i].modifiers) {
-                    RemoveAttributeModifier(m);
-                }
-                if (modifierSets[i].mark != null) {
-                    mark.RemoveMark(modifierSets[i].mark);
-                }
-                modifierSets.RemoveAt(i);
-                return;
-            }
-        }
-    }
-    
     void ProcessAttributeModifiers() {
         var changedKeys = new HashSet<string>();
 
         for (int i = modifierSets.Count - 1; i >= 0; i--) {
+            if (modifierSets[i].permanent) continue;
             modifierSets[i].duration -= Time.deltaTime;
             if (modifierSets[i].duration <= 0) {
                 foreach (var m in modifierSets[i].modifiers) {
@@ -378,24 +378,6 @@ public class HeroAttributes : HeroAbility {
                 }
                 modifierSets[i].onRemove?.Invoke();
                 modifierSets.RemoveAt(i);
-            }
-        }
-        
-        for (int i = modifierGroups.Count - 1; i >= 0; i--) {
-            var key = modifierGroups[i].key;
-            var modifiers = modifierGroups[i].modifiers;
-            for (int j = modifiers.Count - 1; j >= 0; j--) {
-                if (modifiers[j].permanent || modifiers[j].ControlledBySet()) continue;
-                
-                modifiers[j].duration -= Time.deltaTime;
-                if (modifiers[j].duration <= 0) {
-                    modifiers.RemoveAt(j);
-                    changedKeys.Add(key);
-                }
-            }
-
-            if (modifiers.Count == 0) {
-                modifierGroups.RemoveAt(i);
             }
         }
 
@@ -607,6 +589,8 @@ public class HeroAttributes : HeroAbility {
         hero.SwitchCanvas(false);
         hero.name = "(DEAD) " + hero.name;
         GameManager.Instance.BattleField.MarkHeroAsDead((BattleHero)hero);
+        
+        OnDeath?.Invoke();
     }
 }
 

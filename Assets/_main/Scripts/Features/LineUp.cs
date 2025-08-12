@@ -10,10 +10,6 @@ using Random = UnityEngine.Random;
 public class LineUp : MonoBehaviour {
     [SerializeField] LineUpHero heroPrefab;
 
-    Dictionary<Role, int> roleNumbers = new();
-    Dictionary<Realm, int> realmNumbers = new();
-    HashSet<HeroTrait> uniqueTraits = new();
-
     Dictionary<LineUpHero, Node> heroes = new();
     Dictionary<LineUpHero, MapNode> heroesOnMap = new();
     Queue<LineUpHero> heroPool = new();
@@ -23,16 +19,7 @@ public class LineUp : MonoBehaviour {
     int maxHeroesOnMap;
 
     public void Initialize() {
-        var allRoles = ((Role[])Enum.GetValues(typeof(Role))).Where(x => x != 0).ToArray();
-        var allRealms = ((Realm[])Enum.GetValues(typeof(Realm))).Where(x => x != 0).ToArray();
-        foreach (var role in allRoles) {
-            roleNumbers.Add(role, 0);
-        }
-        foreach (var realm in allRealms) {
-            realmNumbers.Add(realm, 0);
-        }
         SetHeroesLimit(1);
-        UIManager_Arena.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
     }
 
     public void SetHeroesLimit(int value) {
@@ -64,17 +51,6 @@ public class LineUp : MonoBehaviour {
             availableDeckNode.ChangeState(NodeState.Occupied);
             MapVisual.Instance.SetOccupied(availableDeckNode, true);
             RecalculateHeroesOnMap();
-
-            if (uniqueTraits.Add(hero.Trait)) {
-                var roles = hero.Trait.role.GetAllFlags().Where(x => x != 0).ToArray();
-                foreach (var role in roles) {
-                    roleNumbers[role]++;
-                }
-                realmNumbers[hero.Trait.realm]++;
-                UIManager_Arena.Instance.Inventory.Close();
-                UIManager_Arena.Instance.LineUp.Open();
-                UIManager_Arena.Instance.LineUp.Initialize(roleNumbers, realmNumbers);
-            }
             
             return true;
         }
@@ -96,6 +72,7 @@ public class LineUp : MonoBehaviour {
         foreach (var (hero, node) in heroes) {
             if (node is MapNode mn) heroesOnMap.Add(hero, mn);
         }
+        GameManager.Instance.Destinies.SetData(heroesOnMap.Select(x=>x.Key.Trait).ToArray());
         UIManager_Arena.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
     }
 
@@ -201,16 +178,6 @@ public class LineUp : MonoBehaviour {
             MapVisual.Instance.SetOccupied(node, false);
         }
         MapVisual.Instance.SwitchPortal(true);
-    }
-
-    [Button]
-    void dev_checkAllNumber() {
-        foreach (var it in roleNumbers) {
-            Debug.Log($"{it.Key}:{it.Value}");
-        }
-        foreach (var it in realmNumbers) {
-            Debug.Log($"{it.Key}:{it.Value}");
-        }
     }
 }
 

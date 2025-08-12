@@ -62,60 +62,27 @@ public static class GameConfigs {
     };
 
     public static readonly Dictionary<Reputation, int> HERO_PRICES = new() {
-        {Reputation.Unknown, 1},
-        {Reputation.Elite, 3},
-        {Reputation.Legendary, 5},
+        { Reputation.Unknown, 1 },
+        { Reputation.Elite, 3 },
+        { Reputation.Legendary, 5 },
     };
     public const int REFRESH_COST = 2;
 
-    public static readonly RoleConfig[] ROLE_CONFIGS = {
-        new() {
-            role = Role.Duelist,
-            stages = new[] { 2, 3, 4 }
-        },
-        new() {
-            role = Role.Sorcerer,
-            stages = new[] { 2, 3, 4 }
-        },
-        new() {
-            role = Role.Marksman,
-            stages = new[] { 2, 3, 4 }
-        },
-        new() {
-            role = Role.Assassin,
-            stages = new[] { 2, 3, 4 }
-        },
-        new() {
-            role = Role.Bruiser,
-            stages = new[] { 2, 3, 4 }
-        },
-        new() {
-            role = Role.Cultist,
-            stages = new[] { 2, 3, 4 }
-        },
+    public static readonly Dictionary<Role,int[]> ROLE_CONFIGS = new() {
+        { Role.Duelist, new[] { 2, 3, 4 } },
+        { Role.Sorcerer, new[] { 2, 3, 4 } },
+        { Role.Marksman, new[] { 2, 3, 4 } },
+        { Role.Assassin, new[] { 2, 3, 4 } },
+        { Role.Bruiser, new[] { 2, 3, 4 } },
+        { Role.Cultist, new[] { 2, 3, 4 } },
     };
     
-    public static readonly RealmConfig[] REALM_CONFIGS = {
-        new() {
-            realm = Realm.Mortal,
-            stages = new[] { 2, 3, 4, 5}
-        },
-        new() {
-            realm = Realm.Divine,
-            stages = new[] { 2, 3, 4, 5}
-        },
-        new() {
-            realm = Realm.Nether,
-            stages = new[] { 2, 3, 4, 5}
-        },
-        new() {
-            realm = Realm.Mecha,
-            stages = new[] { 2, 3, 4, 5}
-        },
-        new() {
-            realm = Realm.Chaos,
-            stages = new[] { 2, 3, 4, 5}
-        }
+    public static readonly Dictionary<Realm,int[]> REALM_CONFIGS = new() {
+        { Realm.Mortal, new[] { 2, 3, 4, 5} },
+        { Realm.Divine, new[] { 2, 3, 4, 5} },
+        { Realm.Nether, new[] { 2, 3, 4, 5} },
+        { Realm.Mecha, new[] { 2, 3, 4, 5} },
+        { Realm.Chaos, new[] { 2, 3, 4, 5} }
     };
 
     public static readonly Dictionary<MatchPhase, int> MATCH_PHASE_DURATIONS = new() {

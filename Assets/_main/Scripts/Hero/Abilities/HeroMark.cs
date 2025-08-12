@@ -28,32 +28,6 @@ public class HeroMark : HeroAbility {
         markGroups.Clear();
     }
 
-    public override void Process() {
-        ProcessMarks();
-    }
-
-    void ProcessMarks() {
-        for (int i = markGroups.Count - 1; i >= 0; i--) {
-            var marks = markGroups[i].marks;
-            for (int j = marks.Count - 1; j >= 0; j--) {
-                if (marks[j].permanent) continue;
-                marks[j].duration -= Time.deltaTime;
-                if (marks[j].duration <= 0 && marks[j].autoRemove) {
-                    markHolders.ForEach(x => {
-                        if (x.Id == marks[j].id) {
-                            x.gameObject.SetActive(false);
-                        }
-                    });
-                    marks.RemoveAt(j);
-                }
-            }
-
-            if (marks.Count == 0) {
-                markGroups.RemoveAt(i);
-            }
-        }
-    }
-
     public void AddMark(Mark mark) {
         var group = markGroups.Find(g => g.key == mark.key);
         if (group == null) {
@@ -71,7 +45,12 @@ public class HeroMark : HeroAbility {
         }
         
         markHolder.gameObject.SetActive(true);
-        markHolder.Initialize(mark.id, AssetDB.Instance.GetMarkIcon(mark.key).value, mark.duration, mark.stacks);
+        if (mark.permanent) {
+            markHolder.SetData(mark.id, AssetDB.Instance.GetMarkIcon(mark.key).value, mark.stacks);
+        }
+        else {
+            markHolder.SetData(mark.id, AssetDB.Instance.GetMarkIcon(mark.key).value, mark.stacks, mark.duration);
+        }
     }
 
     public void RemoveMark(Mark mark) {
@@ -111,35 +90,32 @@ public class MarkGroup {
 
 [Serializable]
 public class Mark {
-    public string key;
-    public string id;
     public Hero owner;
+    public string id;
+    public string key;
     public int stacks;
-    public float duration;
-    public bool permanent;
-    public bool autoRemove;
+    [HideInInspector] public float duration;
+    [HideInInspector] public bool permanent;
     
-    public static Mark Create(string key, Hero owner, int stacks, float duration, bool autoRemove) {
+    public static Mark Create(Hero owner, string key, int stacks, float duration) {
         return new Mark {
             id = Guid.NewGuid().ToString(),
-            key = key,
             owner = owner,
+            key = key,
             stacks = stacks,
             duration = duration,
-            permanent = false,
-            autoRemove = autoRemove
+            permanent = false
         };
     }
 
-    public static Mark Create(string key, Hero owner, int stacks) {
+    public static Mark Create(Hero owner, string key, int stacks) {
         return new Mark {
             id = Guid.NewGuid().ToString(),
-            key = key,
             owner = owner,
+            key = key,
             stacks = stacks,
             duration = Mathf.Infinity,
             permanent = true,
-            autoRemove = false
         };
     }
     

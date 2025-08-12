@@ -68,12 +68,12 @@ public class ArenaUI : BaseUI {
     }
 
     void OpenLineUp() {
-        UIManager_Arena.Instance.LineUp.Open();
+        UIManager_Arena.Instance.Destinies.Open();
         UIManager_Arena.Instance.Inventory.Close();
     }
 
     void OpenInventory() {
-        UIManager_Arena.Instance.LineUp.Close();
+        UIManager_Arena.Instance.Destinies.Close();
         UIManager_Arena.Instance.Inventory.Open();
     }
 

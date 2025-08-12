@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 1593873032627459407}
   - component: {fileID: 5759290436061111046}
   m_Layer: 5
-  m_Name: LineUp_Destiny
+  m_Name: Destinies_Destiny
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

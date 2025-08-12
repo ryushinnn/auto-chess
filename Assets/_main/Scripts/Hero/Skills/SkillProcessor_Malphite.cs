@@ -42,7 +42,7 @@ public class SkillProcessor_Malphite : SkillProcessor {
         var vfx = VfxPool.Instance.GetVfx<ScalableVfx>("malphite_skill");
         var bone = hero.Mecanim.GetComponent<BodyParts>().GetBone("chest");
         vfx.SetScale(hero.Model.localScale);
-        vfx.GetComponent<PositionBind>().SetTarget(bone, -1.44f);
+        vfx.GetComponent<PositionBind>().SetTarget(bone, -2f);
         
         attributes.AddAttributeModifier(
             AttributeModifierSet.Create(

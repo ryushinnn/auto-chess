@@ -47,7 +47,7 @@ public class BattleField : MonoBehaviour {
         }
     }
 
-    public BattleHero SpawnHero(HeroTrait trait, HeroRank rank, TeamSide side, MapNode node) {
+    BattleHero SpawnHero(HeroTrait trait, HeroRank rank, TeamSide side, MapNode node) {
         if (!heroPool.TryDequeue(out var hero)) {
             hero = Instantiate(heroPrefab);
         }
@@ -58,6 +58,10 @@ public class BattleField : MonoBehaviour {
         aliveHeroes[side].Add(hero);
         UpdateOccupiedNode(hero, node);
         return hero;
+    }
+
+    public List<BattleHero> GetAliveHeroes(TeamSide side) {
+        return aliveHeroes[side];
     }
 
     public BattleHero GetNearestOpponent(BattleHero hero) {

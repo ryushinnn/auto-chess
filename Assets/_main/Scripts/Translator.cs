@@ -1,6 +1,6 @@
 using System;
 
-public static partial class Translator {
+public static class Translator {
     public static string ToName(this Realm realm) {
         return realm switch {
             Realm.Mortal => "Phàm nhân",

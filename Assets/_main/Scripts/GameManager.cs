@@ -7,6 +7,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager> {
     public Shop Shop => shop;
     public LineUp LineUp => lineUp;
+    public Destinies Destinies => destinies;
     public Inventory Inventory => inventory;
     public BattleField BattleField => battleField;
     public Level Level => level;
@@ -14,6 +15,7 @@ public class GameManager : Singleton<GameManager> {
     
     [SerializeField] Shop shop;
     [SerializeField] LineUp lineUp;
+    [SerializeField] Destinies destinies;
     [SerializeField] Inventory inventory;
     [SerializeField] BattleField battleField;
     [SerializeField] Level level;
@@ -22,6 +24,7 @@ public class GameManager : Singleton<GameManager> {
     void Start() {
         MapVisual.Instance.Initialize();
         level.Initialize();
+        destinies.Initialize();
         lineUp.Initialize();
         inventory.Initialize();
     }

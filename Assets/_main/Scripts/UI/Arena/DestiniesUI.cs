@@ -6,14 +6,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LineUpUI : BaseUI {
-    [SerializeField] LineUp_Destiny destinyPrefab;
+public class DestiniesUI : BaseUI {
+    [SerializeField] Destinies_Destiny destinyPrefab;
     [SerializeField] Transform destinyContainer;
     [SerializeField] Button leftButton;
     [SerializeField] Button rightButton;
     [SerializeField] TMP_Text pageText;
-    
-    List<LineUp_Destiny> destinies;
+
+    List<Destinies_Destiny> destinies = new();
     int currentPage;
     int maxPage;
     
@@ -22,32 +22,31 @@ public class LineUpUI : BaseUI {
     void Awake() {
         leftButton.onClick.AddListener(NavigateLeft);
         rightButton.onClick.AddListener(NavigateRight);
+        destinyContainer.ProcessChildren<Destinies_Destiny>(d => destinies.Add(d));
     }
 
-    public void Initialize(Dictionary<Role, int> roleNumbers, Dictionary<Realm, int> realmNumbers) {
-        destinies ??= destinyContainer.GetComponentsInChildren<LineUp_Destiny>().ToList();
-
+    public void SetData(Dictionary<Role, int> roleNumbers, Dictionary<Realm, int> realmNumbers) {
         var destinyNumbers = new List<(object destiny, int number)>();
-        foreach (var it in roleNumbers) {
-            if (it.Value > 0) destinyNumbers.Add((it.Key, it.Value));
+        foreach (var (role,num) in roleNumbers) {
+            destinyNumbers.Add((role, num));
         }
-        foreach (var it in realmNumbers) {
-            if (it.Value > 0) destinyNumbers.Add((it.Key, it.Value));
+        foreach (var (realm,num) in realmNumbers) {
+            destinyNumbers.Add((realm, num));
         }
-        destinyNumbers.Sort((nA, nB) => {
-            var stagesA = nA.destiny switch {
-                Role role => GameConfigs.ROLE_CONFIGS.Find(x => x.role == role).stages,
-                Realm realm => GameConfigs.REALM_CONFIGS.Find(x => x.realm == realm).stages,
+        destinyNumbers.Sort((dnA, dnB) => {
+            var stagesA = dnA.destiny switch {
+                Role role => GameConfigs.ROLE_CONFIGS[role],
+                Realm realm => GameConfigs.REALM_CONFIGS[realm],
             };
-            var unlockedA = stagesA.Count(x => x <= nA.number);
+            var unlockedA = stagesA.Count(x => x <= dnA.number);
 
-            var stagesB = nB.destiny switch {
-                Role role => GameConfigs.ROLE_CONFIGS.Find(x => x.role == role).stages,
-                Realm realm => GameConfigs.REALM_CONFIGS.Find(x => x.realm == realm).stages,
+            var stagesB = dnB.destiny switch {
+                Role role => GameConfigs.ROLE_CONFIGS[role],
+                Realm realm => GameConfigs.REALM_CONFIGS[realm],
             };
-            var unlockedB = stagesB.Count(x => x <= nB.number);
+            var unlockedB = stagesB.Count(x => x <= dnB.number);
 
-            return unlockedA != unlockedB ? unlockedB.CompareTo(unlockedA) : nB.number.CompareTo(nA.number);
+            return unlockedA != unlockedB ? unlockedB.CompareTo(unlockedA) : dnB.number.CompareTo(dnA.number);
         });
         
         var index = 0;
@@ -60,13 +59,11 @@ public class LineUpUI : BaseUI {
             destinies[index].gameObject.SetActive(true);
             switch (dn.destiny) {
                 case Role role: {
-                    var cfg = GameConfigs.ROLE_CONFIGS.Find(x => x.role == role);
-                    destinies[index].Initialize(cfg, dn.number);
+                    destinies[index].SetData(role, dn.number);
                     break;
                 }
                 case Realm realm: {
-                    var cfg = GameConfigs.REALM_CONFIGS.Find(x => x.realm == realm);
-                    destinies[index].Initialize(cfg, dn.number);
+                    destinies[index].SetData(realm, dn.number);
                     break;
                 }
             }

@@ -50,15 +50,21 @@ public class HeroInventory : HeroAbility {
             slot = new ItemSlot(completeItem);
         }
 
-        foreach (var m in slot.item.modifiers) {
-            var modifier = AttributeModifier.Create(m);
-            modifier.owner = hero;
-            modifier.duration = Mathf.Infinity;
-            modifier.stacks = 1;
-            modifier.permanent = true;
-            attributes.AddAttributeModifier(modifier);
-            slot.modifiers.Add(modifier);
+        var modifiers = new (string, float, AttributeModifier.Type)[slot.item.modifiers.Length];
+        for (int i = 0; i < slot.item.modifiers.Length; i++) {
+            var m = slot.item.modifiers[i];
+            modifiers[i] = (m.key, m.value, m.type);
         }
+
+        var modifierSet = AttributeModifierSet.Create(
+            hero, 
+            $"[ITEM_#{itemSlots.Count}]", 
+            modifiers,
+            createMark: false);
+
+        attributes.AddAttributeModifier(modifierSet);
+        slot.modifierSet = modifierSet;
+        
         itemSlots.Add(slot);
         itemSlots.Sort((a, b) => {
             if (a.item.IsForgedItem() && !b.item.IsForgedItem()) return -1;
@@ -90,9 +96,7 @@ public class HeroInventory : HeroAbility {
     [Button]
     void Dev_RemoveAll() {
         foreach (var s in itemSlots) {
-            foreach (var m in s.modifiers) {
-                attributes.RemoveAttributeModifier(m);
-            }
+            // attributes.RemoveAttributeModifier(s.modifierSet); //later
         }
         itemSlots.Clear();
     }
@@ -101,7 +105,7 @@ public class HeroInventory : HeroAbility {
 [Serializable]
 public class ItemSlot {
     public Item item;
-    public List<AttributeModifier> modifiers = new();
+    public AttributeModifierSet modifierSet;
     
     public ItemSlot(Item item) {
         this.item = item;

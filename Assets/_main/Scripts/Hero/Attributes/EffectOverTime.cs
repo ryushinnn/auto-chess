@@ -26,11 +26,10 @@ public class DamageOverTime : EffectOverTime {
             stacks = stacks,
             mark = createMark 
                 ? Mark.Create(
-                    key, 
                     owner, 
+                    key, 
                     stacks, 
-                    interval * (applyDmgInstantly ? times-1 : times), 
-                    false
+                    interval * (applyDmgInstantly ? times-1 : times)
                 ) 
                 : null, 
             timer = applyDmgInstantly ? 0 : interval,
@@ -54,7 +53,14 @@ public class HealOverTime : EffectOverTime {
             amount = amount,
             times = times,
             interval = interval,
-            mark = createMark ? Mark.Create(key,owner,1, interval * (times-1), false) : null,
+            mark = createMark 
+                ? Mark.Create(
+                    owner,
+                    key,
+                    1, 
+                    interval * (times-1)
+                ) 
+                : null,
             timer = 0,
         };
     }

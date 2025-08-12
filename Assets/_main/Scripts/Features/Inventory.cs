@@ -25,7 +25,7 @@ public class Inventory : MonoBehaviour {
         else {
             items[item] = 1;
         }
-        UIManager_Arena.Instance.LineUp.Close();
+        UIManager_Arena.Instance.Destinies.Close();
         UIManager_Arena.Instance.Inventory.Open();
         UIManager_Arena.Instance.Inventory.SetData(items);
     }
@@ -48,7 +48,6 @@ public class Inventory : MonoBehaviour {
         }
     }
 
-    [Button]
     public void GainCoins(int amount) {
         coins += amount;
         UIManager_Arena.Instance.Arena.UpdateCoinsText(coins);
@@ -57,5 +56,10 @@ public class Inventory : MonoBehaviour {
     public void SpendCoins(int amount) {
         coins -= amount;
         UIManager_Arena.Instance.Arena.UpdateCoinsText(coins);
+    }
+
+    [Button]
+    void dev_addCoins() {
+        GainCoins(1000);
     }
 }
