@@ -11,6 +11,10 @@
         Name = "Chiến Pháo Cuồng Nộ";
         Description = $"Tăng {ATK_SPD_MUL*100}% <sprite name=aspd> và " +
                       $"{CRIT_CHANCE_MUL * 100}% <sprite name=crc>, duy trì {DURATION}s.";
+
+        drainEnergy = true;
+        drainEnergyDelay = Timers[0];
+        drainEnergyDuration = DURATION;
     }
 
     public override void Process(float timer) {

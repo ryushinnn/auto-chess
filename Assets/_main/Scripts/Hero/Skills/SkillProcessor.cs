@@ -10,6 +10,10 @@ public class SkillProcessor {
     
     protected readonly Hero hero;
     protected readonly HeroAttributes attributes;
+
+    protected bool drainEnergy;
+    protected float drainEnergyDelay;
+    protected float drainEnergyDuration;
     
     protected int skillExecuted;
 
@@ -22,7 +26,13 @@ public class SkillProcessor {
         if (Unstoppable) {
             hero.GetAbility<HeroStatusEffects>().Unstoppable(true);
         }
-        hero.GetAbility<HeroAttributes>().UseAllEnergy();
+
+        if (drainEnergy) {
+            attributes.DrainEnergy(drainEnergyDelay, drainEnergyDuration);
+        }
+        else {
+            attributes.UseAllEnergy();
+        }
         animLength = AnimationLength;
         skillExecuted = 0;
     }

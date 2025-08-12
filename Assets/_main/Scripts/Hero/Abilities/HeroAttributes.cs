@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using RExt.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -16,6 +17,8 @@ public class HeroAttributes : HeroAbility {
     [SerializeField] ProgressBar healthBar;
     [SerializeField] ProgressBar energyBar;
     [SerializeField] Transform hpTextParent;
+    [SerializeField] Color allyHpColor, enemyHpColor;
+    [SerializeField] Color normalEnergyColor, drainingEnergyColor;
     
     public bool IsAlive => isAlive;
     public float MaxHp => maxHp;
@@ -62,6 +65,9 @@ public class HeroAttributes : HeroAbility {
 
     float hpScale;
     float damageScale;
+    
+    bool isDrainingEnergy;
+    Sequence drainEnergySeq;
 
     public override void ResetAll() {
         isAlive = true;
@@ -85,6 +91,7 @@ public class HeroAttributes : HeroAbility {
         energyBar.UpdateAmount(0, true);
         hpScale = 1;
         damageScale = 1;
+        isDrainingEnergy = false;
         modifierSets.Clear();
         modifierGroups.Clear();
         damageOverTimes.Clear();
@@ -101,6 +108,9 @@ public class HeroAttributes : HeroAbility {
                 AddAttributeModifier(modifier);
             }
         }
+        
+        healthBar.SetMainColor(hero is LineUpHero || ((BattleHero)hero).Side == TeamSide.Ally ? allyHpColor : enemyHpColor);
+        energyBar.SetMainColor(normalEnergyColor);
     }
 
     public override void Process() {
@@ -199,7 +209,7 @@ public class HeroAttributes : HeroAbility {
     }
 
     public void RegenEnergy(float amount) {
-        if (!isAlive || skill.IsUsingSkill) return;
+        if (!isAlive || isDrainingEnergy || skill.IsUsingSkill) return;
         
         amount *= energyRegenEfficiency;
         energy = Mathf.Min(energy + amount, HeroTrait.MAX_ENERGY);
@@ -209,6 +219,22 @@ public class HeroAttributes : HeroAbility {
     public void UseAllEnergy() {
         energy = 0;
         energyBar.UpdateAmount(0);
+    }
+
+    public void DrainEnergy(float delay, float duration) {
+        energy = 0;
+        isDrainingEnergy = true;
+        energyBar.SetMainColor(drainingEnergyColor);
+        drainEnergySeq?.Kill();
+        drainEnergySeq = DOTween.Sequence()
+            .AppendInterval(delay)
+            .Append(DOVirtual.Float(1,0,duration, val => {
+                energyBar.UpdateAmount(val);
+            }).SetEase(Ease.Linear))
+            .AppendCallback(() => {
+                isDrainingEnergy = false;
+                energyBar.SetMainColor(normalEnergyColor);
+            });
     }
 
     public bool Crit() {
@@ -568,6 +594,7 @@ public class HeroAttributes : HeroAbility {
 
     void Die() {
         isAlive = false;
+        drainEnergySeq?.Kill();
         movement.StopMove(true);
         hero.Mecanim.Death();
         hero.Mecanim.InterruptAttack();

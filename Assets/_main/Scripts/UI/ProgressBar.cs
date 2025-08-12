@@ -40,6 +40,10 @@ public class ProgressBar : MonoBehaviour {
                 .Append(sub.DOFillAmount(amount,0.3f));
         }
     }
+
+    public void SetMainColor(Color color) {
+        main.color = color;
+    }
     
     [Button]
     void Dev_UpdateAmount(float value) {

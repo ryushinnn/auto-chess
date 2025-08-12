@@ -1308,6 +1308,10 @@ MonoBehaviour:
   healthBar: {fileID: 4616933226886558938}
   energyBar: {fileID: 6529644040993711803}
   hpTextParent: {fileID: 8753971672558067024}
+  allyHpColor: {r: 1, g: 0.85331404, b: 0, a: 1}
+  enemyHpColor: {r: 0.735849, g: 0.19090424, b: 0.19090424, a: 1}
+  normalEnergyColor: {r: 0, g: 0.8509804, b: 1, a: 1}
+  drainingEnergyColor: {r: 0.7924528, g: 0.42986828, b: 0.51318926, a: 1}
   isAlive: 0
   maxHp: 0
   hp: 0

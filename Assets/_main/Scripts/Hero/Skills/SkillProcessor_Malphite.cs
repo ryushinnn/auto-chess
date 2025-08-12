@@ -19,6 +19,10 @@ public class SkillProcessor_Malphite : SkillProcessor {
                       $"duy trì {EFFECT_DURATION}s. Sau đó vận sức nhảy lên rồi giáng xuống " +
                       $"gây ({DMG_MUL * 100}% <sprite name=pdmg>) sát thương vật lý " +
                       $"và hất tung kẻ địch trong {AIRBORNE_DURATION}s.";
+
+        drainEnergy = true;
+        drainEnergyDelay = Timers[0];
+        drainEnergyDuration = EFFECT_DURATION;
     }
 
     public override void Process(float timer) {
