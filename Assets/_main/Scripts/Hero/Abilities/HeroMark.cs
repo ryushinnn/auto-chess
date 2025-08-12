@@ -22,6 +22,9 @@ public class HeroMark : HeroAbility {
     }
 
     public override void ResetAll() {
+        foreach (var holder in markHolders) {
+            holder.gameObject.SetActive(false);
+        }
         markGroups.Clear();
     }
 

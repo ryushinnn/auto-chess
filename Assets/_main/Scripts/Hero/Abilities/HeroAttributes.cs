@@ -595,6 +595,11 @@ public class HeroAttributes : HeroAbility {
     void Die() {
         isAlive = false;
         drainEnergySeq?.Kill();
+
+        foreach (var ms in modifierSets) {
+            ms.onRemove?.Invoke();
+        }
+        
         movement.StopMove(true);
         hero.Mecanim.Death();
         hero.Mecanim.InterruptAttack();
