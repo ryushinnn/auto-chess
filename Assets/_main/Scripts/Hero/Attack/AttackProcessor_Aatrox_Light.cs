@@ -1,5 +1,5 @@
 public class AttackProcessor_Aatrox_Light : AttackProcessor {
-    public AttackProcessor_Aatrox_Light(Hero hero) : base(hero) {
+    public AttackProcessor_Aatrox_Light(BattleHero hero) : base(hero) {
         AnimationLength = 1.367f;
         Timers = new[] { 0.18f };
     }

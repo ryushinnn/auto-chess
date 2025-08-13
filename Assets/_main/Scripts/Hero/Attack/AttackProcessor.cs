@@ -13,10 +13,10 @@ public class AttackProcessor {
     protected int atkExecuted;
     protected float trueTimer;
     
-    protected readonly Hero hero;
+    protected readonly BattleHero hero;
     protected readonly HeroAttributes attributes;
     
-    public AttackProcessor(Hero hero) {
+    public AttackProcessor(BattleHero hero) {
         this.hero = hero;
         attributes = this.hero.GetAbility<HeroAttributes>();
     }

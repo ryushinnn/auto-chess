@@ -12,7 +12,7 @@ public class SkillProcessor_Yone : SkillProcessor {
     AttackProcessor_Yone atkProcessor;
     YoneSword sword;
     
-    public SkillProcessor_Yone(Hero hero) : base(hero) {
+    public SkillProcessor_Yone(BattleHero hero) : base(hero) {
         Name = "Thiên Ân/Tuyệt Diệt";
         Description = "Thanh Kiếm sắp sử dụng (đang sẵn sàng) sẽ quyết định kỹ năng nào sẽ được kích hoạt.\n" +
                       "- <color=yellow>Thần Kiếm</color>: Lao tới chém 1 nhát gây " +
@@ -29,32 +29,32 @@ public class SkillProcessor_Yone : SkillProcessor {
 
     public override void Begin(out float animLength) {
         sword = atkProcessor.CurrentSword;
-        AnimationLength = sword == YoneSword.Divine ? DIVINE_ANIM_LENGTH : DEVIL_ANIM_LENGTH;
-        Timers = sword == YoneSword.Divine ? DIVINE_TIMERS : DEVIL_TIMERS;
+        animationLength = sword == YoneSword.Divine ? DIVINE_ANIM_LENGTH : DEVIL_ANIM_LENGTH;
+        timers = sword == YoneSword.Divine ? DIVINE_TIMERS : DEVIL_TIMERS;
         base.Begin(out animLength);
     }
 
     public override void Process(float timer) {
         if (sword == YoneSword.Divine) {
-            if (timer >= Timers[0] && skillExecuted == 0) {
+            if (timer >= timers[0] && skillExecuted == 0) {
                 Judge();
                 skillExecuted++;
             }
         }
         else {
-            if (timer >= Timers[0] && skillExecuted == 0) {
+            if (timer >= timers[0] && skillExecuted == 0) {
                 LightSmite();
                 skillExecuted++;
             }
-            else if (timer >= Timers[1] && skillExecuted == 1) {
+            else if (timer >= timers[1] && skillExecuted == 1) {
                 LightSmite();
                 skillExecuted++;
             }
-            else if (timer >= Timers[2] && skillExecuted == 2) {
+            else if (timer >= timers[2] && skillExecuted == 2) {
                 LightSmite();
                 skillExecuted++;
             }
-            else if (timer >= Timers[3] && skillExecuted == 3) {
+            else if (timer >= timers[3] && skillExecuted == 3) {
                 HeavySmite();
                 skillExecuted++;
             }

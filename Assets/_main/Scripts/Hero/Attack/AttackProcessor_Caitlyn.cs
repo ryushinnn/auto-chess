@@ -1,5 +1,5 @@
 ﻿public class AttackProcessor_Caitlyn : AttackProcessor {
-    public AttackProcessor_Caitlyn(Hero hero) : base(hero) {
+    public AttackProcessor_Caitlyn(BattleHero hero) : base(hero) {
         AnimationLength = 1.367f;
         Timers = new[] { 0.2f };
     }

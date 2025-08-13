@@ -1,5 +1,5 @@
 ﻿public class AttackProcessor_Zed : AttackProcessor {
-    public AttackProcessor_Zed(Hero hero) : base(hero) {
+    public AttackProcessor_Zed(BattleHero hero) : base(hero) {
         AnimationLength = 1.267f;
         Timers = new[] { 0.25f };
     }

@@ -1,5 +1,5 @@
 ﻿public class AttackProcessor_Tristana : AttackProcessor {
-    public AttackProcessor_Tristana(Hero hero) : base(hero) {
+    public AttackProcessor_Tristana(BattleHero hero) : base(hero) {
         AnimationLength = 0.933f;
         Timers = new[] { 0.17f };
     }

@@ -3,9 +3,9 @@
     const float SILENT_DURATION = 2;
     const float STUN_DURATION = 1;
     
-    public SkillProcessor_Akali(Hero hero) : base(hero) {
-        AnimationLength = 1;
-        Timers = new[] { 0.2f };
+    public SkillProcessor_Akali(BattleHero hero) : base(hero) {
+        animationLength = 1;
+        timers = new[] { 0.2f };
         Name = "Ám Quang Chi Thuật";
         Description = $"Ném bom mù vào 1 mục tiêu, nếu mục tiêu có ít nhất {ENERGY_THRESHOLD} " +
                       $"<sprite name=eng>, gây câm lặng trong {SILENT_DURATION}s, ngược lại gây " +
@@ -13,7 +13,7 @@
     }
 
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             ThrowBomb();
             skillExecuted++;
         }

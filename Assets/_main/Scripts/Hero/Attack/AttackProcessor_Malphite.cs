@@ -1,5 +1,5 @@
 ﻿public class AttackProcessor_Malphite : AttackProcessor {
-    public AttackProcessor_Malphite(Hero hero) : base(hero) {
+    public AttackProcessor_Malphite(BattleHero hero) : base(hero) {
         AnimationLength = 1.1f;
         Timers = new[] { 0.17f };
     }

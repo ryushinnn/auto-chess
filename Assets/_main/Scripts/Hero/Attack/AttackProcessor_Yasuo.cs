@@ -6,7 +6,7 @@ public class AttackProcessor_Yasuo : AttackProcessor {
     const float DMG_MUL = 0.5f;
     const int COUNT_LIMIT = 2;
 
-    public AttackProcessor_Yasuo(Hero hero) : base(hero) {
+    public AttackProcessor_Yasuo(BattleHero hero) : base(hero) {
         AnimationLength = 1.333f;
         Timers = new[] { 0.33f };
         Description = $"Mỗi đòn đánh thứ {COUNT_LIMIT + 1} sẽ gây thêm " +

@@ -40,6 +40,10 @@ public class HeroInfoUI : BaseUI {
     }
 
     public override void Open(params object[] args) {
+        if (!gameObject.activeSelf) {
+            skillDescription.Switch(false);
+        }
+        
         base.Open();
         var targetHero = (Hero)args[0];
         
@@ -52,7 +56,6 @@ public class HeroInfoUI : BaseUI {
         UpdateIdentity();
         UpdateItems();
         UpdateAttributeValues();
-        skillDescription.Switch(false);
     }
     
     public override void Close() {
@@ -77,12 +80,8 @@ public class HeroInfoUI : BaseUI {
             destinies[i].gameObject.SetActive(true);
             destinies[i].Initialize(roles[i-1]);
         }
-
-        var attackDesc = hero.GetAbility<HeroAttack>().Processor.Description;
-        var passive = attackDesc.IsValid() ? $"<color=grey><i>Nội tại: {attackDesc}</color></i>\n\n" : "";
-        var skillProcessor = hero.GetAbility<HeroSkill>().Processor;
-        var note = skillProcessor.Unstoppable ? "\n<color=grey><i>(Khi đang sử dụng kỹ năng, không thể bị cản phá)</color></i>" : "";
-        skillDescription.SetText($"<uppercase>{skillProcessor.Name}</uppercase>\n\n{passive}{skillProcessor.Description}{note}");
+        
+        skillDescription.SetText(hero.Trait.SkillDescription());
     }
 
     void UpdateItems() {

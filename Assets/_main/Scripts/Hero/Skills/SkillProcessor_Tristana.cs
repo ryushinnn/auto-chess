@@ -4,21 +4,21 @@
     const float DURATION = 4f;
     const string EFFECT_KEY = "tristana_furious";
     
-    public SkillProcessor_Tristana(Hero hero) : base(hero) {
-        AnimationLength = 2.2f;
-        Timers = new[] { 0.625f };
-        Unstoppable = true;
+    public SkillProcessor_Tristana(BattleHero hero) : base(hero) {
+        animationLength = 2.2f;
+        timers = new[] { 0.625f };
+        unstoppable = true;
         Name = "Chiến Pháo Cuồng Nộ";
         Description = $"Tăng {ATK_SPD_MUL*100}% <sprite name=aspd> và " +
                       $"{CRIT_CHANCE_MUL * 100}% <sprite name=crc>, duy trì {DURATION}s.";
 
         drainEnergy = true;
-        drainEnergyDelay = Timers[0];
+        drainEnergyDelay = timers[0];
         drainEnergyDuration = DURATION;
     }
 
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             Greeting();
             skillExecuted++;
         }

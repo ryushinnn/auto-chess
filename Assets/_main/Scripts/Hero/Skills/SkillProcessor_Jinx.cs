@@ -10,10 +10,10 @@ public class SkillProcessor_Jinx : SkillProcessor {
 
     List<Hero> affectedTargets = new();
     
-    public SkillProcessor_Jinx(Hero hero) : base(hero) {
-        AnimationLength = 4.2f;
-        Timers = new[] { 2f };
-        Unstoppable = true;
+    public SkillProcessor_Jinx(BattleHero hero) : base(hero) {
+        animationLength = 4.2f;
+        timers = new[] { 2f };
+        unstoppable = true;
         Name = "Bùm! Bùm! Bùm! Bùm! Bùm!";
         Description = $"Bắn 5 quả tên lửa, mỗi quả gây ({DMG_MUL_PER_ROCKET * 100}% <sprite name=pdmg>) sát thương, " +
                       $"Sát thương đầu ra ngẫu nhiên là sát thương vật lý, sát thương phép hoặc sát thương chuẩn " +
@@ -21,7 +21,7 @@ public class SkillProcessor_Jinx : SkillProcessor {
     }
 
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             ShotRockets();
             skillExecuted++;
         }

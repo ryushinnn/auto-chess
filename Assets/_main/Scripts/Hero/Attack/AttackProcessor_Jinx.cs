@@ -1,5 +1,5 @@
 ﻿public class AttackProcessor_Jinx : AttackProcessor {
-    public AttackProcessor_Jinx(Hero hero) : base(hero) {
+    public AttackProcessor_Jinx(BattleHero hero) : base(hero) {
         AnimationLength = 1.067f;
         Timers = new[] { 0.37f };
     }

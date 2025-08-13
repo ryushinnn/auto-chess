@@ -14,10 +14,10 @@ public class SkillProcessor_Aatrox_Light : SkillProcessor {
     const float VAMP_MUL_WHEN_LOW_HP = 2f;
     const float HP_THRESHOLD = 0.5f;
 
-    public SkillProcessor_Aatrox_Light(Hero hero) : base(hero) {
-        AnimationLength = 5f;
-        Timers = new[] { 0.6f, 2.3f, 4.1f };
-        Unstoppable = true;
+    public SkillProcessor_Aatrox_Light(BattleHero hero) : base(hero) {
+        animationLength = 5f;
+        timers = new[] { 0.6f, 2.3f, 4.1f };
+        unstoppable = true;
         Name = "Nguyệt Thực: Bạch Vân Liên Trảm";
         Description = $"Chém 3 nhát, lần lượt gây ({DMG_MUL_0 * 100}%/{DMG_MUL_1 * 100}%/{DMG_MUL_2 * 100}% <sprite name=mdmg>) sát thương phép " +
                       $"và hất tung mục tiêu trong {AIRBORNE_TIME_0}s/{AIRBORNE_TIME_1}s/{AIRBORNE_TIME_2}s " +
@@ -27,15 +27,15 @@ public class SkillProcessor_Aatrox_Light : SkillProcessor {
     }
     
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             LightSlash();
             skillExecuted++;
         }
-        else if (timer >= Timers[1] && skillExecuted == 1) {
+        else if (timer >= timers[1] && skillExecuted == 1) {
             MediumSlash();
             skillExecuted++;
         }
-        else if (timer >= Timers[2] && skillExecuted == 2) {
+        else if (timer >= timers[2] && skillExecuted == 2) {
             HeavySlash();
             skillExecuted++;
         }

@@ -12,10 +12,10 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
     const string HOT_KEY = "caitlyn_cake";
     const string ATK_SPD_KEY = "caitlyn_cake_atkspd";
     
-    public SkillProcessor_Caitlyn(Hero hero) : base(hero) {
-        AnimationLength = 6.5f;
-        Timers = new[] { 2.2f, 5.6f };
-        Unstoppable = true;
+    public SkillProcessor_Caitlyn(BattleHero hero) : base(hero) {
+        animationLength = 6.5f;
+        timers = new[] { 2.2f, 5.6f };
+        unstoppable = true;
         Name = "Đến giờ trà chiều rồi! ^_^";
         Description = $"Ăn bánh giúp hồi máu trong {TOTAL_TIME/1000f}s, " +
                       $"mỗi {INTERVAL/1000f}s hồi máu bằng ({HP_MUL_TO_HEAL*100}% <sprite name=hp> tối đa + " +
@@ -24,11 +24,11 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
     }
 
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             DrinkTea();
             skillExecuted++;
         }
-        else if (timer >= Timers[1] && skillExecuted == 1) {
+        else if (timer >= timers[1] && skillExecuted == 1) {
             Focus();
             skillExecuted++;
         }

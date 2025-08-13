@@ -6,9 +6,9 @@ public class SkillProcessor_Zed : SkillProcessor {
     const float STUN_MAIN = 1f;
     const float STUN_OTHERS = 0.5f;
 
-    public SkillProcessor_Zed(Hero hero) : base(hero) {
-        AnimationLength = 3;
-        Timers = new[] { 0.83f, 1.66f };
+    public SkillProcessor_Zed(BattleHero hero) : base(hero) {
+        animationLength = 3;
+        timers = new[] { 0.83f, 1.66f };
         Name = "Phi Tiêu Bộc Phá";
         Description = "Nhảy lên và ném phi tiêu vào 1 mục tiêu gây " +
                       $"({DMG_MUL * 100}% <sprite name=pdmg>) sát thương vật lý sau đó nhảy xuống, kích nổ phi tiêu " +
@@ -17,11 +17,11 @@ public class SkillProcessor_Zed : SkillProcessor {
     }
 
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             ThrowShurikens();
             skillExecuted++;
         }
-        else if (timer >= Timers[1] && skillExecuted == 1) {
+        else if (timer >= timers[1] && skillExecuted == 1) {
             TriggerExplosion();
             skillExecuted++;
         }

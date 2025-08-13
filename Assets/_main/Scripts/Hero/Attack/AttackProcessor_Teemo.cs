@@ -10,7 +10,7 @@ public class AttackProcessor_Teemo : AttackProcessor {
     public const float MAX_HP_DMG = 0.001f;
     public const float DMG_MUL_LIMIT = 0.01f;
 
-    public AttackProcessor_Teemo(Hero hero) : base(hero) {
+    public AttackProcessor_Teemo(BattleHero hero) : base(hero) {
         AnimationLength = 0.933f;
         Timers = new[] { 0.17f };
         Description = $"Đòn đánh sẽ thêm 1 cộng dồn (tối đa {MAX_STACKS} cộng dồn) " +

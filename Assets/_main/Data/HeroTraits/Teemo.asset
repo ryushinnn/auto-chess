@@ -33,6 +33,14 @@ MonoBehaviour:
   energyRegenPerAttack: 15
   energyRegenPerHit: 7
   attackRange: 2
+  evolutions: []
+  skillParams: []
+  attackDescription: 
+  skillName: 
+  skillDescription: 
+  unstoppable: 0
+  specialKeys:
+  - teemo_hell_flame
   dps: 65
   physicalReduction: 24.242424
   magicalReduction: 19.35484

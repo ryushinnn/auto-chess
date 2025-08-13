@@ -10,9 +10,9 @@ public class SkillProcessor_Malphite : SkillProcessor {
     const float DMG_MUL = 1f;
     const float AIRBORNE_DURATION = 2f;
     
-    public SkillProcessor_Malphite(Hero hero) : base(hero) {
-        AnimationLength = 4.7f;
-        Timers = new[] { 0.46f, 2.3f };
+    public SkillProcessor_Malphite(BattleHero hero) : base(hero) {
+        animationLength = 4.7f;
+        timers = new[] { 0.46f, 2.3f };
         Name = "Kim Cang Bất Hoại";
         Description = $"Tăng {DEFENSE_MUL * 100}% <sprite name=arm> và <sprite name=res>, " +
                       $"nhận tối đa <sprite name=ten>, nhưng bị giảm {ATK_SPEED_REDUCE_MUL * -100}% <sprite name=aspd>, " +
@@ -21,16 +21,16 @@ public class SkillProcessor_Malphite : SkillProcessor {
                       $"và hất tung kẻ địch trong {AIRBORNE_DURATION}s.";
 
         drainEnergy = true;
-        drainEnergyDelay = Timers[0];
+        drainEnergyDelay = timers[0];
         drainEnergyDuration = EFFECT_DURATION;
     }
 
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             Strengthen();
             skillExecuted++;
         }
-        else if (timer >= Timers[1] && skillExecuted == 1) {
+        else if (timer >= timers[1] && skillExecuted == 1) {
             Slam();
             skillExecuted++;
         }

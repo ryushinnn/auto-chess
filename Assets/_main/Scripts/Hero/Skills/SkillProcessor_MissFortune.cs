@@ -12,9 +12,9 @@
     const float REDUCE_DEFENSE_DURATION = 5f;
     const string EFFECT_KEY = "missfortune_shield_breaker";
 
-    public SkillProcessor_MissFortune(Hero hero) : base(hero) {
-        AnimationLength = 2.8f;
-        Timers = new[] { 1f, 1.3f };
+    public SkillProcessor_MissFortune(BattleHero hero) : base(hero) {
+        animationLength = 2.8f;
+        timers = new[] { 1f, 1.3f };
         Name = "Hơi thở của Hoa Cải!";
         Description = "Bắn lần lượt 2 viên đạn.\n" +
                       $"- Viên đầu tiên: Gây ({L_PHYSICAL_DMG_MUL_0 * 100}% <sprite name=pdmg> + " +
@@ -30,11 +30,11 @@
     }
 
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             ShotLeft();
             skillExecuted++;
         }
-        else if (timer >= Timers[1] && skillExecuted == 1) {
+        else if (timer >= timers[1] && skillExecuted == 1) {
             ShotRight();
             skillExecuted++;
         }

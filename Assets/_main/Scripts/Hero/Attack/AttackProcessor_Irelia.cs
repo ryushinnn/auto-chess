@@ -1,5 +1,5 @@
 ﻿public class AttackProcessor_Irelia : AttackProcessor {
-    public AttackProcessor_Irelia(Hero hero) : base(hero) {
+    public AttackProcessor_Irelia(BattleHero hero) : base(hero) {
         AnimationLength = 1.3f;
         Timers = new[] { 0.2f };
     }

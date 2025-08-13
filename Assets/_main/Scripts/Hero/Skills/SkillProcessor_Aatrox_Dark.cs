@@ -13,10 +13,10 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
     const float BONUS_TRUE_DMG_MUL = 0.5f;
     const float HP_THRESHOLD = 0.5f;
 
-    public SkillProcessor_Aatrox_Dark(Hero hero) : base(hero) {
-        AnimationLength = 5;
-        Timers = new[] { 0.6f, 2.3f, 4.1f };
-        Unstoppable = true;
+    public SkillProcessor_Aatrox_Dark(BattleHero hero) : base(hero) {
+        animationLength = 5;
+        timers = new[] { 0.6f, 2.3f, 4.1f };
+        unstoppable = true;
         Name = "Nhật Thực: Huyết Sát Cửu U";
         Description = $"Chém 3 nhát, lần lượt gây ({DMG_MUL_0 * 100}%/{DMG_MUL_1 * 100}%/{DMG_MUL_2 * 100}% <sprite name=pdmg>) sát thương vật lý " +
                       $"và hất tung mục tiêu trong {AIRBORNE_TIME_0}s/{AIRBORNE_TIME_1}s/{AIRBORNE_TIME_2}s. " +
@@ -28,15 +28,15 @@ public class SkillProcessor_Aatrox_Dark : SkillProcessor {
     }
 
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             LightSlash();
             skillExecuted++;
         }
-        else if (timer >= Timers[1] && skillExecuted == 1) {
+        else if (timer >= timers[1] && skillExecuted == 1) {
             MediumSlash();
             skillExecuted++;
         }
-        else if (timer >= Timers[2] && skillExecuted == 2) {
+        else if (timer >= timers[2] && skillExecuted == 2) {
             HeavySlash();
             skillExecuted++;
         }

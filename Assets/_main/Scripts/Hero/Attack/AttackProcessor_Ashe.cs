@@ -1,5 +1,5 @@
 ﻿public class AttackProcessor_Ashe : AttackProcessor {
-    public AttackProcessor_Ashe(Hero hero) : base(hero) {
+    public AttackProcessor_Ashe(BattleHero hero) : base(hero) {
         AnimationLength = 1f;
         Timers = new[] { 0.2f };
     }

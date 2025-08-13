@@ -13,7 +13,7 @@ public class AttackProcessor_Yone : AttackProcessor {
     
     public YoneSword CurrentSword { get; private set; }
 
-    public AttackProcessor_Yone(Hero hero) : base(hero) {
+    public AttackProcessor_Yone(BattleHero hero) : base(hero) {
         AnimationLength = 1.367f;
         Timers = new[] { 0.5f };
         Description = "Thay đổi qua lại giữa <color=yellow>Thần Kiếm</color> và <color=purple>Quỷ Kiếm</color> sau mỗi đòn đánh.\n" +

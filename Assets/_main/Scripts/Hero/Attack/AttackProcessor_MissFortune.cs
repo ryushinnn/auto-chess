@@ -7,7 +7,7 @@ public class AttackProcessor_MissFortune : AttackProcessor {
     const float MAGICAL_DMG_MUL_1 = 0.7f;
     
 
-    public AttackProcessor_MissFortune(Hero hero) : base(hero) {
+    public AttackProcessor_MissFortune(BattleHero hero) : base(hero) {
         AnimationLength = 1.167f;
         Timers = new[] { 0.35f };
         Description = $"Đòn đánh bắn cùng lúc 2 viên đạn. 1 viên gây ({PHYSICAL_DMG_MUL_0 * 100}% <sprite name=pdmg> + " +

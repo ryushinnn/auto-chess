@@ -5,7 +5,7 @@ public class AttackProcessor_Aatrox_Dark : AttackProcessor {
     const float MIN_DMG_MUL = 0.5f;
     const float MAX_DMG_MUL = 1;
 
-    public AttackProcessor_Aatrox_Dark(Hero hero) : base(hero) {
+    public AttackProcessor_Aatrox_Dark(BattleHero hero) : base(hero) {
         AnimationLength = 2.167f;
         Timers = new[] { 0.9f, 1.9f };
         Description = "Đòn đánh sẽ chém liên tiếp 2 nhát, mỗi nhát gây " +

@@ -2,13 +2,13 @@ using System;
 using DG.Tweening;
 
 public class SkillProcessor {
-    public float AnimationLength { get; protected set; }
-    public float[] Timers { get; protected set; }
-    public bool Unstoppable { get; protected set; }
+    protected float animationLength;
+    protected float[] timers;
+    protected bool unstoppable;
     public string Name { get; protected set; }
     public string Description { get; protected set; }
     
-    protected readonly Hero hero;
+    protected readonly BattleHero hero;
     protected readonly HeroAttributes attributes;
 
     protected bool drainEnergy;
@@ -17,13 +17,14 @@ public class SkillProcessor {
     
     protected int skillExecuted;
 
-    public SkillProcessor(Hero hero) {
+    public SkillProcessor(BattleHero hero) {
         this.hero = hero;
+        unstoppable = this.hero.Trait.unstoppable;
         attributes = this.hero.GetAbility<HeroAttributes>();
     }
 
     public virtual void Begin(out float animLength) {
-        if (Unstoppable) {
+        if (unstoppable) {
             hero.GetAbility<HeroStatusEffects>().Unstoppable(true);
         }
 
@@ -33,7 +34,7 @@ public class SkillProcessor {
         else {
             attributes.UseAllEnergy();
         }
-        animLength = AnimationLength;
+        animLength = animationLength;
         skillExecuted = 0;
     }
 
@@ -42,7 +43,7 @@ public class SkillProcessor {
     }
 
     public virtual void End(bool complete) {
-        if (Unstoppable) {
+        if (unstoppable) {
             hero.GetAbility<HeroStatusEffects>().Unstoppable(false);
         }
     }

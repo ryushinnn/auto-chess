@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using RExt.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -36,6 +37,14 @@ public class HeroTrait : ScriptableObject {
 
     [TitleGroup("Evolution")]
     public Evolution[] evolutions;
+
+    [TitleGroup("Skill")]
+    [TableList(ShowIndexLabels = true)] public HeroSkillParam[] skillParams;
+    [TextArea(1,100)] public string attackDescription;
+    public string skillName;
+    [TextArea(1,100)] public string skillDescription;
+    public bool unstoppable;
+    public string[] specialKeys;
 
     [TitleGroup("Contants & Limits")]
     public const float BASE_CRITICAL_CHANCE = 0.15f;
@@ -78,12 +87,38 @@ public class HeroTrait : ScriptableObject {
     public string DisplayName() {
         return name + (subName.IsValid() ? "\n" + subName : "");
     }
+
+    public string SkillDescription() {
+        var attack = attackDescription.IsValid() ? $"<color=grey><i>Nội tại: {attackDescription}</color></i>\n\n" : "";
+        
+        var placeholderPattern = @"#\[(\d+)\]";
+        var skill = Regex.Replace(skillDescription, placeholderPattern, match => {
+            var index = int.Parse(match.Groups[1].Value);
+            if (index >= 0 && index < skillParams.Length) {
+                var param = skillParams[index];
+                return param.isPercentage ? $"{param.value * 100}%" : $"{param.value}";
+            }
+
+            return match.Value;
+        });
+
+        var note = unstoppable ? "\n<color=grey><i>(Khi đang sử dụng kỹ năng, không thể bị cản phá)</color></i>" : "";
+
+        return $"<uppercase>{skillName}</uppercase>\n\n{attack}{skill}{note}";
+    }
 }
 
 [Serializable]
 public class Evolution {
     public HeroRank rank;
     public AttributeModifier[] modifiers;
+}
+
+[Serializable]
+public class HeroSkillParam {
+    public string key;
+    public float value;
+    public bool isPercentage;
 }
 
 public static class HeroId {

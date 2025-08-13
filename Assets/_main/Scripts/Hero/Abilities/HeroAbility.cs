@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ public abstract class HeroAbility : MonoBehaviour {
 
     public bool IsActive => isActive;
 
-    protected Hero hero;
+    [NonSerialized] protected Hero hero;
     
     public virtual void Initialize(Hero hero) {
         this.hero = hero;

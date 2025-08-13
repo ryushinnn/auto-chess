@@ -1,5 +1,5 @@
 ﻿public class AttackProcessor_Morgana : AttackProcessor {
-    public AttackProcessor_Morgana(Hero hero) : base(hero) {
+    public AttackProcessor_Morgana(BattleHero hero) : base(hero) {
         AnimationLength = 2f;
         Timers = new[] { 0.14f };
     }

@@ -1,5 +1,5 @@
 ﻿public static class AttackProcessorFactory {
-    public static AttackProcessor Create(Hero hero) {
+    public static AttackProcessor Create(BattleHero hero) {
         return hero.Trait.id switch {
             HeroId.Aatrox_Dark => new AttackProcessor_Aatrox_Dark(hero),
             HeroId.Aatrox_Light => new AttackProcessor_Aatrox_Light(hero),

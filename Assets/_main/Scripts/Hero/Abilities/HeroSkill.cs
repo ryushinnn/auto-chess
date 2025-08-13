@@ -1,20 +1,25 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class HeroSkill : HeroAbility {
     public bool IsUsingSkill => isUsingSkill;
-    public SkillProcessor Processor => processor;
-
-    HeroAttributes attributes;
-    HeroRotation rotation;
-    HeroStatusEffects effects;
-    HeroAttack attack;
     
-    SkillProcessor processor;
     [SerializeField, ReadOnly] float timer;
     [SerializeField, ReadOnly] bool isUsingSkill;
     [SerializeField, ReadOnly] float duration;
+
+    [NonSerialized] new BattleHero hero;
+    HeroAttributes attributes;
+    HeroRotation rotation;
+    HeroStatusEffects effects;
+    SkillProcessor processor;
+
+    public override void Initialize(Hero hero) {
+        this.hero = (BattleHero)hero;
+        FindReferences();
+    }
 
     public override void ResetAll() {
         processor = SkillProcessorFactory.Create(hero);
@@ -29,7 +34,6 @@ public class HeroSkill : HeroAbility {
         attributes = hero.GetAbility<HeroAttributes>();
         rotation = hero.GetAbility<HeroRotation>();
         effects = hero.GetAbility<HeroStatusEffects>();
-        attack = hero.GetAbility<HeroAttack>();
     }
 
     public bool UseSkill() {
@@ -40,7 +44,7 @@ public class HeroSkill : HeroAbility {
         
         isUsingSkill = true;
         timer = 0;
-        rotation.Rotate(((BattleHero)hero).Target.transform.position - hero.transform.position);
+        rotation.Rotate(hero.Target.transform.position - hero.transform.position);
         processor.Begin(out duration);
         hero.Mecanim.UseSkill();
         return true;

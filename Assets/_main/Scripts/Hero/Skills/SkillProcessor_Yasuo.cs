@@ -11,9 +11,9 @@ public class SkillProcessor_Yasuo : SkillProcessor {
     const int DOT_TOTAL_TIME = 4000; //ms
     const int DOT_INTERVAL = 333; //ms
     
-    public SkillProcessor_Yasuo(Hero hero) : base(hero) {
-        AnimationLength = 6.3f;
-        Timers = new[] { 0.7f, 1.7f, 3.5f };
+    public SkillProcessor_Yasuo(BattleHero hero) : base(hero) {
+        animationLength = 6.3f;
+        timers = new[] { 0.7f, 1.7f, 3.5f };
         Name = "Tuỷ Tán Tâm Tan";
         Description = $"Hất tung mục tiêu trong {AIRBORNE_DURATION}s sau đó chém 2 lần gây " +
                       $"lần lượt ({DMG_MUL_0 * 100}% <sprite name=pdmg>) sát thương vật lý " +
@@ -23,15 +23,15 @@ public class SkillProcessor_Yasuo : SkillProcessor {
     }
 
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             BlowUp();
             skillExecuted++;
         }
-        else if (timer >= Timers[1] && skillExecuted == 1) {
+        else if (timer >= timers[1] && skillExecuted == 1) {
             Cut();
             skillExecuted++;
         }
-        else if (timer >= Timers[2] && skillExecuted == 2) {
+        else if (timer >= timers[2] && skillExecuted == 2) {
             BonusCut();
             skillExecuted++;
         }

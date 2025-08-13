@@ -1,5 +1,5 @@
-﻿public class SkillProcessorFactory {
-    public static SkillProcessor Create(Hero hero) {
+﻿public static class SkillProcessorFactory {
+    public static SkillProcessor Create(BattleHero hero) {
         return hero.Trait.id switch {
             HeroId.Aatrox_Dark => new SkillProcessor_Aatrox_Dark(hero),
             HeroId.Aatrox_Light => new SkillProcessor_Aatrox_Light(hero),

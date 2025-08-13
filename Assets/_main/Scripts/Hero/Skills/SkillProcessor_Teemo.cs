@@ -6,9 +6,9 @@ public class SkillProcessor_Teemo : SkillProcessor {
     const float DMG_MUL = 1f;
     const float DMG_MUL_PER_IGNITE = 0.1f;
     
-    public SkillProcessor_Teemo(Hero hero) : base(hero) {
-        AnimationLength = 4;
-        Timers = new[] { 1.56f, 2.73f, 3.29f };
+    public SkillProcessor_Teemo(BattleHero hero) : base(hero) {
+        animationLength = 4;
+        timers = new[] { 1.56f, 2.73f, 3.29f };
         Name = "Hoả Ngục Tàn Hồn: Tam Thức";
         Description = $"Ném 3 quả bom, mỗi quả bom gây ({DMG_MUL * 100}% <sprite name=mdmg>) sát thương phép" +
                       $", tăng {DMG_MUL_PER_IGNITE * 100}% " +
@@ -18,15 +18,15 @@ public class SkillProcessor_Teemo : SkillProcessor {
     }
 
     public override void Process(float timer) {
-        if (timer >= Timers[0] && skillExecuted == 0) {
+        if (timer >= timers[0] && skillExecuted == 0) {
             ThrowBomb();
             skillExecuted++;
         }
-        else if (timer >= Timers[1] && skillExecuted == 1) {
+        else if (timer >= timers[1] && skillExecuted == 1) {
             ThrowBomb();
             skillExecuted++;
         }
-        else if (timer >= Timers[2] && skillExecuted == 2) {
+        else if (timer >= timers[2] && skillExecuted == 2) {
             ThrowBigBomb();
             skillExecuted++;
         }

@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public enum DamageType {
@@ -10,16 +11,22 @@ public enum DamageType {
 public class HeroAttack : HeroAbility {
     public AttackProcessor Processor => processor;
     
-    HeroAttributes attributes;
-    HeroRotation rotation;
-    HeroSkill skill;
-    HeroStatusEffects effects;
-    
-    AttackProcessor processor;
     [SerializeField, ReadOnly] float currentAttackCooldown;
     [SerializeField, ReadOnly] float timer;
     [SerializeField, ReadOnly] bool isAttacking;
     [SerializeField, ReadOnly] float duration;
+    
+    [NonSerialized] new BattleHero hero;
+    HeroAttributes attributes;
+    HeroRotation rotation;
+    HeroSkill skill;
+    HeroStatusEffects effects;
+    AttackProcessor processor;
+
+    public override void Initialize(Hero hero) {
+        this.hero = (BattleHero)hero;
+        FindReferences();
+    }
 
     public override void ResetAll() {
         processor = AttackProcessorFactory.Create(hero);
@@ -45,7 +52,7 @@ public class HeroAttack : HeroAbility {
 
         isAttacking = true;
         timer = 0;
-        rotation.Rotate(((BattleHero)hero).Target.transform.position - hero.transform.position);
+        rotation.Rotate(hero.Target.transform.position - hero.transform.position);
         currentAttackCooldown = 1 / attributes.AttackSpeed;
         processor.Begin(out duration);
         hero.Mecanim.Attack();

@@ -10,9 +10,9 @@ public class SkillProcessor_Katarina : SkillProcessor {
     
     List<Hero> affectedTargets = new();
 
-    public SkillProcessor_Katarina(Hero hero) : base(hero) {
-        AnimationLength = 3.1f;
-        Unstoppable = true;
+    public SkillProcessor_Katarina(BattleHero hero) : base(hero) {
+        animationLength = 3.1f;
+        unstoppable = true;
         Name = "Đoạn Thuỷ Toái Phong Đao";
         Description = $"Biến thành lốc xoáy, liên tục gây sát thương xung quanh. " +
                       $"Mỗi lần gây ({DMG_MUL*100}% <sprite name=pdmg>) sát thương phép và có thể " +

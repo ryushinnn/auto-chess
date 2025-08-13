@@ -1,5 +1,5 @@
 ﻿public class AttackProcessor_Akali : AttackProcessor {
-    public AttackProcessor_Akali(Hero hero) : base(hero) {
+    public AttackProcessor_Akali(BattleHero hero) : base(hero) {
         AnimationLength = 1.2f;
         Timers = new[] { 0.18f };
     }
