@@ -9,14 +9,19 @@ using Random = UnityEngine.Random;
 public class HpTextSpawner : Singleton<HpTextSpawner> {
     [SerializeField] HpText hpTextPrefab;
     
-    ObjectPool<HpText> pool;
-    
+    Queue<HpText> pool = new();
+
+    const float POOL_INIT_SIZE = 10;
     const float LEFT_POS = -0.5f;
     const float RIGHT_POS = 0.5f;
     const float POS_Y_GAP = 0.5f;
     
     protected override void OnAwake() {
-        pool = ObjectPools.Instance.CreatePool(hpTextPrefab, 10, 20, 5);
+        for (int i = 0; i < POOL_INIT_SIZE; i++) {
+            var hpText = Instantiate(hpTextPrefab, transform);
+            hpText.gameObject.SetActive(false);
+            pool.Enqueue(hpText);
+        }    
     }
 
     public HpText SpawnHpTextAsDamage(Transform parent, Damage damage) {
@@ -46,12 +51,21 @@ public class HpTextSpawner : Singleton<HpTextSpawner> {
     }
 
     HpText SpawnHpText(Transform parent, Vector3 pos) {
-        var hpText = pool.Get();
-        hpText.transform.SetParent(parent);
+        HpText hpText;
+        if (pool.Count > 0) {
+            hpText = pool.Dequeue();
+            hpText.transform.SetParent(parent);
+        }
+        else {
+            hpText = Instantiate(hpTextPrefab, parent);
+        }
+        hpText.gameObject.SetActive(true);
         hpText.transform.localPosition = pos;
         hpText.transform.localEulerAngles = Vector3.zero;
         DOVirtual.DelayedCall(1, () => {
-            pool.Return(hpText);
+            hpText.transform.SetParent(transform);
+            hpText.gameObject.SetActive(false);
+            pool.Enqueue(hpText);
         });
         return hpText;
     }

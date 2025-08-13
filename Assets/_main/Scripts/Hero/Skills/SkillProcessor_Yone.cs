@@ -28,7 +28,7 @@ public class SkillProcessor_Yone : SkillProcessor {
     }
 
     public override void Begin(out float animLength) {
-        sword = (YoneSword)atkProcessor.CustomInt["sword"];
+        sword = atkProcessor.CurrentSword;
         AnimationLength = sword == YoneSword.Divine ? DIVINE_ANIM_LENGTH : DEVIL_ANIM_LENGTH;
         Timers = sword == YoneSword.Divine ? DIVINE_TIMERS : DEVIL_TIMERS;
         base.Begin(out animLength);

@@ -10,11 +10,11 @@ public class Mecanim_Yone : Mecanim {
     }
 
     public override void UseSkill() {
-        var atkProcessor = hero.GetAbility<HeroAttack>().Processor as AttackProcessor_Yone;
-        if (atkProcessor.CustomInt["sword"] == (int)YoneSword.Divine) {
+        var atkProcessor = (AttackProcessor_Yone)hero.GetAbility<HeroAttack>().Processor;
+        if (atkProcessor.CurrentSword == YoneSword.Divine) {
             Interact(Interaction.Skill, (paramSkill, 0));
         }
-        else if (atkProcessor.CustomInt["sword"] == (int)YoneSword.Devil) {
+        else if (atkProcessor.CurrentSword == YoneSword.Devil) {
             Interact(Interaction.Skill, (paramSkill, 1));
         }
     }

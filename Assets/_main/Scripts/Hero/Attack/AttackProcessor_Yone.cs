@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using RExt.Extensions;
 using UnityEngine;
 
 public class AttackProcessor_Yone : AttackProcessor {
@@ -9,6 +10,8 @@ public class AttackProcessor_Yone : AttackProcessor {
     const int DIVINE_WEAKENING_DURATION = 5;
     const float DEVIL_VAMP_MIN = 0f;
     const float DEVIL_VAMP_MAX = 0.2f;
+    
+    public YoneSword CurrentSword { get; private set; }
 
     public AttackProcessor_Yone(Hero hero) : base(hero) {
         AnimationLength = 1.367f;
@@ -24,8 +27,7 @@ public class AttackProcessor_Yone : AttackProcessor {
                       $"Nhận thêm tối đa {DEVIL_VAMP_MAX * 100}% <sprite name=ls>, dựa trên " +
                       $"máu đã mất";
         
-        customInt = new CustomData<int>();
-        customInt["sword"] = (int)YoneSword.Divine;
+        CurrentSword = YoneSword.Divine;
     }
 
     public override void Process(float timer) {
@@ -33,9 +35,8 @@ public class AttackProcessor_Yone : AttackProcessor {
 
         if (trueTimer >= Timers[0] && atkExecuted == 0) {
             if (((BattleHero)hero).Target != null) {
-                var sword = (YoneSword)customInt["sword"];
-                Damage dmg = default;
-                if (sword == YoneSword.Divine) {
+                Damage dmg;
+                if (CurrentSword == YoneSword.Divine) {
                     dmg = attributes.GetDamage(DamageType.Physical);
                 }
                 else {
@@ -45,7 +46,7 @@ public class AttackProcessor_Yone : AttackProcessor {
                 
                 var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(dmg);
                 var heal = outputDmg * attributes.LifeSteal;
-                if (sword == YoneSword.Devil) {
+                if (CurrentSword == YoneSword.Devil) {
                     heal += outputDmg * Mathf.Lerp(DEVIL_VAMP_MIN, DEVIL_VAMP_MAX, attributes.HpLostPercentage);
                 }
 
@@ -53,7 +54,7 @@ public class AttackProcessor_Yone : AttackProcessor {
                     attributes.Heal(heal);
                 }
 
-                if (sword == YoneSword.Divine) {
+                if (CurrentSword == YoneSword.Divine) {
                     var currentStack = ((BattleHero)hero).Target.GetAbility<HeroMark>().GetMark(EFFECT_KEY, hero)?.stacks ?? 0;
                     var nextStacks = Mathf.Min(currentStack + 1, DIVINE_WEAKENING_MAX_STACK);
                     
@@ -72,7 +73,7 @@ public class AttackProcessor_Yone : AttackProcessor {
                 
                 attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
             }
-            customInt["sword"] = (customInt["sword"] + 1) % 2;
+            CurrentSword = CurrentSword.Next();
             atkExecuted++;
         }
     }

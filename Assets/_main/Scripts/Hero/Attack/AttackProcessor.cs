@@ -13,11 +13,8 @@ public class AttackProcessor {
     protected int atkExecuted;
     protected float trueTimer;
     
-    public CustomData<int> CustomInt => customInt;
-    
     protected readonly Hero hero;
     protected readonly HeroAttributes attributes;
-    protected CustomData<int> customInt;
     
     public AttackProcessor(Hero hero) {
         this.hero = hero;
