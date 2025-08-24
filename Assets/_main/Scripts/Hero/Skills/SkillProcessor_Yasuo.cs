@@ -3,23 +3,34 @@ using RExt.Extensions;
 using UnityEngine;
 
 public class SkillProcessor_Yasuo : SkillProcessor {
-    const float AIRBORNE_DURATION = 1f;
-    const float DMG_MUL_0 = 1f;
-    const float DMG_MUL_1 = 1.5f;
-    const string DOT_KEY = "yasuo_wind_claws";
-    const float DOT_DMG_MUL = 0.1f;
-    const int DOT_TOTAL_TIME = 4000; //ms
-    const int DOT_INTERVAL = 333; //ms
+    readonly float airborneDuration;
+    readonly float baseDmg0;
+    readonly float dmgMul0;
+    readonly float baseDmg1;
+    readonly float dmgMul1;
+    readonly float dotBaseDmg;
+    readonly float dotDmgMul;
+    readonly float duration;
+    readonly float interval;
+    readonly string dotKey;
     
     public SkillProcessor_Yasuo(BattleHero hero) : base(hero) {
         animationLength = 6.3f;
         timers = new[] { 0.7f, 1.7f, 3.5f };
-        Name = "Tuỷ Tán Tâm Tan";
-        Description = $"Hất tung mục tiêu trong {AIRBORNE_DURATION}s sau đó chém 2 lần gây " +
-                      $"lần lượt ({DMG_MUL_0 * 100}% <sprite name=pdmg>) sát thương vật lý " +
-                      $"và ({DMG_MUL_1 * 100}% <sprite name=pdmg>) sát thương vật lý. Nhát chém thứ 2 kèm theo " +
-                      $"hiệu ứng <color=red>XUẤT HUYẾT</color> duy trì {DOT_TOTAL_TIME / 1000f}s\n" +
-                      $"<color=red>XUẤT HUYẾT</color>: mỗi {DOT_INTERVAL / 1000f}s gây ({DOT_DMG_MUL * 100}% <sprite name=pdmg>) sát thương vật lý.";
+
+        var skillParams = hero.Trait.skillParams;
+        airborneDuration = skillParams[0].value;
+        baseDmg0 = skillParams[1].value;
+        dmgMul0 = skillParams[2].value;
+        baseDmg1 = skillParams[3].value;
+        dmgMul1 = skillParams[4].value;
+        dotBaseDmg = skillParams[5].value;
+        dotDmgMul = skillParams[6].value;
+        duration = skillParams[7].value;
+        interval = skillParams[8].value;
+        
+        var specialKeys = hero.Trait.specialKeys;
+        dotKey = specialKeys[0];
     }
 
     public override void Process(float timer) {
@@ -38,33 +49,37 @@ public class SkillProcessor_Yasuo : SkillProcessor {
     }
 
     void BlowUp() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
 
-        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_DURATION);
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(airborneDuration);
     }
 
     void Cut() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
 
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
-            scaledValues:new[]{(DMG_MUL_0, DamageType.Physical)}));
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+            scaledValues:new[]{(dmgMul0, DamageType.Physical)},
+            fixedValues:new[]{ baseDmg0 }));
     }
 
     void BonusCut() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
         
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
-            scaledValues:new[]{(DMG_MUL_1, DamageType.Physical)}));
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+            scaledValues:new[]{(dmgMul1, DamageType.Physical)},
+            fixedValues:new[]{ baseDmg1 }));
 
         var bleedDmg = attributes.GetDamage(DamageType.Physical, false,
-            scaledValues: new[] { (DOT_DMG_MUL, DamageType.Physical) });
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().AddDamageOverTime(
+            scaledValues: new[] { (dotDmgMul, DamageType.Physical) },
+            fixedValues: new[] { dotBaseDmg });
+        
+        hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
             DamageOverTime.Create(
-                DOT_KEY,
+                dotKey,
                 hero,
                 bleedDmg,
-                DOT_TOTAL_TIME / DOT_INTERVAL,
-                DOT_INTERVAL.ToSeconds(),
+                Mathf.RoundToInt(duration / interval),
+                interval,
                 1,
                 false,
                 true

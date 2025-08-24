@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Morgana
   m_EditorClassIdentifier: 
-  id: Morgana
+  id: Tristana
   name: "M\u1EA1c Ng\xE2n"
   subName: 
   summoned: 0
@@ -30,17 +30,55 @@ MonoBehaviour:
   resistance: 24
   attackSpeed: 0.2
   movementSpeed: 2
-  criticalChance: 0.05
-  criticalDamage: 1.5
-  energyRegenEfficient: 1
-  physicalPenetration: 0
-  magicalPenetration: 0
-  lifeSteal: 0
-  tenacity: 0
   energyRegenPerAttack: 6
   energyRegenPerHit: 8
   attackRange: 3
-  minDps: 36
-  avgDps: 36.9
+  evolutions:
+  - rank: 1
+    modifiers:
+    - id: <will be auto generated>
+      key: max_hp
+      value: 0.8
+      type: 1
+    - id: <will be auto generated>
+      key: p_dmg
+      value: 0.8
+      type: 1
+    - id: <will be auto generated>
+      key: atk_spd
+      value: 0.2
+      type: 1
+  - rank: 2
+    modifiers:
+    - id: <will be auto generated>
+      key: max_hp
+      value: 3.5
+      type: 1
+    - id: <will be auto generated>
+      key: p_dmg
+      value: 3.5
+      type: 1
+    - id: <will be auto generated>
+      key: atk_spd
+      value: 0.5
+      type: 1
+  skillName: "B\xE1ch \u0110i\u1EC3u Tri\u1EC1u Ph\u1EE5ng"
+  unstoppable: 0
+  skillParams:
+  - key: heal_by_hp_mul_min
+    value: 0.1
+    isPercentage: 1
+  - key: heal_by_hp_mul_max
+    value: 0.3
+    isPercentage: 1
+  - key: heal_by_dmg_mul
+    value: 2
+    isPercentage: 1
+  passiveDescription: 
+  activeDescription: "H\u1ED3i <color=grey>(#[0] ~ #[1]<sprite name=hp> t\u1ED1i
+    \u0111a + #[2]<sprite name=mdmg>)</color> m\xE1u d\u1EF1a tr\xEAn m\xE1u \u0111\xE3
+    m\u1EA5t."
+  specialKeys: []
+  dps: 36
   physicalReduction: 24.242424
   magicalReduction: 19.35484

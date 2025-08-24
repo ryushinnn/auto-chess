@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
-  m_Name: D_u_m_m_y
+  m_Name: _Dummy
   m_EditorClassIdentifier: 
-  id: D_u_m_m_y
+  id: _Dummy
   name: 
   subName: 
   summoned: 1
@@ -33,6 +33,13 @@ MonoBehaviour:
   energyRegenPerAttack: 0
   energyRegenPerHit: 0
   attackRange: 1
+  evolutions: []
+  skillParams: []
+  attackDescription: 
+  skillName: 
+  skillDescription: 
+  unstoppable: 0
+  specialKeys: []
   dps: 0
   physicalReduction: 33.333332
   magicalReduction: 33.333332

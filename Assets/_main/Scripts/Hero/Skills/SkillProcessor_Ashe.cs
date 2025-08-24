@@ -9,9 +9,9 @@ using Random = UnityEngine.Random;
 public class SkillProcessor_Ashe : SkillProcessor {
     readonly int arrowSetMin;
     readonly int arrowSetMax;
-    readonly float dmgBase;
-    readonly float pdmgMul;
-    readonly float mdmgMul;
+    readonly float baseDmg;
+    readonly float pDmgMul;
+    readonly float mDmgMul;
     readonly float totalTime;
     readonly float radius;
     
@@ -22,9 +22,9 @@ public class SkillProcessor_Ashe : SkillProcessor {
         var skillParams = hero.Trait.skillParams;
         arrowSetMin = (int)skillParams[0].value;
         arrowSetMax = (int)skillParams[1].value;
-        dmgBase = skillParams[2].value;
-        pdmgMul = skillParams[3].value;
-        mdmgMul = skillParams[4].value;
+        baseDmg = skillParams[2].value;
+        pDmgMul = skillParams[3].value;
+        mDmgMul = skillParams[4].value;
         totalTime = skillParams[5].value;
         radius = skillParams[6].value;
     }
@@ -38,14 +38,14 @@ public class SkillProcessor_Ashe : SkillProcessor {
 
     void ShotArrows() {
         var dotArea = GameObject.Instantiate(PrefabDB.Instance.DotArea);
-        dotArea.transform.position = ((BattleHero)hero).Target.WorldPosition;
+        dotArea.transform.position = hero.Target.WorldPosition;
         var dmg = attributes.GetDamage(DamageType.Physical, false,
             scaledValues: new[] {
-                (pdmgMul, DamageType.Physical),
-                (mdmgMul, DamageType.Magical)
-            }, fixedValues: new[] { dmgBase });
+                (pDmgMul, DamageType.Physical),
+                (mDmgMul, DamageType.Magical)
+            }, fixedValues: new[] { baseDmg });
         var set = Random.Range(arrowSetMin, arrowSetMax + 1);
         var vfx = VfxPool.Instance.GetVfx("ashe_skill");
-        dotArea.SetData((BattleHero)hero, dmg, set, totalTime / set, true, radius, vfx);
+        dotArea.SetData(hero, dmg, set, totalTime / set, true, radius, vfx);
     }
 }

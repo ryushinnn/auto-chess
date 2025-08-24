@@ -7,8 +7,8 @@ public class AttackProcessor_Yasuo : AttackProcessor {
     const int COUNT_LIMIT = 2;
 
     public AttackProcessor_Yasuo(BattleHero hero) : base(hero) {
-        AnimationLength = 1.333f;
-        Timers = new[] { 0.33f };
+        animationLength = 1.333f;
+        timers = new[] { 0.33f };
         Description = $"Mỗi đòn đánh thứ {COUNT_LIMIT + 1} sẽ gây thêm " +
                       $"({DMG_MUL * 100}% <sprite name=pdmg>) sát thương chuẩn.";
     }
@@ -16,7 +16,7 @@ public class AttackProcessor_Yasuo : AttackProcessor {
     public override void Process(float timer) {
         base.Process(timer);
 
-        if (trueTimer >= Timers[0] && atkExecuted == 0) {
+        if (trueTimer >= timers[0] && atkExecuted == 0) {
             if (((BattleHero)hero).Target != null) {
                 var baseDmg = attributes.GetDamage(DamageType.Physical);
                 float outputDmg;

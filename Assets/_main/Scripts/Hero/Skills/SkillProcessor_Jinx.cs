@@ -1,23 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RExt.Extensions;
 using Random = UnityEngine.Random;
 
 public class SkillProcessor_Jinx : SkillProcessor {
-    public const int ROCKETS = 5;
-    public const int INTERVAL = 200;
-    const float DMG_MUL_PER_ROCKET = 0.5f;
+    readonly int rockets;
+    readonly float interval;
+    readonly float baseDmgPerRocket;
+    readonly float dmgMulPerRocket;
 
     List<Hero> affectedTargets = new();
     
     public SkillProcessor_Jinx(BattleHero hero) : base(hero) {
         animationLength = 4.2f;
         timers = new[] { 2f };
-        unstoppable = true;
-        Name = "Bùm! Bùm! Bùm! Bùm! Bùm!";
-        Description = $"Bắn 5 quả tên lửa, mỗi quả gây ({DMG_MUL_PER_ROCKET * 100}% <sprite name=pdmg>) sát thương, " +
-                      $"Sát thương đầu ra ngẫu nhiên là sát thương vật lý, sát thương phép hoặc sát thương chuẩn " +
-                      $"và có thể chí mạng.";
+        
+        var skillParams = hero.Trait.skillParams;
+        rockets = (int)skillParams[0].value;
+        interval = (int)skillParams[1].value;
+        baseDmgPerRocket = skillParams[2].value;
+        dmgMulPerRocket = skillParams[3].value;
     }
 
     public override void Process(float timer) {
@@ -30,40 +33,43 @@ public class SkillProcessor_Jinx : SkillProcessor {
     async void ShotRockets() {
         affectedTargets.Clear();
         ShotRocket();
-        for (int i = 1; i < ROCKETS; i++) {
-            await Task.Delay(INTERVAL);
+        for (int i = 1; i < rockets; i++) {
+            await Task.Delay(interval.ToMilliseconds());
             ShotRocket();
         }
     }
 
     void ShotRocket() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
 
         var type = Random.Range(0, 3);
-        Damage dmg = default;
+        Damage dmg = null;
         switch (type) {
             case 0:
                 dmg = attributes.GetDamage(DamageType.Physical, attributes.Crit(),
-                    scaledValues: new[] { (DMG_MUL_PER_ROCKET, DamageType.Physical) });
+                    scaledValues: new[] { (dmgMulPerRocket, DamageType.Physical) },
+                    fixedValues: new[] { baseDmgPerRocket });
                 break;
             
             case 1:
                 dmg = attributes.GetDamage(DamageType.Magical, attributes.Crit(),
-                    scaledValues: new[] { (DMG_MUL_PER_ROCKET, DamageType.Physical) });
+                    scaledValues: new[] { (dmgMulPerRocket, DamageType.Physical) },
+                    fixedValues: new[] { baseDmgPerRocket });
                 break;
             
             case 2:
                 dmg = attributes.GetDamage(DamageType.True, attributes.Crit(),
-                    scaledValues: new[] { (DMG_MUL_PER_ROCKET, DamageType.Physical) });
+                    scaledValues: new[] { (dmgMulPerRocket, DamageType.Physical) },
+                    fixedValues: new[] { baseDmgPerRocket });
                 break;
         }
 
-        var isNewTarget = !affectedTargets.Contains(((BattleHero)hero).Target);
+        var isNewTarget = !affectedTargets.Contains(hero.Target);
         
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(dmg, isNewTarget);
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg, isNewTarget);
 
         if (isNewTarget) {
-            affectedTargets.Add(((BattleHero)hero).Target);
+            affectedTargets.Add(hero.Target);
         }
     }
 }

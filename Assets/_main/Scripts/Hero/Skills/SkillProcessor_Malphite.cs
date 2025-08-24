@@ -3,26 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SkillProcessor_Malphite : SkillProcessor {
-    const string EFFECT_KEY = "malphite_unstoppable";
-    const float DEFENSE_MUL = 2;
-    const float ATK_SPEED_REDUCE_MUL = -0.5f;
-    const float EFFECT_DURATION = 5;
-    const float DMG_MUL = 1f;
-    const float AIRBORNE_DURATION = 2f;
+    readonly float defMul;
+    readonly float atkSpeedReduceMul;
+    readonly float effectDuration;
+    readonly float baseDmg;
+    readonly float dmgMul;
+    readonly float airborneDuration;
+    readonly string effectKey;
     
     public SkillProcessor_Malphite(BattleHero hero) : base(hero) {
         animationLength = 4.7f;
         timers = new[] { 0.46f, 2.3f };
-        Name = "Kim Cang Bất Hoại";
-        Description = $"Tăng {DEFENSE_MUL * 100}% <sprite name=arm> và <sprite name=res>, " +
-                      $"nhận tối đa <sprite name=ten>, nhưng bị giảm {ATK_SPEED_REDUCE_MUL * -100}% <sprite name=aspd>, " +
-                      $"duy trì {EFFECT_DURATION}s. Sau đó vận sức nhảy lên rồi giáng xuống " +
-                      $"gây ({DMG_MUL * 100}% <sprite name=pdmg>) sát thương vật lý " +
-                      $"và hất tung kẻ địch trong {AIRBORNE_DURATION}s.";
+        
+        var skillParams = hero.Trait.skillParams;
+        defMul = skillParams[0].value;
+        atkSpeedReduceMul = skillParams[1].value;
+        effectDuration = skillParams[2].value;
+        baseDmg = skillParams[3].value;
+        dmgMul = skillParams[4].value;
+        airborneDuration = skillParams[5].value;
+        
+        var specialKeys = hero.Trait.specialKeys;
+        effectKey = specialKeys[0];
 
         drainEnergy = true;
         drainEnergyDelay = timers[0];
-        drainEnergyDuration = EFFECT_DURATION;
+        drainEnergyDuration = effectDuration;
     }
 
     public override void Process(float timer) {
@@ -47,12 +53,12 @@ public class SkillProcessor_Malphite : SkillProcessor {
         attributes.AddAttributeModifier(
             AttributeModifierSet.Create(
                 hero,
-                EFFECT_KEY,
-                EFFECT_DURATION,
+                effectKey,
+                effectDuration,
                 new [] {
-                    (AttributeModifierKey.Armor, DEFENSE_MUL, AttributeModifier.Type.Percentage),
-                    (AttributeModifierKey.Resistance, DEFENSE_MUL, AttributeModifier.Type.Percentage),
-                    (AttributeModifierKey.AttackSpeed, ATK_SPEED_REDUCE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.Armor, defMul, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.Resistance, defMul, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.AttackSpeed, atkSpeedReduceMul, AttributeModifier.Type.Percentage),
                     (AttributeModifierKey.Tenacity, HeroTrait.MAX_TENACITY, AttributeModifier.Type.FixedValue),
                 },
                 onRemove: () => {
@@ -62,11 +68,12 @@ public class SkillProcessor_Malphite : SkillProcessor {
     }
 
     void Slam() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
         
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
-            scaledValues: new[] { (DMG_MUL, DamageType.Physical) }));
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical, false,
+            scaledValues: new[] { (dmgMul, DamageType.Physical) },
+            fixedValues: new[] { baseDmg }));
         
-        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_DURATION);
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(airborneDuration);
     }
 }

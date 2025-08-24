@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Akali
   m_EditorClassIdentifier: 
-  id: Akali
+  id: Tristana
   name: "Kh\xE1nh Linh"
   subName: 
   summoned: 0
@@ -33,6 +33,52 @@ MonoBehaviour:
   energyRegenPerAttack: 20
   energyRegenPerHit: 7
   attackRange: 2
+  evolutions:
+  - rank: 1
+    modifiers:
+    - id: <will be auto generated>
+      key: max_hp
+      value: 0.8
+      type: 1
+    - id: <will be auto generated>
+      key: p_dmg
+      value: 0.8
+      type: 1
+    - id: <will be auto generated>
+      key: atk_spd
+      value: 0.2
+      type: 1
+  - rank: 2
+    modifiers:
+    - id: <will be auto generated>
+      key: max_hp
+      value: 3.5
+      type: 1
+    - id: <will be auto generated>
+      key: p_dmg
+      value: 3.5
+      type: 1
+    - id: <will be auto generated>
+      key: atk_spd
+      value: 0.5
+      type: 1
+  skillName: "\xC1m Quang Chi Thu\u1EADt"
+  skillParams:
+  - key: energy_threshold
+    value: 50
+    isPercentage: 0
+  - key: silent_duration
+    value: 2
+    isPercentage: 0
+  - key: stun_duration
+    value: 1
+    isPercentage: 0
+  passiveDescription: 
+  activeDescription: "N\xE9m bom m\xF9 v\xE0o 1 m\u1EE5c ti\xEAu, n\u1EBFu m\u1EE5c
+    ti\xEAu c\xF3 \xEDt nh\u1EA5t #[0]<sprite name=eng>, g\xE2y c\xE2m l\u1EB7ng
+    trong #[1]s, ng\u01B0\u1EE3c l\u1EA1i g\xE2y cho\xE1ng trong #[2]s."
+  unstoppable: 0
+  specialKeys: []
   dps: 50.7
   physicalReduction: 15.966387
   magicalReduction: 15.966387

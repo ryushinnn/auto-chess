@@ -3,37 +3,43 @@ using RExt.Extensions;
 using UnityEngine;
 
 public class AttackProcessor_Teemo : AttackProcessor {
-    public const string DOT_KEY = "teemo_hell_flame";
-    public const int MAX_STACKS = 5;
-    public const int TOTAL_TIME = 3000; //ms
-    public const int INTERVAL = 500; //ms
-    public const float MAX_HP_DMG = 0.001f;
-    public const float DMG_MUL_LIMIT = 0.01f;
+    readonly int maxStacks;
+    readonly float duration;
+    readonly float interval;
+    readonly float dmgByMaxHp;
+    readonly float dmgMulLimit;
+    readonly string dotKey;
 
     public AttackProcessor_Teemo(BattleHero hero) : base(hero) {
-        AnimationLength = 0.933f;
-        Timers = new[] { 0.17f };
-        Description = $"Đòn đánh sẽ thêm 1 cộng dồn (tối đa {MAX_STACKS} cộng dồn) " +
-                      $"và làm mới thời gian duy trì ({TOTAL_TIME / 1000f}s) của hiệu ứng <color=red>HOẢ NGỤC</color>.\n" +
-                      $"<color=red>HOẢ NGỤC</color>: Mỗi {INTERVAL / 1000f}s gây sát thương chuẩn bằng {MAX_HP_DMG * 100}% " +
-                      $"<sprite name=hp> tối đa của mục tiêu, không vượt quá {DMG_MUL_LIMIT * 100}% <sprite name=mdmg>.";
+        animationLength = 0.933f;
+        timers = new[] { 0.17f };
+        
+        var skillParams = hero.Trait.skillParams;
+        maxStacks = (int)skillParams[0].value;
+        duration = skillParams[1].value;
+        interval = skillParams[2].value;
+        dmgByMaxHp = skillParams[3].value;
+        dmgMulLimit = skillParams[4].value;
+        
+        var specialKeys = hero.Trait.specialKeys;
+        dotKey = specialKeys[0];
     }
 
     public override void Process(float timer) {
         base.Process(timer);
 
-        if (trueTimer >= Timers[0] && atkExecuted == 0) {
-            if (((BattleHero)hero).Target != null) {
-                var currentStacks = ((BattleHero)hero).Target.GetAbility<HeroMark>().GetMark(DOT_KEY, hero)?.stacks ?? 0;
-                var nextStacks = Mathf.Min(currentStacks + 1, MAX_STACKS);
+        if (trueTimer >= timers[0] && atkExecuted == 0) {
+            if (hero.Target != null) {
+                var currentStacks = hero.Target.GetAbility<HeroMark>().GetMark(dotKey, hero)?.stacks ?? 0;
+                var nextStacks = Mathf.Min(currentStacks + 1, maxStacks);
 
                 var igniteDmg = Damage.Create(
-                    nextStacks * Mathf.Min(attributes.MagicalDamage * DMG_MUL_LIMIT, ((BattleHero)hero).Target.GetAbility<HeroAttributes>().MaxHp * MAX_HP_DMG),
+                    nextStacks * Mathf.Min(attributes.MagicalDamage * dmgMulLimit, hero.Target.GetAbility<HeroAttributes>().MaxHp * dmgByMaxHp),
                     DamageType.True,
                     0
                 );
 
-                var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(
+                var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(
                     new[] {
                         attributes.GetDamage(DamageType.Magical),
                         igniteDmg,
@@ -49,13 +55,13 @@ public class AttackProcessor_Teemo : AttackProcessor {
 
                 attributes.RegenEnergy(hero.Trait.energyRegenPerAttack);
 
-                ((BattleHero)hero).Target.GetAbility<HeroAttributes>().AddDamageOverTime(
+                hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
                     DamageOverTime.Create(
-                        DOT_KEY,
+                        dotKey,
                         hero,
                         igniteDmg,
-                        (TOTAL_TIME / INTERVAL) - 1,
-                        INTERVAL.ToSeconds(),
+                        Mathf.RoundToInt(duration / interval) - 1,
+                        interval,
                         nextStacks,
                         false,
                         true

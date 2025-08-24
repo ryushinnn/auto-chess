@@ -4,9 +4,9 @@ using RExt.Extensions;
 using UnityEngine;
 
 [Serializable]
-public class AttackProcessor {
-    public float AnimationLength { get; protected set; }
-    public float[] Timers { get; protected set; }
+public abstract class AttackProcessor {
+    protected float animationLength;
+    protected float[] timers;
     public string Description { get; protected set; }
 
     protected float atkTimeMul;
@@ -16,15 +16,15 @@ public class AttackProcessor {
     protected readonly BattleHero hero;
     protected readonly HeroAttributes attributes;
     
-    public AttackProcessor(BattleHero hero) {
+    protected AttackProcessor(BattleHero hero) {
         this.hero = hero;
         attributes = this.hero.GetAbility<HeroAttributes>();
     }
 
     public virtual void Begin(out float actualAnimLength) {
         var expectedAnimLength = 1 / attributes.AttackSpeed;
-        atkTimeMul = Mathf.Max(1, AnimationLength / expectedAnimLength);
-        actualAnimLength = AnimationLength / atkTimeMul;
+        atkTimeMul = Mathf.Max(1, animationLength / expectedAnimLength);
+        actualAnimLength = animationLength / atkTimeMul;
         hero.Mecanim.ModifyAttackTime_New(atkTimeMul);
         atkExecuted = 0;
     }

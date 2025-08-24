@@ -3,18 +3,35 @@ using RExt.Extensions;
 using UnityEngine;
 
 public class SkillProcessor_Teemo : SkillProcessor {
-    const float DMG_MUL = 1f;
-    const float DMG_MUL_PER_IGNITE = 0.1f;
+    readonly int maxStacks;
+    readonly float duration;
+    readonly float interval;
+    readonly float dmgByMaxHp;
+    readonly float dmgMulLimit;
+    readonly string dotKey;
+    
+    readonly float baseDmg;
+    readonly float dmgMul;
+    readonly float bonusBaseDmgPerStack;
+    readonly float bonusDmgMulPerStack;
     
     public SkillProcessor_Teemo(BattleHero hero) : base(hero) {
         animationLength = 4;
         timers = new[] { 1.56f, 2.73f, 3.29f };
-        Name = "Hoả Ngục Tàn Hồn: Tam Thức";
-        Description = $"Ném 3 quả bom, mỗi quả bom gây ({DMG_MUL * 100}% <sprite name=mdmg>) sát thương phép" +
-                      $", tăng {DMG_MUL_PER_IGNITE * 100}% " +
-                      $"sát thương với mỗi cộng dồn <color=red>HOẢ NGỤC</color> trên mục tiêu. Mỗi quả bom " +
-                      $"đều thêm 1 cộng dồn và làm mới thời gian duy trì của hiệu ứng " +
-                      $"<color=red>HOẢ NGỤC</color>. Quả bom thứ 3 gây sát thương chí mạng.";
+        
+        var skillParams = hero.Trait.skillParams;
+        maxStacks = (int)skillParams[0].value;
+        duration = skillParams[1].value;
+        interval = skillParams[2].value;
+        dmgByMaxHp = skillParams[3].value;
+        dmgMulLimit = skillParams[4].value;
+        baseDmg = skillParams[5].value;
+        dmgMul = skillParams[6].value;
+        bonusBaseDmgPerStack = skillParams[7].value;
+        bonusDmgMulPerStack = skillParams[8].value;
+        
+        var specialKeys = hero.Trait.specialKeys;
+        dotKey = specialKeys[0];
     }
 
     public override void Process(float timer) {
@@ -33,29 +50,36 @@ public class SkillProcessor_Teemo : SkillProcessor {
     }
 
     void ThrowBomb() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
 
-        var currentStacks = ((BattleHero)hero).Target.GetAbility<HeroMark>().GetMark(AttackProcessor_Teemo.DOT_KEY, hero)?.stacks ?? 0;
-        var nextStacks = Mathf.Min(currentStacks + 1, AttackProcessor_Teemo.MAX_STACKS);
+        var currentStacks = hero.Target.GetAbility<HeroMark>().GetMark(dotKey, hero)?.stacks ?? 0;
+        var nextStacks = Mathf.Min(currentStacks + 1, maxStacks);
         
         var igniteDmg = Damage.Create(
-            nextStacks * Mathf.Min(attributes.MagicalDamage * AttackProcessor_Teemo.DMG_MUL_LIMIT, ((BattleHero)hero).Target.GetAbility<HeroAttributes>().MaxHp * AttackProcessor_Teemo.MAX_HP_DMG),
+            nextStacks * Mathf.Min(attributes.MagicalDamage * dmgMulLimit, hero.Target.GetAbility<HeroAttributes>().MaxHp * dmgByMaxHp),
             DamageType.True,
             0
         );
 
         var mainDmg = attributes.GetDamage(DamageType.Magical, false,
-            scaledValues: new[] { (DMG_MUL + DMG_MUL_PER_IGNITE * currentStacks, DamageType.Magical) });
+            scaledValues: new[] {
+                (dmgMul, DamageType.Magical),
+                (bonusDmgMulPerStack * currentStacks, DamageType.Magical)
+            },
+            fixedValues: new[] {
+                baseDmg, 
+                bonusBaseDmgPerStack * currentStacks
+            });
 
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(new[] { mainDmg, igniteDmg });
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] { mainDmg, igniteDmg });
         
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().AddDamageOverTime(
+        hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
             DamageOverTime.Create(
-                    AttackProcessor_Teemo.DOT_KEY,
+                    dotKey,
                     hero,
                     igniteDmg, 
-                    (AttackProcessor_Teemo.TOTAL_TIME / AttackProcessor_Teemo.INTERVAL) - 1,
-                    AttackProcessor_Teemo.INTERVAL.ToSeconds(),
+                    Mathf.RoundToInt(duration / interval) - 1,
+                    interval,
                     nextStacks,
                     false,
                     true
@@ -63,29 +87,36 @@ public class SkillProcessor_Teemo : SkillProcessor {
     }
 
     void ThrowBigBomb() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
         
-        var currentStacks = ((BattleHero)hero).Target.GetAbility<HeroMark>().GetMark(AttackProcessor_Teemo.DOT_KEY, hero)?.stacks ?? 0;
-        var nextStacks = Mathf.Min(currentStacks + 1, AttackProcessor_Teemo.MAX_STACKS);
+        var currentStacks = hero.Target.GetAbility<HeroMark>().GetMark(dotKey, hero)?.stacks ?? 0;
+        var nextStacks = Mathf.Min(currentStacks + 1, maxStacks);
 
         var igniteDmg = Damage.Create(
-            nextStacks * Mathf.Min(attributes.MagicalDamage * AttackProcessor_Teemo.DMG_MUL_LIMIT, ((BattleHero)hero).Target.GetAbility<HeroAttributes>().MaxHp * AttackProcessor_Teemo.MAX_HP_DMG),
+            nextStacks * Mathf.Min(attributes.MagicalDamage * dmgMulLimit, hero.Target.GetAbility<HeroAttributes>().MaxHp * dmgByMaxHp),
             DamageType.True,
             0
         );
 
         var mainDmg = attributes.GetDamage(DamageType.Magical, true,
-            scaledValues: new[] { (DMG_MUL + DMG_MUL_PER_IGNITE * currentStacks, DamageType.Magical) });
+            scaledValues: new[] {
+                (dmgMul, DamageType.Magical),
+                (bonusDmgMulPerStack * currentStacks, DamageType.Magical)
+            },
+            fixedValues: new[] {
+                baseDmg, 
+                bonusBaseDmgPerStack * currentStacks
+            });
 
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(new[] { mainDmg, igniteDmg });
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] { mainDmg, igniteDmg });
         
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().AddDamageOverTime(
+        hero.Target.GetAbility<HeroAttributes>().AddDamageOverTime(
             DamageOverTime.Create(
-                AttackProcessor_Teemo.DOT_KEY,
+                dotKey,
                 hero,
                 igniteDmg,
-                (AttackProcessor_Teemo.TOTAL_TIME / AttackProcessor_Teemo.INTERVAL) - 1,
-                AttackProcessor_Teemo.INTERVAL.ToSeconds(),
+                Mathf.RoundToInt(duration / interval) - 1,
+                interval,
                 nextStacks,
                 false,
                 true

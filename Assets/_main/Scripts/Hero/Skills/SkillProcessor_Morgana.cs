@@ -2,17 +2,18 @@
 using UnityEngine;
 
 public class SkillProcessor_Morgana : SkillProcessor {
-    const float MAX_HP_TO_HEAL_MIN = 0.1f;
-    const float MAX_HP_TO_HEAL_MAX = 0.3f;
-    const float DMG_TO_HEAL_MUL = 2f;
+    readonly float healByHpMulMin;
+    readonly float healByHpMulMax;
+    readonly float healByDmgMul;
 
     public SkillProcessor_Morgana(BattleHero hero) : base(hero) {
         animationLength = 1;
         timers = new[] { 0.41f };
-        Name = "Thần Quang Phổ Chiếu";
-        Description = $"Hồi máu bằng ({MAX_HP_TO_HEAL_MIN * 100}%~{MAX_HP_TO_HEAL_MAX * 100}% " +
-                      $"<sprite name=hp> tối đa + {DMG_TO_HEAL_MUL * 100}% <sprite name=mdmg>) " +
-                      $"dựa trên máu đã mất.";
+        
+        var skillParams = hero.Trait.skillParams;
+        healByHpMulMin = skillParams[0].value;
+        healByHpMulMax = skillParams[1].value;
+        healByDmgMul = skillParams[2].value;
     }
 
     public override void Process(float timer) {
@@ -25,7 +26,7 @@ public class SkillProcessor_Morgana : SkillProcessor {
     void OpenWings() {
         if (!attributes.IsAlive) return;
         
-        attributes.Heal(attributes.MagicalDamage * DMG_TO_HEAL_MUL 
-                        + attributes.MaxHp * Mathf.Lerp(MAX_HP_TO_HEAL_MIN, MAX_HP_TO_HEAL_MAX, attributes.HpLostPercentage));
+        attributes.Heal(attributes.MagicalDamage * healByDmgMul 
+                        + attributes.MaxHp * Mathf.Lerp(healByHpMulMin, healByHpMulMax, attributes.HpLostPercentage));
     }
 }

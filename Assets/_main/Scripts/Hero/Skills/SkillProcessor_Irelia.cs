@@ -1,14 +1,16 @@
 public class SkillProcessor_Irelia : SkillProcessor {
-    const float DMG_MUL = 2.5f;
-    const float AIRBRONE_TIME = 1; //ms
+    readonly float baseDmg;
+    readonly float dmgMul;
+    readonly float airborneDuration;
     
     public SkillProcessor_Irelia(BattleHero hero) : base(hero) {
         animationLength = 4.8f;
         timers = new[] { 4.23f };
-        Name = "Hắc Long Chưởng";
-        Description = $"Triệu hồi rồng thần tấn công kẻ địch gây ({DMG_MUL * 100}% <sprite name=pdmg>) sát thương phép " +
-                      $"và hất tung mục tiêu trong {AIRBRONE_TIME}s.";
-        unstoppable = true;
+        
+        var skillParams = hero.Trait.skillParams;
+        baseDmg = skillParams[0].value;
+        dmgMul = skillParams[1].value;
+        airborneDuration = skillParams[2].value;
     }
 
     public override void Process(float timer) {
@@ -19,10 +21,11 @@ public class SkillProcessor_Irelia : SkillProcessor {
     }
 
     void SummonDragon() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
 
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
-            scaledValues: new[]{(DMG_MUL, DamageType.Physical)}));
-        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBRONE_TIME);
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
+            scaledValues: new[]{(dmgMul, DamageType.Physical)},
+            fixedValues: new[]{ baseDmg }));
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(airborneDuration);
     }
 }

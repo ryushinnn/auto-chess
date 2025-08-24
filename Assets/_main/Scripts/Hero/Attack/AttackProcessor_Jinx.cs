@@ -1,13 +1,13 @@
 ﻿public class AttackProcessor_Jinx : AttackProcessor {
     public AttackProcessor_Jinx(BattleHero hero) : base(hero) {
-        AnimationLength = 1.067f;
-        Timers = new[] { 0.37f };
+        animationLength = 1.067f;
+        timers = new[] { 0.37f };
     }
 
     public override void Process(float timer) {
         base.Process(timer);
 
-        if (trueTimer >= Timers[0] && atkExecuted == 0) {
+        if (trueTimer >= timers[0] && atkExecuted == 0) {
             if (((BattleHero)hero).Target != null) {
                 var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Physical));
                 var heal = outputDmg * attributes.LifeSteal;

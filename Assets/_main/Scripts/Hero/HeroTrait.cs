@@ -6,47 +6,40 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "Hero/Trait")]
 public class HeroTrait : ScriptableObject {
-    [TitleGroup("Identity")]
-    [StringDropdown(typeof(HeroId))] public string id;
-    public new string name;
-    public string subName;
-    public bool summoned;
-    [HideIf("summoned")] public Realm realm;
-    [HideIf("summoned")] public Role role;
-    [HideIf("summoned")] public Reputation reputation;
-    public bool moveable;
+    [FoldoutGroup("Identity"), StringDropdown(typeof(HeroId))] public string id;
+    [FoldoutGroup("Identity")] public new string name;
+    [FoldoutGroup("Identity")] public string subName;
+    [FoldoutGroup("Identity")] public bool summoned;
+    [FoldoutGroup("Identity"), HideIf("summoned")] public Realm realm;
+    [FoldoutGroup("Identity"), HideIf("summoned")] public Role role;
+    [FoldoutGroup("Identity"), HideIf("summoned")] public Reputation reputation;
+    [FoldoutGroup("Identity")] public bool moveable;
     
-    [TitleGroup("Asset")]
-    public Mecanim mecanim;
-    [PreviewField(ObjectFieldAlignment.Left), HideIf("summoned")] public Sprite thumbnail;
-    [PreviewField(ObjectFieldAlignment.Left)] public Sprite skillIcon;
+    [FoldoutGroup("Asset")] public Mecanim mecanim;
+    [FoldoutGroup("Asset"), PreviewField(ObjectFieldAlignment.Left), HideIf("summoned")] public Sprite thumbnail;
+    [FoldoutGroup("Asset"), PreviewField(ObjectFieldAlignment.Left)] public Sprite skillIcon;
     
-    [TitleGroup("Basic")]
-    public float maxHp;
-    public float physicalDamage;
-    public float magicalDamage;
-    public float armor;
-    public float resistance;
-    public float attackSpeed;
-    public float movementSpeed;
+    [FoldoutGroup("Stats"), BoxGroup("Stats/Basic")] public float maxHp;
+    [FoldoutGroup("Stats"), BoxGroup("Stats/Basic")] public float physicalDamage;
+    [FoldoutGroup("Stats"), BoxGroup("Stats/Basic")] public float magicalDamage;
+    [FoldoutGroup("Stats"), BoxGroup("Stats/Basic")] public float armor;
+    [FoldoutGroup("Stats"), BoxGroup("Stats/Basic")] public float resistance;
+    [FoldoutGroup("Stats"), BoxGroup("Stats/Basic")] public float attackSpeed;
+    [FoldoutGroup("Stats"), BoxGroup("Stats/Basic")] public float movementSpeed;
 
-    [TitleGroup("Unmodifiable")]
-    public float energyRegenPerAttack;
-    public float energyRegenPerHit;
-    public int attackRange;
+    [FoldoutGroup("Stats"), BoxGroup("Stats/Unmodifiable")] public float energyRegenPerAttack;
+    [FoldoutGroup("Stats"), BoxGroup("Stats/Unmodifiable")] public float energyRegenPerHit;
+    [FoldoutGroup("Stats"), BoxGroup("Stats/Unmodifiable")] public int attackRange;
+    
+    [FoldoutGroup("Evolution")] public Evolution[] evolutions;
+    
+    [FoldoutGroup("Skill")] public string skillName;
+    [FoldoutGroup("Skill")] public bool unstoppable;
+    [FoldoutGroup("Skill"), TableList(ShowIndexLabels = true)] public HeroSkillParam[] skillParams;
+    [FoldoutGroup("Skill"), TextArea(1,100)] public string passiveDescription;
+    [FoldoutGroup("Skill"), TextArea(1,100)] public string activeDescription;
+    [FoldoutGroup("Skill")] public string[] specialKeys;
 
-    [TitleGroup("Evolution")]
-    public Evolution[] evolutions;
-
-    [TitleGroup("Skill")]
-    [TableList(ShowIndexLabels = true)] public HeroSkillParam[] skillParams;
-    [TextArea(1,100)] public string attackDescription;
-    public string skillName;
-    [TextArea(1,100)] public string skillDescription;
-    public bool unstoppable;
-    public string[] specialKeys;
-
-    [TitleGroup("Contants & Limits")]
     public const float BASE_CRITICAL_CHANCE = 0.15f;
     public const float BASE_CRITICAL_DAMAGE = 1.5f;
     public const float BASE_ENERGY_REGEN_EFFICIENCY = 1;
@@ -64,12 +57,10 @@ public class HeroTrait : ScriptableObject {
     public const float MIN_DAMAGE_DEALT = 1;
     public const float MIN_DAMAGE = 1;
     public const float MIN_ATTACK_SPEED = 0.1f;
-    public const float MIN_MOVEMENT_SPEED = 0.1f;
 
-    [TitleGroup("Calculated Result")]
-    [SerializeField, ReadOnly] float dps;
-    [SerializeField, ReadOnly, LabelText("Physical Reduction (%)")] float physicalReduction;
-    [SerializeField, ReadOnly, LabelText("Magical Reduction (%)")] float magicalReduction;
+    [BoxGroup("Test"), SerializeField, ReadOnly] float dps;
+    [BoxGroup("Test"), SerializeField, ReadOnly, LabelText("Physical Reduction (%)")] float physicalReduction;
+    [BoxGroup("Test"), SerializeField, ReadOnly, LabelText("Magical Reduction (%)")] float magicalReduction;
 
     void OnValidate() {
         var outputDamage = physicalDamage + magicalDamage;
@@ -89,23 +80,94 @@ public class HeroTrait : ScriptableObject {
     }
 
     public string SkillDescription() {
-        var attack = attackDescription.IsValid() ? $"<color=grey><i>Nội tại: {attackDescription}</color></i>\n\n" : "";
-        
-        var placeholderPattern = @"#\[(\d+)\]";
-        var skill = Regex.Replace(skillDescription, placeholderPattern, match => {
+        MatchEvaluator eval = match => {
             var index = int.Parse(match.Groups[1].Value);
             if (index >= 0 && index < skillParams.Length) {
                 var param = skillParams[index];
-                return param.isPercentage ? $"{param.value * 100}%" : $"{param.value}";
+                var val = Mathf.Abs(param.value);
+                return param.isPercentage ? $"{val * 100}%" : $"{val}";
             }
 
             return match.Value;
-        });
-
-        var note = unstoppable ? "\n<color=grey><i>(Khi đang sử dụng kỹ năng, không thể bị cản phá)</color></i>" : "";
-
-        return $"<uppercase>{skillName}</uppercase>\n\n{attack}{skill}{note}";
+        };
+        
+        var header = $"<uppercase>{skillName}</uppercase>\n\n";
+        var attack = passiveDescription.IsValid() ? $"<color=grey><i>Nội tại: {ReformDescription(passiveDescription, eval)}</color></i>\n\n" : "";
+        var skill = ReformDescription(activeDescription, eval);
+        var footer = unstoppable ? "\n\n<color=grey><i>(Khi đang sử dụng kỹ năng, không thể bị cản phá)</color></i>" : "";
+        return $"{header}{attack}{skill}{footer}";
     }
+
+    string ReformDescription(string des, MatchEvaluator eval) {
+        const string pattern = @"#\[(\d+)\]";
+        return Regex.Replace(des, pattern, eval);
+    }
+
+#if UNITY_EDITOR
+    [Button]
+    void AddSkillParam(int index) {
+        var arr = new HeroSkillParam[skillParams.Length + 1];
+        for (int i = arr.Length-1; i >=0; i--) {
+            if (i == index) {
+                arr[i] = new HeroSkillParam();
+            }
+            else if (i < index) {
+                arr[i] = skillParams[i];
+            }
+            else {
+                arr[i] = skillParams[i - 1];
+            }
+        }
+
+        skillParams = arr;
+
+        MatchEvaluator eval = match => {
+            var i = int.Parse(match.Groups[1].Value);
+            if (i >= index) {
+                return $"#[{i + 1}]";
+            }
+
+            return match.Value;
+        };
+
+        passiveDescription = ReformDescription(passiveDescription, eval);
+        activeDescription = ReformDescription(activeDescription, eval);
+    }
+    
+    [Button]
+    void RemoveSkillParam(int index) {
+        if (skillParams.Length <= 1) return;
+        
+        var arr = new HeroSkillParam[skillParams.Length - 1];
+        for (int i = 0; i < arr.Length; i++) {
+            if (i < index) {
+                arr[i] = skillParams[i];
+            }
+            else {
+                arr[i] = skillParams[i + 1];
+            }
+        }
+
+        skillParams = arr;
+
+        MatchEvaluator eval = match => {
+            var i = int.Parse(match.Groups[1].Value);
+            if (i > index) {
+                return $"#[{i - 1}]";
+            }
+
+            return match.Value;
+        };
+
+        passiveDescription = ReformDescription(passiveDescription, eval);
+        activeDescription = ReformDescription(activeDescription, eval);
+    }
+
+    [Button]
+    void test() {
+     
+    }
+#endif
 }
 
 [Serializable]
@@ -116,13 +178,15 @@ public class Evolution {
 
 [Serializable]
 public class HeroSkillParam {
+    [TableColumnWidth(170, resizable:false)] 
     public string key;
     public float value;
+    [TableColumnWidth(30, resizable:false), VerticalGroup("%"), LabelText("")] 
     public bool isPercentage;
 }
 
 public static class HeroId {
-    public const string D_u_m_m_y = "D_u_m_m_y";
+    public const string _Dummy = "_Dummy";
     public const string Aatrox_Dark = "Aatrox_Dark";
     public const string Aatrox_Light = "Aatrox_Light";
     public const string Akali = "Akali";

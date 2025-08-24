@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Aatrox_TrueForm
   m_EditorClassIdentifier: 
-  id: Aatrox_Light
+  id: Tristana
   name: "A Ch\u1ED1c"
   subName: "(T\u1EADn Th\u1EBF)"
   summoned: 1
@@ -33,6 +33,41 @@ MonoBehaviour:
   energyRegenPerAttack: 1
   energyRegenPerHit: 1
   attackRange: 1
+  evolutions:
+  - rank: 1
+    modifiers:
+    - id: <will be auto generated>
+      key: max_hp
+      value: 0.8
+      type: 1
+    - id: <will be auto generated>
+      key: p_dmg
+      value: 0.8
+      type: 1
+    - id: <will be auto generated>
+      key: atk_spd
+      value: 0.2
+      type: 1
+  - rank: 2
+    modifiers:
+    - id: <will be auto generated>
+      key: max_hp
+      value: 3.5
+      type: 1
+    - id: <will be auto generated>
+      key: p_dmg
+      value: 3.5
+      type: 1
+    - id: <will be auto generated>
+      key: atk_spd
+      value: 0.5
+      type: 1
+  skillParams: []
+  attackDescription: 
+  skillName: 
+  skillDescription: 
+  unstoppable: 0
+  specialKeys: []
   dps: 269.1
   physicalReduction: 50
   magicalReduction: 50

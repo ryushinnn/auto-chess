@@ -2,25 +2,25 @@ using System;
 using UnityEngine;
 
 public class AttackProcessor_Aatrox_Dark : AttackProcessor {
-    const float MIN_DMG_MUL = 0.5f;
-    const float MAX_DMG_MUL = 1;
+    readonly float dmgMulMin;
+    readonly float dmgMulMax;
 
     public AttackProcessor_Aatrox_Dark(BattleHero hero) : base(hero) {
-        AnimationLength = 2.167f;
-        Timers = new[] { 0.9f, 1.9f };
-        Description = "Đòn đánh sẽ chém liên tiếp 2 nhát, mỗi nhát gây " +
-                      $"({MIN_DMG_MUL * 100}%~{MAX_DMG_MUL * 100}% <sprite name=pdmg>) sát thương vật lý " +
-                      $"dựa trên máu đã mất của mục tiêu. Nhát chém đầu tiên không thể chí mạng, " +
-                      $"nhát chém thứ 2 chắc chắn chí mạng.";
+        animationLength = 2.167f;
+        timers = new[] { 0.9f, 1.9f };
+        
+        var skillParams = hero.Trait.skillParams;
+        dmgMulMin = skillParams[0].value;
+        dmgMulMax = skillParams[1].value;
     }
 
     public override void Process(float timer) {
         base.Process(timer);
 
-        if (trueTimer >= Timers[0] && atkExecuted == 0) {
-            if (((BattleHero)hero).Target != null) {
-                var targetAtb = ((BattleHero)hero).Target.GetAbility<HeroAttributes>();
-                var perc = Mathf.Lerp(MIN_DMG_MUL, MAX_DMG_MUL, targetAtb.HpLostPercentage);
+        if (trueTimer >= timers[0] && atkExecuted == 0) {
+            if (hero.Target != null) {
+                var targetAtb = hero.Target.GetAbility<HeroAttributes>();
+                var perc = Mathf.Lerp(dmgMulMin, dmgMulMax, targetAtb.HpLostPercentage);
                 var baseDmg = attributes.GetDamage(DamageType.Physical, false, scaledValues: new[] {
                     (perc, DamageType.Physical)
                 });
@@ -32,10 +32,10 @@ public class AttackProcessor_Aatrox_Dark : AttackProcessor {
             }
             atkExecuted++;
         }
-        else if (trueTimer >= Timers[1] && atkExecuted == 1) {
-            if (((BattleHero)hero).Target != null) {
-                var targetAtb = ((BattleHero)hero).Target.GetAbility<HeroAttributes>();
-                var perc = Mathf.Lerp(MIN_DMG_MUL, MAX_DMG_MUL, targetAtb.HpLostPercentage);
+        else if (trueTimer >= timers[1] && atkExecuted == 1) {
+            if (hero.Target != null) {
+                var targetAtb = hero.Target.GetAbility<HeroAttributes>();
+                var perc = Mathf.Lerp(dmgMulMin, dmgMulMax, targetAtb.HpLostPercentage);
                 var baseDmg = attributes.GetDamage(DamageType.Physical, true, scaledValues: new[] {
                     (perc, DamageType.Physical)
                 });

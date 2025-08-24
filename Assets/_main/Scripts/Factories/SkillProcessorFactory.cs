@@ -17,7 +17,7 @@
             HeroId.Yasuo => new SkillProcessor_Yasuo(hero),
             HeroId.Yone => new SkillProcessor_Yone(hero),
             HeroId.Zed => new SkillProcessor_Zed(hero),
-            _ => new SkillProcessor(hero),
+            _ => new SkillProcessor__Empty(hero),
         };
     }
 }

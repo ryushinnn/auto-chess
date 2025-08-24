@@ -27,6 +27,7 @@ public class LineUp : MonoBehaviour {
         UIManager_Arena.Instance.Arena.UpdateLineUpText(heroesOnMap.Count, maxHeroesOnMap);
     }
 
+    [Button]
     public bool Add(HeroTrait trait) {
         // merge into rank A hero
         if (MergeHeroes(trait, HeroRank.B, GameConfigs.NUMBER_OF_HEROES_TO_RANK_UP - 1)) {

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Yasuo
   m_EditorClassIdentifier: 
-  id: Yasuo
+  id: Tristana
   name: "D\u1EA1 Xu\xE2n"
   subName: 
   summoned: 0
@@ -33,6 +33,75 @@ MonoBehaviour:
   energyRegenPerAttack: 20
   energyRegenPerHit: 1
   attackRange: 1
+  evolutions:
+  - rank: 1
+    modifiers:
+    - id: <will be auto generated>
+      key: max_hp
+      value: 0.8
+      type: 1
+    - id: <will be auto generated>
+      key: p_dmg
+      value: 0.8
+      type: 1
+    - id: <will be auto generated>
+      key: atk_spd
+      value: 0.2
+      type: 1
+  - rank: 2
+    modifiers:
+    - id: <will be auto generated>
+      key: max_hp
+      value: 3.5
+      type: 1
+    - id: <will be auto generated>
+      key: p_dmg
+      value: 3.5
+      type: 1
+    - id: <will be auto generated>
+      key: atk_spd
+      value: 0.5
+      type: 1
+  skillName: "Tu\u1EF7 T\xE1n T\xE2m Tan"
+  unstoppable: 0
+  skillParams:
+  - key: airborne_duration
+    value: 1
+    isPercentage: 0
+  - key: base_dmg_0
+    value: 50
+    isPercentage: 0
+  - key: dmg_mul_0
+    value: 0.5
+    isPercentage: 1
+  - key: base_dmg_1
+    value: 80
+    isPercentage: 0
+  - key: dmg_mul_1
+    value: 1
+    isPercentage: 1
+  - key: dot_base_dmg
+    value: 5
+    isPercentage: 0
+  - key: dot_dmg_mul
+    value: 0.1
+    isPercentage: 1
+  - key: duration
+    value: 4
+    isPercentage: 0
+  - key: interval
+    value: 0.333
+    isPercentage: 0
+  passiveDescription: 
+  activeDescription: "H\u1EA5t tung m\u1EE5c ti\xEAu trong #[0]s sau \u0111\xF3 ch\xE9m
+    2 l\u1EA7n g\xE2y l\u1EA7n l\u01B0\u1EE3t <color=grey>(#[1] + #[2]<sprite name=pdmg>)</color>
+    s\xE1t th\u01B0\u01A1ng v\u1EADt l\xFD v\xE0 <color=grey>(#[3] + #[4]<sprite
+    name=pdmg>)</color> s\xE1t th\u01B0\u01A1ng v\u1EADt l\xFD. Nh\xE1t ch\xE9m th\u1EE9
+    2 k\xE8m theo hi\u1EC7u \u1EE9ng <color=red>XU\u1EA4T HUY\u1EBET</color> duy
+    tr\xEC #[7]s\n\n[<color=red>XU\u1EA4T HUY\u1EBET</color>] m\u1ED7i #[8]s g\xE2y
+    <color=grey>(#[5] + #[6]<sprite name=pdmg>)</color> s\xE1t th\u01B0\u01A1ng v\u1EADt
+    l\xFD."
+  specialKeys: []
   dps: 54.000004
   physicalReduction: 23.076923
   magicalReduction: 99.0098

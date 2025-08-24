@@ -1,32 +1,36 @@
 ﻿public class SkillProcessor_MissFortune : SkillProcessor {
-    const float L_PHYSICAL_DMG_MUL_0 = 0.6f;
-    const float L_MAGICAL_DMG_MUL_0 = 0.3f;
-    const float L_PHYSICAL_DMG_MUL_1 = 0.3f;
-    const float L_MAGICAL_DMG_MUL_1 = 0.6f;
-    const float R_PHYSICAL_DMG_MUL_0 = 1f;
-    const float R_MAGICAL_DMG_MUL_0 = 0.5f;
-    const float R_PHYSICAL_DMG_MUL_1 = 0.5f;
-    const float R_MAGICAL_DMG_MUL_1 = 1f;
-    const float VAMP_MUL = 0.3f;
-    const float REDUCE_DEFENSE_MUL = -0.3f;
-    const float REDUCE_DEFENSE_DURATION = 5f;
-    const string EFFECT_KEY = "missfortune_shield_breaker";
+    readonly float lPDmgMul0;
+    readonly float lMDmgMul0;
+    readonly float lPDmgMul1;
+    readonly float lMDmgMul1;
+    readonly float rPDmgMul0;
+    readonly float rMDmgMul0;
+    readonly float rPDmgMul1;
+    readonly float rMDmgMul1;
+    readonly float vampMul;
+    readonly float reduceDefMul;
+    readonly float reduceDefDuration;
+    readonly string effectKey;
 
     public SkillProcessor_MissFortune(BattleHero hero) : base(hero) {
         animationLength = 2.8f;
         timers = new[] { 1f, 1.3f };
-        Name = "Hơi thở của Hoa Cải!";
-        Description = "Bắn lần lượt 2 viên đạn.\n" +
-                      $"- Viên đầu tiên: Gây ({L_PHYSICAL_DMG_MUL_0 * 100}% <sprite name=pdmg> + " +
-                      $"{L_MAGICAL_DMG_MUL_0*100}% <sprite name=mdmg>) sát thương vật lý cùng với " +
-                      $"({L_PHYSICAL_DMG_MUL_1*100}% <sprite name=pdmg> + {L_MAGICAL_DMG_MUL_1 * 100}% <sprite name=mdmg>) " +
-                      $"sát thương phép. Hồi máu bằng {VAMP_MUL * 100}% sát thương gây ra.\n" +
-                      $"- Viên thứ 2: Gây ({R_PHYSICAL_DMG_MUL_0 * 100}% <sprite name=pdmg> + " +
-                      $"{R_MAGICAL_DMG_MUL_0*100}% <sprite name=mdmg>) sát thương vật lý cùng với " +
-                      $"({R_PHYSICAL_DMG_MUL_1*100}% <sprite name=pdmg> + {R_MAGICAL_DMG_MUL_1 * 100}% <sprite name=mdmg>) " +
-                      $"sát thương phép. Mục tiêu bị giảm {REDUCE_DEFENSE_MUL * -100}% <sprite name=arm> và <sprite name=res> " +
-                      $"trong {REDUCE_DEFENSE_DURATION}s.\n" +
-                      $"Các viên đạn đều có thể chí mạng.";
+        
+        var skillParams = hero.Trait.skillParams;
+        lPDmgMul0 = skillParams[0].value;
+        lMDmgMul0 = skillParams[1].value;
+        lPDmgMul1 = skillParams[2].value;
+        lMDmgMul1 = skillParams[3].value;
+        rPDmgMul0 = skillParams[4].value;
+        rMDmgMul0 = skillParams[5].value;
+        rPDmgMul1 = skillParams[6].value;
+        rMDmgMul1 = skillParams[7].value;
+        vampMul = skillParams[8].value;
+        reduceDefMul = skillParams[9].value;
+        reduceDefDuration = skillParams[10].value;
+        
+        var specialKeys = hero.Trait.specialKeys;
+        effectKey = specialKeys[0];
     }
 
     public override void Process(float timer) {
@@ -41,48 +45,48 @@
     }
 
     void ShotLeft() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
 
         var crit = attributes.Crit();
         var phyDmg = attributes.GetDamage(DamageType.Physical, crit, scaledValues:
             new[] {
-                (L_PHYSICAL_DMG_MUL_0, DamageType.Physical),
-                (L_MAGICAL_DMG_MUL_0, DamageType.Magical)
+                (lPDmgMul0, DamageType.Physical),
+                (lMDmgMul0, DamageType.Magical)
             });
         var magDmg = attributes.GetDamage(DamageType.Magical, crit, scaledValues:
             new[] {
-                (L_PHYSICAL_DMG_MUL_1, DamageType.Physical),
-                (L_MAGICAL_DMG_MUL_1, DamageType.Magical)
+                (lPDmgMul1, DamageType.Physical),
+                (lMDmgMul1, DamageType.Magical)
             });
         
-        var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(new[] {phyDmg, magDmg});
-        attributes.Heal(outputDmg * VAMP_MUL);
+        var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] {phyDmg, magDmg});
+        attributes.Heal(outputDmg * vampMul);
     }
 
     void ShotRight() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
 
         var crit = attributes.Crit();
         var phyDmg = attributes.GetDamage(DamageType.Physical, crit, scaledValues:
             new[] {
-                (R_PHYSICAL_DMG_MUL_0, DamageType.Physical),
-                (R_MAGICAL_DMG_MUL_0, DamageType.Magical)
+                (rPDmgMul0, DamageType.Physical),
+                (rMDmgMul0, DamageType.Magical)
             });
         var magDmg = attributes.GetDamage(DamageType.Magical, crit, scaledValues:
             new[] {
-                (R_PHYSICAL_DMG_MUL_1, DamageType.Physical),
-                (R_MAGICAL_DMG_MUL_1, DamageType.Magical)
+                (rPDmgMul1, DamageType.Physical),
+                (rMDmgMul1, DamageType.Magical)
             });
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(new[] {phyDmg, magDmg});
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(new[] {phyDmg, magDmg});
         
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().AddAttributeModifier(
+        hero.Target.GetAbility<HeroAttributes>().AddAttributeModifier(
             AttributeModifierSet.Create(
                 hero,
-                EFFECT_KEY,
-                REDUCE_DEFENSE_DURATION,
+                effectKey,
+                reduceDefDuration,
                 new[] {
-                    (AttributeModifierKey.Armor, REDUCE_DEFENSE_MUL, AttributeModifier.Type.Percentage),
-                    (AttributeModifierKey.Resistance, REDUCE_DEFENSE_MUL, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.Armor, reduceDefMul, AttributeModifier.Type.Percentage),
+                    (AttributeModifierKey.Resistance, reduceDefMul, AttributeModifier.Type.Percentage),
                 }
             ));
     }

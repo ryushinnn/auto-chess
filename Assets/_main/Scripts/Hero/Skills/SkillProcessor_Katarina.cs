@@ -1,23 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RExt.Extensions;
 
 public class SkillProcessor_Katarina : SkillProcessor {
-    public const int HITS = 15;
-    public const int INTERVAL = 200; //ms
-    const float DMG_MUL = 0.3f;
-    const float ANTI_HEAL_DURATION = 3;
+    readonly int hits;
+    readonly float interval;
+    readonly float baseDmgPerHit;
+    readonly float dmgMulPerHit;
+    readonly float antiHealDuration;
     
-    List<Hero> affectedTargets = new();
+    readonly List<Hero> affectedTargets = new();
 
     public SkillProcessor_Katarina(BattleHero hero) : base(hero) {
         animationLength = 3.1f;
-        unstoppable = true;
-        Name = "Đoạn Thuỷ Toái Phong Đao";
-        Description = $"Biến thành lốc xoáy, liên tục gây sát thương xung quanh. " +
-                      $"Mỗi lần gây ({DMG_MUL*100}% <sprite name=pdmg>) sát thương phép và có thể " +
-                      $"chí mạng, tổng cộng {HITS} lần. Kẻ địch chịu sát thương sẽ nhận hiệu ứng giảm hồi máu " +
-                      $"trong {ANTI_HEAL_DURATION}s.";
+        
+        var skillParams = hero.Trait.skillParams;
+        hits = (int)skillParams[0].value;
+        interval = skillParams[1].value;
+        baseDmgPerHit = skillParams[2].value;
+        dmgMulPerHit = skillParams[3].value;
+        antiHealDuration = skillParams[4].value;
     }
 
     public override void Process(float timer) {
@@ -30,24 +33,25 @@ public class SkillProcessor_Katarina : SkillProcessor {
     async void TurnAround() {
         affectedTargets.Clear();
         Cut();
-        for (int i=1; i<HITS; i++) {
-            await Task.Delay(INTERVAL);
+        for (int i=1; i<hits; i++) {
+            await Task.Delay(interval.ToMilliseconds());
             Cut();
         }
     }
 
     void Cut() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
 
         var dmg = attributes.GetDamage(DamageType.Magical, attributes.Crit(),
-            scaledValues: new[] { (DMG_MUL, DamageType.Physical) });
-        var isNewTarget = !affectedTargets.Contains(((BattleHero)hero).Target);
+            scaledValues: new[] { (dmgMulPerHit, DamageType.Physical) },
+            fixedValues: new[] { baseDmgPerHit });
+        var isNewTarget = !affectedTargets.Contains(hero.Target);
         
-        ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(dmg,isNewTarget);
+        hero.Target.GetAbility<HeroAttributes>().TakeDamage(dmg,isNewTarget);
 
         if (isNewTarget) {
-            ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().AntiHeal(ANTI_HEAL_DURATION);
-            affectedTargets.Add(((BattleHero)hero).Target);
+            hero.Target.GetAbility<HeroStatusEffects>().AntiHeal(antiHealDuration);
+            affectedTargets.Add(hero.Target);
         }
     }
 }

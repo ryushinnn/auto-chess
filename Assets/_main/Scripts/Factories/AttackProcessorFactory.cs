@@ -17,7 +17,7 @@
             HeroId.Yasuo => new AttackProcessor_Yasuo(hero),
             HeroId.Yone => new AttackProcessor_Yone(hero),
             HeroId.Zed => new AttackProcessor_Zed(hero),
-            _ => new AttackProcessor(hero)
+            _ => new AttackProcessor__Empty(hero)
         };
     }
 }

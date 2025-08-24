@@ -2,28 +2,35 @@ using System;
 using UnityEngine;
 
 public class SkillProcessor_Aatrox_Light : SkillProcessor {
-    const float DMG_MUL_0 = 0.7f;
-    const float DMG_MUL_1 = 1.5f;
-    const float DMG_MUL_2 = 2f;
-    const float AIRBORNE_TIME_0 = 0.2f;
-    const float AIRBORNE_TIME_1 = 0.2f;
-    const float AIRBORNE_TIME_2 = 0.5f;
-    const float VAMP_0 = 0.25f;
-    const float VAMP_1 = 0.5f;
-    const float VAMP_2 = 1f;
-    const float VAMP_MUL_WHEN_LOW_HP = 2f;
-    const float HP_THRESHOLD = 0.5f;
+    readonly float baseDmg;
+    readonly float dmgMul0;
+    readonly float dmgMul1;
+    readonly float dmgMul2;
+    readonly float airborneTime0;
+    readonly float airborneTime1;
+    readonly float airborneTime2;
+    readonly float vamp0;
+    readonly float vamp1;
+    readonly float vamp2;
+    readonly float vampMulOnLowHp;
+    readonly float hpThreshold;
 
     public SkillProcessor_Aatrox_Light(BattleHero hero) : base(hero) {
         animationLength = 5f;
         timers = new[] { 0.6f, 2.3f, 4.1f };
-        unstoppable = true;
-        Name = "Nguyệt Thực: Bạch Vân Liên Trảm";
-        Description = $"Chém 3 nhát, lần lượt gây ({DMG_MUL_0 * 100}%/{DMG_MUL_1 * 100}%/{DMG_MUL_2 * 100}% <sprite name=mdmg>) sát thương phép " +
-                      $"và hất tung mục tiêu trong {AIRBORNE_TIME_0}s/{AIRBORNE_TIME_1}s/{AIRBORNE_TIME_2}s " +
-                      $"đồng thời hồi máu bằng {VAMP_0 * 100}%/{VAMP_1 * 100}%/{VAMP_2 * 100}% " +
-                      $"sát thương gây ra. Nếu bản thân có thấp hơn {HP_THRESHOLD * 100}% <sprite name=hp>, " +
-                      $"lượng máu hồi phục gấp {VAMP_MUL_WHEN_LOW_HP} lần.";
+        
+        var skillParams = hero.Trait.skillParams;
+        dmgMul0 = skillParams[0].value;
+        dmgMul1 = skillParams[1].value;
+        dmgMul2 = skillParams[2].value;
+        airborneTime0 = skillParams[3].value;
+        airborneTime1 = skillParams[4].value;
+        airborneTime2 = skillParams[5].value;
+        vamp0 = skillParams[6].value;
+        vamp1 = skillParams[7].value;
+        vamp2 = skillParams[8].value;
+        vampMulOnLowHp = skillParams[9].value;
+        hpThreshold = skillParams[10].value;
     }
     
     public override void Process(float timer) {
@@ -42,35 +49,38 @@ public class SkillProcessor_Aatrox_Light : SkillProcessor {
     }
 
     void LightSlash() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
 
-        var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
-            scaledValues: new []{(DMG_MUL_0, DamageType.Magical)}));
+        var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
+            scaledValues: new []{(dmgMul0, DamageType.Magical)},
+            fixedValues: new []{ baseDmg }));
         
-        var vamp = attributes.HpPercentage < HP_THRESHOLD ? VAMP_0 * VAMP_MUL_WHEN_LOW_HP : VAMP_0;
+        var vamp = attributes.HpPercentage < hpThreshold ? vamp0 * vampMulOnLowHp : vamp0;
         attributes.Heal(outputDmg * vamp);
-        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_0);
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(airborneTime0);
     }
     
     void MediumSlash() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
         
-        var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
-            scaledValues: new []{(DMG_MUL_1, DamageType.Magical)}));
+        var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
+            scaledValues: new []{(dmgMul1, DamageType.Magical)},
+            fixedValues: new []{ baseDmg }));
         
-        var vamp = attributes.HpPercentage < HP_THRESHOLD ? VAMP_1 * VAMP_MUL_WHEN_LOW_HP : VAMP_1;
+        var vamp = attributes.HpPercentage < hpThreshold ? vamp1 * vampMulOnLowHp : vamp1;
         attributes.Heal(outputDmg * vamp);
-        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_1);
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(airborneTime1);
     }
     
     void HeavySlash() {
-        if (((BattleHero)hero).Target == null) return;
+        if (hero.Target == null) return;
         
-        var outputDmg = ((BattleHero)hero).Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
-            scaledValues: new []{(DMG_MUL_0, DamageType.Magical)}));
+        var outputDmg = hero.Target.GetAbility<HeroAttributes>().TakeDamage(attributes.GetDamage(DamageType.Magical, false,
+            scaledValues: new []{(dmgMul2, DamageType.Magical)},
+            fixedValues: new []{ baseDmg }));
         
-        var vamp = attributes.HpPercentage < HP_THRESHOLD ? VAMP_2 * VAMP_MUL_WHEN_LOW_HP : VAMP_2;
+        var vamp = attributes.HpPercentage < hpThreshold ? vamp2 * vampMulOnLowHp : vamp2;
         attributes.Heal(outputDmg * vamp);
-        ((BattleHero)hero).Target.GetAbility<HeroStatusEffects>().Airborne(AIRBORNE_TIME_2);
+        hero.Target.GetAbility<HeroStatusEffects>().Airborne(airborneTime2);
     }
 }

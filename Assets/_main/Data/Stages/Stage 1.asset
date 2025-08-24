@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   matches:
   - enemies:
-    - heroId: Ashe
-      rank: 0
+    - heroId: Katarina
+      rank: 2
       gridPosition: {x: 7, y: 3}
       items: []
-      hpScale: 0.5
-      damageScale: 0.5
+      hpScale: 100
+      damageScale: 0.01
     rewards:
     - type: hero
       coins: 1
@@ -107,11 +107,11 @@ MonoBehaviour:
       reputation: 0
       randomRewards: []
   - enemies:
-    - heroId: Ashe
+    - heroId: Malphite
       rank: 2
       gridPosition: {x: 5, y: 4}
       items: []
-      hpScale: 3
-      damageScale: 1
+      hpScale: 10
+      damageScale: 0.01
     rewards: []
     winRewards: []

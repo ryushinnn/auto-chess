@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Ashe
   m_EditorClassIdentifier: 
-  id: Ashe
+  id: Tristana
   name: "\xC1nh"
   subName: 
   summoned: 0
@@ -30,7 +30,7 @@ MonoBehaviour:
   resistance: 15
   attackSpeed: 0.48
   movementSpeed: 1.8
-  energyRegenPerAttack: 15
+  energyRegenPerAttack: 30
   energyRegenPerHit: 4
   attackRange: 2
   evolutions:
@@ -62,6 +62,7 @@ MonoBehaviour:
       key: atk_spd
       value: 0.5
       type: 1
+  skillName: "Thi\xEAn Gi\xE1ng Th\u1EA7n V\u0169 Ti\u1EC5n"
   skillParams:
   - key: arrow_set_min
     value: 10
@@ -85,13 +86,19 @@ MonoBehaviour:
     value: 2
     isPercentage: 0
   attackDescription: 
-  skillName: "Thi\xEAn Gi\xE1ng Th\u1EA7n V\u0169 Ti\u1EC5n"
+  passiveDescription: 
   skillDescription: "B\u1EAFn ng\u1EABu nhi\xEAn <color=grey>#[0] ~ #[1]</color>
-    lo\u1EA1t m\u01B0a t\xEAn. M\u1ED7i lo\u1EA1t m\u01B0a t\xEAn g\xE2y  <color=grey>(#[2]
+    lo\u1EA1t m\u01B0a t\xEAn. M\u1ED7i lo\u1EA1t m\u01B0a t\xEAn g\xE2y <color=grey>(#[2]
+    + #[3]<sprite name=pdmg> + #[4]<sprite name=mdmg>)</color> s\xE1t th\u01B0\u01A1ng
+    v\u1EADt l\xFD (c\xF3 th\u1EC3 ch\xED m\u1EA1ng) cho t\u1EA5t c\u1EA3 m\u1EE5c
+    ti\xEAu trong v\xF9ng \u1EA3nh h\u01B0\u1EDFng."
+  activeDescription: "B\u1EAFn ng\u1EABu nhi\xEAn <color=grey>#[0] ~ #[1]</color>
+    lo\u1EA1t m\u01B0a t\xEAn. M\u1ED7i lo\u1EA1t m\u01B0a t\xEAn g\xE2y <color=grey>(#[2]
     + #[3]<sprite name=pdmg> + #[4]<sprite name=mdmg>)</color> s\xE1t th\u01B0\u01A1ng
     v\u1EADt l\xFD (c\xF3 th\u1EC3 ch\xED m\u1EA1ng) cho t\u1EA5t c\u1EA3 m\u1EE5c
     ti\xEAu trong v\xF9ng \u1EA3nh h\u01B0\u1EDFng."
   unstoppable: 0
+  specialKeys: []
   dps: 69.119995
   physicalReduction: 13.793103
   magicalReduction: 13.043478

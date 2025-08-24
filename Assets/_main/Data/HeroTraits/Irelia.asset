@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Irelia
   m_EditorClassIdentifier: 
-  id: Irelia
+  id: Tristana
   name: "\xC1i Li\xEAn"
   subName: 
   summoned: 0
@@ -33,6 +33,52 @@ MonoBehaviour:
   energyRegenPerAttack: 8
   energyRegenPerHit: 12
   attackRange: 2
+  evolutions:
+  - rank: 1
+    modifiers:
+    - id: <will be auto generated>
+      key: max_hp
+      value: 0.8
+      type: 1
+    - id: <will be auto generated>
+      key: p_dmg
+      value: 0.8
+      type: 1
+    - id: <will be auto generated>
+      key: atk_spd
+      value: 0.2
+      type: 1
+  - rank: 2
+    modifiers:
+    - id: <will be auto generated>
+      key: max_hp
+      value: 3.5
+      type: 1
+    - id: <will be auto generated>
+      key: p_dmg
+      value: 3.5
+      type: 1
+    - id: <will be auto generated>
+      key: atk_spd
+      value: 0.5
+      type: 1
+  skillName: "H\u1EAFc Long Ch\u01B0\u1EDFng"
+  unstoppable: 1
+  skillParams:
+  - key: base_dmg
+    value: 120
+    isPercentage: 0
+  - key: dmg_mul
+    value: 1.5
+    isPercentage: 1
+  - key: airborne_duration
+    value: 1
+    isPercentage: 0
+  passiveDescription: 
+  activeDescription: "Tri\u1EC7u h\u1ED3i r\u1ED3ng th\u1EA7n t\u1EA5n c\xF4ng k\u1EBB
+    \u0111\u1ECBch g\xE2y <color=grey>(#[0] + #[1]<sprite name=pdmg>)</color> s\xE1t
+    th\u01B0\u01A1ng ph\xE9p v\xE0 h\u1EA5t tung m\u1EE5c ti\xEAu trong #[2]s."
+  specialKeys: []
   dps: 54
   physicalReduction: 24.242424
   magicalReduction: 19.35484

@@ -1,26 +1,33 @@
 using System;
 using System.Threading.Tasks;
 using RExt.Extensions;
+using UnityEngine;
 
 public class SkillProcessor_Caitlyn : SkillProcessor {
-    const float HP_MUL_TO_HEAL = 0.03f;
-    const float DMG_MUL_TO_HEAL = 0.15f;
-    const int TOTAL_TIME = 1500; //ms
-    const int INTERVAL = 250; //ms
-    const float ATK_SPD_MUL = 0.25f;
-    const float ATK_SPD_DURATION = 3f;
-    const string HOT_KEY = "caitlyn_cake";
-    const string ATK_SPD_KEY = "caitlyn_cake_atkspd";
+    readonly float healByHpMul;
+    readonly float healByDmgMul;
+    readonly float duration;
+    readonly float interval;
+    readonly float atkSpdMul;
+    readonly float atkSpdDuration;
+    readonly string hotKey;
+    readonly string effectKey;
     
     public SkillProcessor_Caitlyn(BattleHero hero) : base(hero) {
         animationLength = 6.5f;
         timers = new[] { 2.2f, 5.6f };
-        unstoppable = true;
-        Name = "Đến giờ trà chiều rồi! ^_^";
-        Description = $"Ăn bánh giúp hồi máu trong {TOTAL_TIME/1000f}s, " +
-                      $"mỗi {INTERVAL/1000f}s hồi máu bằng ({HP_MUL_TO_HEAL*100}% <sprite name=hp> tối đa + " +
-                      $"{DMG_MUL_TO_HEAL*100}% <sprite name=pdmg>). Sau đó tăng " +
-                      $"{ATK_SPD_MUL*100}% <sprite name=aspd> trong {ATK_SPD_DURATION}s.";        
+        
+        var skillParams = hero.Trait.skillParams;
+        healByHpMul = skillParams[0].value;
+        healByDmgMul = skillParams[1].value;
+        duration = (int)skillParams[2].value;
+        interval = (int)skillParams[3].value;
+        atkSpdMul = skillParams[4].value;
+        atkSpdDuration = skillParams[5].value;
+        
+        var specialKeys = hero.Trait.specialKeys;
+        hotKey = specialKeys[0];
+        effectKey = specialKeys[1];
     }
 
     public override void Process(float timer) {
@@ -39,11 +46,11 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
         
         attributes.AddHealOverTime(
             HealOverTime.Create(
-                HOT_KEY,
+                hotKey,
                 hero,
-                attributes.MaxHp * HP_MUL_TO_HEAL + attributes.PhysicalDamage * DMG_MUL_TO_HEAL,
-                TOTAL_TIME / INTERVAL,
-                INTERVAL.ToSeconds()
+                attributes.MaxHp * healByHpMul + attributes.PhysicalDamage * healByDmgMul,
+                Mathf.RoundToInt(duration / interval),
+                interval
             ));
     }
 
@@ -53,10 +60,10 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
         attributes.AddAttributeModifier(
             AttributeModifierSet.Create(
                 hero,
-                ATK_SPD_KEY,
-                ATK_SPD_DURATION,
+                effectKey,
+                atkSpdDuration,
                 new[] {
-                    (AttributeModifierKey.AttackSpeed, ATK_SPD_MUL, AttributeModifier.Type.Percentage)
+                    (AttributeModifierKey.AttackSpeed, ATK_SPD_MUL: atkSpdMul, AttributeModifier.Type.Percentage)
                 }
             ));
     }
