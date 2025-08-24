@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Akali
   m_EditorClassIdentifier: 
-  id: Tristana
+  id: Akali
   name: "Kh\xE1nh Linh"
   subName: 
   summoned: 0
@@ -63,6 +63,7 @@ MonoBehaviour:
       value: 0.5
       type: 1
   skillName: "\xC1m Quang Chi Thu\u1EADt"
+  unstoppable: 0
   skillParams:
   - key: energy_threshold
     value: 50
@@ -77,7 +78,6 @@ MonoBehaviour:
   activeDescription: "N\xE9m bom m\xF9 v\xE0o 1 m\u1EE5c ti\xEAu, n\u1EBFu m\u1EE5c
     ti\xEAu c\xF3 \xEDt nh\u1EA5t #[0]<sprite name=eng>, g\xE2y c\xE2m l\u1EB7ng
     trong #[1]s, ng\u01B0\u1EE3c l\u1EA1i g\xE2y cho\xE1ng trong #[2]s."
-  unstoppable: 0
   specialKeys: []
   dps: 50.7
   physicalReduction: 15.966387

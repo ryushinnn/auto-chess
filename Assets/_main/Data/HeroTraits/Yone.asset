@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Yone
   m_EditorClassIdentifier: 
-  id: Tristana
+  id: Yone
   name: "Du Thi\xEAn"
   subName: 
   summoned: 0

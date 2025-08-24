@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: MissFortune
   m_EditorClassIdentifier: 
-  id: Tristana
+  id: MissFortune
   name: "M\u1EF9 Ph\u01B0\u01A1ng"
   subName: 
   summoned: 0

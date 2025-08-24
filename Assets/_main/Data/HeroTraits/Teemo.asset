@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Teemo
   m_EditorClassIdentifier: 
-  id: Tristana
+  id: Teemo
   name: "Ti\xEAn M\u1EC7nh"
   subName: 
   summoned: 0

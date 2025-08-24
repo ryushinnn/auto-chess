@@ -20,8 +20,8 @@ public class SkillProcessor_Caitlyn : SkillProcessor {
         var skillParams = hero.Trait.skillParams;
         healByHpMul = skillParams[0].value;
         healByDmgMul = skillParams[1].value;
-        duration = (int)skillParams[2].value;
-        interval = (int)skillParams[3].value;
+        duration = skillParams[2].value;
+        interval = skillParams[3].value;
         atkSpdMul = skillParams[4].value;
         atkSpdDuration = skillParams[5].value;
         

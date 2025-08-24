@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,33 +10,23 @@ public class Destinies_Destiny : MonoBehaviour {
     [SerializeField] TMP_Text currentNumberText;
     [SerializeField] TMP_Text[] stageTexts;
     [SerializeField] TMP_Text[] separators;
+    [SerializeField] Button button;
     
-    public bool Empty => empty;
-    
-    bool empty;
+    public bool Empty { get; private set; }
 
-    public void SetData(Role role, int current) {
-        empty = false;
-        iconImage.sprite = AssetDB.Instance.GetRoleIcon(role).value;
-        SetData(GameConfigs.ROLE_CONFIGS[role], current);
-        nameText.text = role.ToName();
+    Action onSelect;
+
+    void Awake() {
+        button.onClick.AddListener(() => onSelect?.Invoke());
     }
 
-    public void SetData(Realm realm, int current) {
-        empty = false;
-        iconImage.sprite = AssetDB.Instance.GetRealmIcon(realm).value;
-        SetData(GameConfigs.REALM_CONFIGS[realm], current);
-        nameText.text = realm.ToName();
-    }
-    
-    public void MarkAsEmpty() {
-        empty = true;
-    }
-
-    void SetData(int[] stages, int current) {
-        var unlockAtLeastOne = false;
+    public void SetData(string name, Sprite icon, int current, int[] checkpoints, int index, Action onSelect) {
+        this.onSelect = onSelect;
+        nameText.text = name;
+        iconImage.sprite = icon;
+        
         for (int i = 0; i < stageTexts.Length; i++) {
-            if (i >= stages.Length) {
+            if (i >= checkpoints.Length) {
                 stageTexts[i].gameObject.SetActive(false);
                 if (i > 0) { 
                     separators[i-1].gameObject.SetActive(false);
@@ -44,18 +35,15 @@ public class Destinies_Destiny : MonoBehaviour {
             }
 
             stageTexts[i].gameObject.SetActive(true);
-            stageTexts[i].text = stages[i].ToString();
-            if (current >= stages[i]) {
-                var isCurrentStage = i == stages.Length - 1 || current < stages[i + 1];
-                stageTexts[i].color = isCurrentStage ? Color.red : Color.white;
-                stageTexts[i].fontSize = isCurrentStage ? 30 : 20;
+            stageTexts[i].text = checkpoints[i].ToString();
+            if (index >= i) {
+                stageTexts[i].color = i == index ? Color.red : Color.white;
+                stageTexts[i].fontSize = i == index ? 30 : 20;
 
                 if (i > 0) {
                     separators[i-1].gameObject.SetActive(true);
                     separators[i-1].color = Color.white;
                 }
-
-                unlockAtLeastOne = true;
             }
             else {
                 stageTexts[i].color = Color.gray;
@@ -67,7 +55,13 @@ public class Destinies_Destiny : MonoBehaviour {
             }
         }
         currentNumberText.text = current.ToString();
-        iconImage.color = unlockAtLeastOne ? Color.white : Color.gray;
-        nameText.color = unlockAtLeastOne ? Color.white : Color.gray;
+        iconImage.color = index >= 0 ? Color.white : Color.gray;
+        nameText.color = index >= 0 ? Color.white : Color.gray;
+        
+        Empty = false;
+    }
+    
+    public void MarkAsEmpty() {
+        Empty = true;
     }
 }

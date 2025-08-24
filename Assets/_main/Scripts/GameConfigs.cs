@@ -68,23 +68,6 @@ public static class GameConfigs {
     };
     public const int REFRESH_COST = 2;
 
-    public static readonly Dictionary<Role,int[]> ROLE_CONFIGS = new() {
-        { Role.Duelist, new[] { 2, 3, 4 } },
-        { Role.Sorcerer, new[] { 2, 3, 4 } },
-        { Role.Marksman, new[] { 2, 3, 4 } },
-        { Role.Assassin, new[] { 2, 3, 4 } },
-        { Role.Bruiser, new[] { 2, 3, 4 } },
-        { Role.Cultist, new[] { 2, 3, 4 } },
-    };
-    
-    public static readonly Dictionary<Realm,int[]> REALM_CONFIGS = new() {
-        { Realm.Mortal, new[] { 2, 3, 4, 5} },
-        { Realm.Divine, new[] { 2, 3, 4, 5} },
-        { Realm.Nether, new[] { 2, 3, 4, 5} },
-        { Realm.Mecha, new[] { 2, 3, 4, 5} },
-        { Realm.Chaos, new[] { 2, 3, 4, 5} }
-    };
-
     public static readonly Dictionary<MatchPhase, int> MATCH_PHASE_DURATIONS = new() {
         { MatchPhase.Preparation, 999 },
         { MatchPhase.Transition, 5 },
@@ -106,14 +89,4 @@ public class LevelConfig {
     public int xpToNextLevel;
     public int maxHeroesOnMap;
     public int[] rates;
-}
-
-public class RoleConfig {
-    public Role role;
-    public int[] stages;
-}
-
-public class RealmConfig {
-    public Realm realm;
-    public int[] stages;
 }

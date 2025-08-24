@@ -12,7 +12,12 @@ public class DestiniesUI : BaseUI {
     [SerializeField] Button leftButton;
     [SerializeField] Button rightButton;
     [SerializeField] TMP_Text pageText;
+    [SerializeField] GameObject description;
+    [SerializeField] Image descriptionIcon;
+    [SerializeField] TMP_Text descriptionText;
+    [SerializeField] Button closeDescriptionButton;
 
+    DestinyConfig lastConfig;
     List<Destinies_Destiny> destinies = new();
     int currentPage;
     int maxPage;
@@ -22,10 +27,13 @@ public class DestiniesUI : BaseUI {
     void Awake() {
         leftButton.onClick.AddListener(NavigateLeft);
         rightButton.onClick.AddListener(NavigateRight);
+        closeDescriptionButton.onClick.AddListener(HideDescription);
         destinyContainer.ProcessChildren<Destinies_Destiny>(d => destinies.Add(d));
     }
 
     public void SetData(Dictionary<Role, int> roleNumbers, Dictionary<Realm, int> realmNumbers) {
+        HideDescription();
+        
         var destinyNumbers = new List<(object destiny, int number)>();
         foreach (var (role,num) in roleNumbers) {
             destinyNumbers.Add((role, num));
@@ -34,48 +42,48 @@ public class DestiniesUI : BaseUI {
             destinyNumbers.Add((realm, num));
         }
         destinyNumbers.Sort((dnA, dnB) => {
-            var stagesA = dnA.destiny switch {
-                Role role => GameConfigs.ROLE_CONFIGS[role],
-                Realm realm => GameConfigs.REALM_CONFIGS[realm],
+            var cfgA = dnA.destiny switch {
+                Role role => DestinyDB.Instance.Find(role),
+                Realm realm => DestinyDB.Instance.Find(realm),
             };
-            var unlockedA = stagesA.Count(x => x <= dnA.number);
+            var indexA = cfgA.GetCheckpointIndex(dnA.number);
 
-            var stagesB = dnB.destiny switch {
-                Role role => GameConfigs.ROLE_CONFIGS[role],
-                Realm realm => GameConfigs.REALM_CONFIGS[realm],
+            var cfgB = dnB.destiny switch {
+                Role role => DestinyDB.Instance.Find(role),
+                Realm realm => DestinyDB.Instance.Find(realm),
             };
-            var unlockedB = stagesB.Count(x => x <= dnB.number);
+            var indexB = cfgB.GetCheckpointIndex(dnB.number);
 
-            return unlockedA != unlockedB ? unlockedB.CompareTo(unlockedA) : dnB.number.CompareTo(dnA.number);
+            return indexA != indexB ? indexB.CompareTo(indexA) : dnB.number.CompareTo(dnA.number);
         });
         
-        var index = 0;
-        foreach (var dn in destinyNumbers) {
-            if (index >= destinies.Count) {
-                var destiny = Instantiate(destinyPrefab, destinyContainer);
-                destinies.Add(destiny);
+        var count = 0;
+        foreach (var (destiny, num) in destinyNumbers) {
+            if (count >= destinies.Count) {
+                var newDestiny = Instantiate(destinyPrefab, destinyContainer);
+                destinies.Add(newDestiny);
             }
 
-            destinies[index].gameObject.SetActive(true);
-            switch (dn.destiny) {
-                case Role role: {
-                    destinies[index].SetData(role, dn.number);
-                    break;
-                }
-                case Realm realm: {
-                    destinies[index].SetData(realm, dn.number);
-                    break;
-                }
-            }
-            index++;
+            destinies[count].gameObject.SetActive(true);
+            var cfg = destiny switch {
+                Role role => DestinyDB.Instance.Find(role),
+                Realm realm => DestinyDB.Instance.Find(realm),
+            };
+            var index = cfg.GetCheckpointIndex(num);
+            destinies[count].SetData(cfg.GetName(), cfg.GetIcon(), num, cfg.checkpoints, index,
+                () => {
+                    ShowDestinyDescription(cfg, index);
+                });
+            
+            count++;
         }
 
-        for (int i = index; i < destinies.Count; i++) {
+        for (int i = count; i < destinies.Count; i++) {
             destinies[i].gameObject.SetActive(false);
             destinies[i].MarkAsEmpty();
         }
         
-        maxPage = (index + ITEM_PER_PAGE - 1) / ITEM_PER_PAGE - 1;
+        maxPage = (count + ITEM_PER_PAGE - 1) / ITEM_PER_PAGE - 1;
         currentPage = Mathf.Clamp(currentPage, 0, maxPage);
         RefreshCurrentPage();
     }
@@ -100,5 +108,22 @@ public class DestiniesUI : BaseUI {
             index++;
         }
         pageText.text = $"{currentPage+1}/{maxPage+1}";
+    }
+
+    void ShowDestinyDescription(DestinyConfig cfg, int stage) {
+        if (lastConfig == cfg) {
+            HideDescription();
+            return;
+        }
+        
+        lastConfig = cfg;
+        description.gameObject.SetActive(true);
+        descriptionIcon.sprite = lastConfig.GetIcon();
+        descriptionText.text = cfg.Description(stage);
+    }
+    
+    void HideDescription() {
+        lastConfig = null;
+        description.gameObject.SetActive(false);
     }
 }

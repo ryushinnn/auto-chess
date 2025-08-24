@@ -36,15 +36,13 @@ public class Destinies : MonoBehaviour {
 
     public void Activate() {
         foreach (var (role, num) in roleNumbers) {
-            var stages = GameConfigs.ROLE_CONFIGS[role];
-            if (role == Role.Marksman) {
-                for (int i = stages.Length - 1; i >= 0; i--) {
-                    if (num >= stages[i]) {
-                        var processor = DestinyProcessorFactory.Create(role);
-                        var heroes = GameManager.Instance.BattleField.GetAliveHeroes(TeamSide.Ally);
-                        processor.Activate(heroes, i);
-                        break;
-                    }
+            var destiny = DestinyDB.Instance.Find(role);
+            var index = destiny.GetCheckpointIndex(num);
+            if (index >= 0) {
+                if (role == Role.Marksman) {
+                    var processor = DestinyProcessorFactory.Create(role);
+                    var heroes = GameManager.Instance.BattleField.GetAliveHeroes(TeamSide.Ally);
+                    processor.Activate(heroes, index);
                 }
             }
         }

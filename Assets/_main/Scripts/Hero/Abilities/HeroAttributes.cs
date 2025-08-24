@@ -518,7 +518,7 @@ public class HeroAttributes : HeroAbility {
                 modifiers?.ForEach(x => {
                     attackSpeed = Mathf.Max(attackSpeed + (x.type == AttributeModifier.Type.FixedValue ? x.value : attackSpeed * x.value), HeroTrait.MIN_ATTACK_SPEED);
                 });
-                attack.RefreshAttackCooldown();
+                attack?.RefreshAttackCooldown();
                 hero.Mecanim.ModifyAttackTime(attackSpeed);
                 break;
             

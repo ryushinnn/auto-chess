@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Aatrox_TrueForm
   m_EditorClassIdentifier: 
-  id: Tristana
+  id: Aatrox_TrueForm
   name: "A Ch\u1ED1c"
   subName: "(T\u1EADn Th\u1EBF)"
   summoned: 1
@@ -62,11 +62,11 @@ MonoBehaviour:
       key: atk_spd
       value: 0.5
       type: 1
-  skillParams: []
-  attackDescription: 
   skillName: 
-  skillDescription: 
   unstoppable: 0
+  skillParams: []
+  passiveDescription: 
+  activeDescription: 
   specialKeys: []
   dps: 269.1
   physicalReduction: 50

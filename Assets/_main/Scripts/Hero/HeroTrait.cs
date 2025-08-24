@@ -189,6 +189,7 @@ public static class HeroId {
     public const string _Dummy = "_Dummy";
     public const string Aatrox_Dark = "Aatrox_Dark";
     public const string Aatrox_Light = "Aatrox_Light";
+    public const string Aatrox_TrueForm = "Aatrox_TrueForm";
     public const string Akali = "Akali";
     public const string Ashe = "Ashe";
     public const string Caitlyn = "Caitlyn";

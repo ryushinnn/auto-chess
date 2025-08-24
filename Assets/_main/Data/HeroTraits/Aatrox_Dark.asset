@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb18913605bba734bace81405fd78978, type: 3}
   m_Name: Aatrox_Dark
   m_EditorClassIdentifier: 
-  id: Tristana
+  id: Aatrox_Dark
   name: "A Ch\u1ED1c"
   subName: "(Nh\u1EADt)"
   summoned: 0
@@ -67,6 +67,7 @@ MonoBehaviour:
       value: 0.2
       type: 0
   skillName: "Nh\u1EADt Th\u1EF1c: Huy\u1EBFt S\xE1t C\u1EEDu U"
+  unstoppable: 1
   skillParams:
   - key: atk_dmg_mul_min
     value: 0.5
@@ -110,24 +111,11 @@ MonoBehaviour:
   - key: true_dmg_mul
     value: 0.5
     isPercentage: 1
-  attackDescription: "\u0110\xF2n \u0111\xE1nh s\u1EBD ch\xE9m li\xEAn ti\u1EBFp
-    2 nh\xE1t, m\u1ED7i nh\xE1t g\xE2y <color=grey>(#[0] ~ #[1]<sprite name=pdmg>)</color>
-    s\xE1t th\u01B0\u01A1ng v\u1EADt l\xFD d\u1EF1a tr\xEAn m\xE1u \u0111\xE3 m\u1EA5t
-    c\u1EE7a m\u1EE5c ti\xEAu. Nh\xE1t ch\xE9m \u0111\u1EA7u ti\xEAn kh\xF4ng th\u1EC3
-    ch\xED m\u1EA1ng, nh\xE1t ch\xE9m th\u1EE9 2 ch\u1EAFc ch\u1EAFn ch\xED m\u1EA1ng."
   passiveDescription: "\u0110\xF2n \u0111\xE1nh s\u1EBD ch\xE9m li\xEAn ti\u1EBFp
     2 nh\xE1t, m\u1ED7i nh\xE1t g\xE2y <color=grey>(#[0] ~ #[1]<sprite name=pdmg>)</color>
     s\xE1t th\u01B0\u01A1ng v\u1EADt l\xFD d\u1EF1a tr\xEAn m\xE1u \u0111\xE3 m\u1EA5t
     c\u1EE7a m\u1EE5c ti\xEAu. Nh\xE1t ch\xE9m \u0111\u1EA7u ti\xEAn kh\xF4ng th\u1EC3
     ch\xED m\u1EA1ng, nh\xE1t ch\xE9m th\u1EE9 2 ch\u1EAFc ch\u1EAFn ch\xED m\u1EA1ng."
-  skillDescription: "Ch\xE9m 3 nh\xE1t, l\u1EA7n l\u01B0\u1EE3t g\xE2y <color=grey>(#[2]
-    + #[3]/ #[4]/ #[5]<sprite name=pdmg>)</color> s\xE1t th\u01B0\u01A1ng v\u1EADt
-    l\xFD v\xE0 h\u1EA5t tung m\u1EE5c ti\xEAu trong <color=grey>#[6]s/ #[7]s/ #[8]s</color>. 
-    N\u1EBFu m\u1EE5c ti\xEAu d\u01B0\u1EDBi #[11]<sprite name=hp>, c\xE1c nh\xE1t
-    ch\xE9m s\u1EBD g\xE2y th\xEAm hi\u1EC7u \u1EE9ng:\r\n- \u0110\u1EA7u ti\xEAn:
-    gi\u1EA3m #[9]<sprite name=arm> trong #[10]s\n- Th\u1EE9 2: g\xE2y th\xEAm <color=grey>(#[12]
-    + #[13]<sprite name=pdmg>)</color> s\xE1t th\u01B0\u01A1ng chu\u1EA9n\n- Th\u1EE9
-    3: C\xF3 th\u1EC3 ch\xED m\u1EA1ng"
   activeDescription: "Ch\xE9m 3 nh\xE1t, l\u1EA7n l\u01B0\u1EE3t g\xE2y <color=grey>(#[2]
     + #[3]/ #[4]/ #[5]<sprite name=pdmg>)</color> s\xE1t th\u01B0\u01A1ng v\u1EADt
     l\xFD v\xE0 h\u1EA5t tung m\u1EE5c ti\xEAu trong <color=grey>#[6]s/ #[7]s/ #[8]s</color>. 
@@ -136,7 +124,6 @@ MonoBehaviour:
     gi\u1EA3m #[9]<sprite name=arm> trong #[10]s\n- Th\u1EE9 2: g\xE2y th\xEAm <color=grey>(#[12]
     + #[13]<sprite name=pdmg>)</color> s\xE1t th\u01B0\u01A1ng chu\u1EA9n\n- Th\u1EE9
     3: C\xF3 th\u1EC3 ch\xED m\u1EA1ng"
-  unstoppable: 1
   specialKeys:
   - aatrox_curse
   dps: 90
