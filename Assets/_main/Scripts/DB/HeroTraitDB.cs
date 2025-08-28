@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using RExt.Extensions;
 using RExt.Patterns.Singleton;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "HeroTraitDB", menuName = "DB/HeroTraitDB")]
@@ -20,5 +21,14 @@ public class HeroTraitDB : ScriptableObjectSingleton<HeroTraitDB> {
             }
         }
         return results;
+    }
+
+    [Button]
+    void test() {
+        foreach (var t in heroTraits) {
+            if (t.realm == Realm.Mortal) {
+                Debug.Log(t.name);
+            }
+        }
     }
 }

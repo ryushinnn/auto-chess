@@ -5,13 +5,21 @@ using RExt.Extensions;
 
 public class DestinyProcessor_Marksman : DestinyProcessor {
     readonly float[] atkSpdBonuses;
-    readonly float burstDuration;
+    readonly float[] burstDurations;
     
     public DestinyProcessor_Marksman(DestinyConfig cfg) : base(cfg) {
         var destinyParams = cfg.destinyParams;
 
-        atkSpdBonuses = new[] { destinyParams[0].value, destinyParams[1].value, destinyParams[2].value };
-        burstDuration = destinyParams[3].value;
+        atkSpdBonuses = new[] {
+            destinyParams[0].value, 
+            destinyParams[1].value, 
+            destinyParams[2].value
+        };
+        burstDurations = new[] {
+            destinyParams[3].value, 
+            destinyParams[4].value, 
+            destinyParams[5].value
+        };
     }
     
     public override void Activate(List<BattleHero> heroes, int checkpointIndex) {
@@ -37,7 +45,7 @@ public class DestinyProcessor_Marksman : DestinyProcessor {
                         AttributeModifierSet.Create(
                             hero,
                             "marksman_burst",
-                            burstDuration,
+                            burstDurations[checkpointIndex],
                             new[] {
                                 (AttributeModifierKey.AttackSpeed, atkSpdBonuses[checkpointIndex], AttributeModifier.Type.Percentage)
                             },

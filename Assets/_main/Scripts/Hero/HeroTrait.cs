@@ -165,7 +165,7 @@ public class HeroTrait : ScriptableObject {
 
     [Button]
     void test() {
-     
+        
     }
 #endif
 }

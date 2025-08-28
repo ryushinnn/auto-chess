@@ -20,8 +20,8 @@ public abstract class DestinyConfig : ScriptableObject {
         return -1;
     }
 
-    public string Description(int stage) {
-        MatchEvaluator eval = match => {
+    public string Description(int checkpoint) {
+        var result = Reform(description, @"#\[(\d+)\]", match => {
             var index = int.Parse(match.Groups[1].Value);
             if (index >= 0 && index < destinyParams.Length) {
                 var param = destinyParams[index];
@@ -30,25 +30,32 @@ public abstract class DestinyConfig : ScriptableObject {
             }
 
             return match.Value;
-        };
+        });
 
-        var result = ReformDescription(description, eval);
-        for (int i = 0; i < destinyParams.Length; i++) {
-            if (i == stage) {
-                result = result.Replace($"[[{i}", "<color=yellow>");
-                result = result.Replace($"{i}]]", "</color>");
+        result = Reform(result, @"&\[(\d+)\]", match => {
+            var index = int.Parse(match.Groups[1].Value);
+            if (index >= 0 && index < destinyParams.Length) {
+                return $"{checkpoints[index]}";
             }
-            else {
-                result = result.Replace($"[[{i}", "");
-                result = result.Replace($"{i}]]", "");
-            }
-        }
 
+            return match.Value;
+        });
+
+        result = Reform(result, @"</?(\d+)>", match => {
+            var isClosing = match.Value.StartsWith("</");
+            var index = int.Parse(match.Groups[1].Value);
+
+            if (index == checkpoint) {
+                return isClosing ? "</color>" : "<color=yellow>";
+            }
+
+            return "";
+        });
+        
         return result;
     }
     
-    string ReformDescription(string des, MatchEvaluator eval) {
-        const string pattern = @"#\[(\d+)\]";
+    string Reform(string des, string pattern, MatchEvaluator eval) {
         return Regex.Replace(des, pattern, eval);
     }
 }

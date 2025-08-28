@@ -69,9 +69,9 @@ public static class GameConfigs {
     public const int REFRESH_COST = 2;
 
     public static readonly Dictionary<MatchPhase, int> MATCH_PHASE_DURATIONS = new() {
-        { MatchPhase.Preparation, 999 },
+        { MatchPhase.Preparation, 99999 },
         { MatchPhase.Transition, 5 },
-        { MatchPhase.Battle, 999 },
+        { MatchPhase.Battle, 60 },
         { MatchPhase.Summary, 2 },
     };
 

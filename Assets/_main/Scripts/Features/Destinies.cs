@@ -39,8 +39,20 @@ public class Destinies : MonoBehaviour {
             var destiny = DestinyDB.Instance.Find(role);
             var index = destiny.GetCheckpointIndex(num);
             if (index >= 0) {
-                if (role == Role.Marksman) {
-                    var processor = DestinyProcessorFactory.Create(role);
+                var processor = DestinyProcessorFactory.Create(role);
+                if (processor != null) {
+                    var heroes = GameManager.Instance.BattleField.GetAliveHeroes(TeamSide.Ally);
+                    processor.Activate(heroes, index);
+                }
+            }
+        }
+        
+        foreach (var (realm, num) in realmNumbers) {
+            var destiny = DestinyDB.Instance.Find(realm);
+            var index = destiny.GetCheckpointIndex(num);
+            if (index >= 0) {
+                var processor = DestinyProcessorFactory.Create(realm);
+                if (processor != null) {
                     var heroes = GameManager.Instance.BattleField.GetAliveHeroes(TeamSide.Ally);
                     processor.Activate(heroes, index);
                 }

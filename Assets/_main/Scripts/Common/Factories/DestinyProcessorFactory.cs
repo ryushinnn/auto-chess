@@ -11,7 +11,7 @@
         var destiny = DestinyDB.Instance.Find(realm);
         
         return realm switch {
-            _ => null,
+            Realm.Mortal => new DestinyProcessor_Mortal(destiny),
         };
     }
 }
