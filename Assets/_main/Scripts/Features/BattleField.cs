@@ -28,6 +28,11 @@ public class BattleField : MonoBehaviour {
             var hero = SpawnHero(trait, e.rank, TeamSide.Enemy, node);
             hero.GetAbility<HeroAttributes>().SetPowerScales(e.hpScale, e.damageScale);
             hero.GetAbility<HeroRotation>().Rotate(-Vector3.forward, true);
+            var inventory = hero.GetAbility<HeroInventory>();
+            foreach (var item in e.items)
+            {
+                inventory.Add(item);
+            }
         }
                 
         var allies = GameManager.Instance.LineUp.GetHeroOnMap();

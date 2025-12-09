@@ -7,6 +7,8 @@ public class Inventory : MonoBehaviour {
     public int Coins => coins;
     
     [SerializeField] LayerMask heroLayerMask;
+
+    [SerializeField] private Item[] hackItems;
     
     Dictionary<Item, int> items = new();
     int coins;
@@ -28,6 +30,18 @@ public class Inventory : MonoBehaviour {
         UIManager_Arena.Instance.Destinies.Close();
         UIManager_Arena.Instance.Inventory.Open();
         UIManager_Arena.Instance.Inventory.SetData(items);
+    }
+
+    [Button]
+    public void AddHackItems()
+    {
+        foreach (var item in hackItems)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                AddItem(item);
+            }
+        }
     }
 
     [Button]

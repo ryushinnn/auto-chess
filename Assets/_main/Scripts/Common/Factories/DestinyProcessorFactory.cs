@@ -4,6 +4,7 @@
         
         return role switch {
             Role.Marksman => new DestinyProcessor_Marksman(destiny),
+            _ => null
         };
     }
 
@@ -12,6 +13,7 @@
         
         return realm switch {
             Realm.Mortal => new DestinyProcessor_Mortal(destiny),
+            _ => null
         };
     }
 }
